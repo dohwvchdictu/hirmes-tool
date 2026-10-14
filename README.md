@@ -1,4 +1,4 @@
-# HIE System Validation — Testing Criteria
+# Healthcare Interoperability Readiness Matrix for EMR Systems Evaluation Tool
 
 Source of the tiered (Level 0–4) testing criteria used to check whether an EMR system conforms to the
 national HL7 FHIR standards (PH Core and PHeReF) and may be used in the Health Information Exchange
