@@ -1,0 +1,24 @@
+# Answer sets used to check that the workbook and the web scorecard agree.
+# `all` gives every item the same answer; otherwise answers are drawn at random with
+# `seed` and `weights` for [Met, Not Met, Not Tested, N/A].
+scenarios:
+  - name: all-not-tested
+    all: Not Tested
+  - name: all-met
+    all: Met
+  - name: all-not-met
+    all: Not Met
+  - name: all-na
+    all: N/A
+  - name: mostly-met
+    seed: 1
+    weights: [20, 1, 0, 1]
+  - name: mostly-met-2
+    seed: 2
+    weights: [30, 1, 0, 2]
+  - name: mixed
+    seed: 3
+    weights: [6, 2, 0, 1]
+  - name: partly-tested
+    seed: 4
+    weights: [5, 1, 2, 1]
