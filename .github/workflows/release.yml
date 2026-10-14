@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Check
+        run: |
+          python scripts/check.py --counts
+          python tests/test_roundtrip.py
+      - name: Build release files
+        run: |
+          python scripts/build_xlsx.py --out dist
+          python scripts/change_summary.py --to "${GITHUB_REF_NAME}" --out dist/CHANGE-SUMMARY.md
+          python scripts/build_web.py --out site
+          (cd site && zip -qr "../dist/web-scorecard-${GITHUB_REF_NAME}.zip" .)
+      - name: Range for the change log
+        id: range
+        run: |
+          prev=$(python scripts/change_summary.py --to "${GITHUB_REF_NAME}" --print-previous)
+          if [ -n "$prev" ]; then echo "args=${prev}..${GITHUB_REF_NAME} --tag ${GITHUB_REF_NAME} --strip header" >> "$GITHUB_OUTPUT";
+          else echo "args=--tag ${GITHUB_REF_NAME} --strip header" >> "$GITHUB_OUTPUT"; fi
+      - name: Change log for this release
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: ${{ steps.range.outputs.args }}
+        env:
+          OUTPUT: dist/CHANGELOG.md
+      - name: Release notes
+        run: |
+          {
+            cat dist/CHANGE-SUMMARY.md
+            echo
+            echo "---"
+            echo
+            cat dist/CHANGELOG.md
+          } > dist/RELEASE-NOTES.md
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body_path: dist/RELEASE-NOTES.md
+          prerelease: ${{ contains(github.ref_name, '-rc') }}
+          files: |
+            dist/*.xlsx
+            dist/CHANGE-SUMMARY.md
+            dist/CHANGELOG.md
+            dist/web-scorecard-*.zip

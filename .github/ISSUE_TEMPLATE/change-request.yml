@@ -1,0 +1,44 @@
+name: Change request
+description: Propose a change to a criterion, a guide or the scoring policy
+labels: ["change-request"]
+body:
+  - type: input
+    id: criterion
+    attributes:
+      label: Criterion or sub-item ID
+      description: For example TS1-16 or TS1-16.2. Leave empty for a new criterion.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of change
+      options:
+        - Wording or guide text (no scoring effect)
+        - Correction
+        - New criterion or sub-item
+        - Retire, move or merge a criterion
+        - Weight, critical flag or threshold (policy)
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed change
+      description: What should the criterion say or do instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Why is the change needed? Link evidence, connectathon issues or decisions.
+    validations:
+      required: true
+  - type: input
+    id: ig
+    attributes:
+      label: IG reference (optional)
+      description: PH Core / PHeReF profile, requirement or page
+  - type: input
+    id: requester
+    attributes:
+      label: Workstream, TWG or organization

@@ -1,0 +1,61 @@
+name: Check and build
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # tags are needed for the version stamp
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Check criteria, scoring and registers
+        run: python scripts/check.py --counts
+      - name: Workbook rows match the YAML
+        run: python tests/test_roundtrip.py
+      - name: Build workbook and web scorecard
+        run: |
+          python scripts/build_xlsx.py --out dist
+          python scripts/build_web.py --out site
+          python scripts/change_summary.py --out dist/CHANGE-SUMMARY.md
+      - name: Summary on the workflow page
+        run: cat dist/CHANGE-SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scorecard-${{ github.ref_name }}-${{ github.sha }}
+          path: |
+            dist/
+            site/
+          retention-days: 30
+
+  scoring-parity:
+    # Same answers through the workbook (LibreOffice) and the web scorecard (Node.js)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install LibreOffice Calc
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends libreoffice-calc
+      - run: python -m pip install -r requirements.txt
+      - run: python tests/test_scoring.py
