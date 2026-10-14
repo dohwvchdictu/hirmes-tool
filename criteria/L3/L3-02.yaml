@@ -1,0 +1,40 @@
+id: L3-02
+status: active
+section: Reports
+title: 'Referral linelist contains: (1) patient, (2) referring facility, (3) facility type, (4) facility classification, (5) TAT, (6) filter by month/year'
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Linelist screenshot/export
+developer_guide: |
+  Provide a referral linelist with the 6 required columns / filters.
+
+  Purpose: The linelist has all the columns the DOH needs.
+validator_guide: |
+  Count the required columns/filters present.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-02.1
+  text: Patient
+  critical: false
+- id: L3-02.2
+  text: Referring facility
+  critical: false
+- id: L3-02.3
+  text: Facility type
+  critical: false
+- id: L3-02.4
+  text: Facility classification
+  critical: false
+- id: L3-02.5
+  text: TAT
+  critical: false
+- id: L3-02.6
+  text: Filter by month / year
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

@@ -1,0 +1,20 @@
+id: TEC-14
+status: active
+section: Vulnerability assessment
+title: An independent vulnerability assessment (VAPT or authenticated scan) of the version under test exists, with no unresolved critical / high findings
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + Technical Lead
+evidence: VAPT / scan executive summary + signed attestation (or full report, view-only)
+developer_guide: |
+  Provide evidence of a vulnerability assessment and penetration test or an authenticated vulnerability scan of the version under test (or the same major version) done within the last 12 months by an independent party or a separate security team (TB-14), with critical / high findings fixed or covered by a remediation plan accepted by the Technical Lead. Evidence options per Instructions 4B (e.g., executive summary + signed attestation).
+
+  Purpose: Black-box conformance testing cannot replace a security assessment; this checks one was done.
+validator_guide: Check the date, scope (product + version), assessor independence and the status of critical / high findings. Met only if all four are acceptable. This criterion does NOT make this validation a security assessment (see disclaimer above).
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-14
+  sources: []
+  ig_requirements: []

@@ -1,0 +1,19 @@
+id: L4-11
+status: active
+section: Maturity · Workflow
+title: 'Referral can be cancelled/revoked by the referring facility, and the receiving facility sees the cancellation (Connectathon Issue #19)'
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots at both EMRs
+developer_guide: |
+  Support cancel / revoke of a referral and send the status to the receiving facility (if supported by the IG version).
+
+  Purpose: Prevents facilities preparing for patients who are not coming.
+validator_guide: Cancel one test referral; Met if the receiving EMR shows it as cancelled. Mark N/A with reason if not yet supported by the IG version tested.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

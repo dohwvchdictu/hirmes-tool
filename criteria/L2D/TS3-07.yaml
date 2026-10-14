@@ -1,0 +1,31 @@
+id: TS3-07
+status: active
+section: Exception · Dependency outage
+title: When the terminology server or a registry (NHFR / PSGC) is unavailable, the EMR degrades gracefully and never sends invented codes
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots + server-side evidence of codes sent
+developer_guide: |
+  When a look-up service is unreachable, use a validated cached copy (scheduled sync — see Terminology & Registry Sources, Reference Guide Ch. 4) OR block the coded field with a clear message. Never substitute free text or locally invented codes for a bound element.
+
+  Purpose: An outage of a national service must not corrupt the data exchanged.
+validator_guide: |
+  1. TD-D13: the DOH makes the terminology server unreachable for the test account (or the developer points the EMR to a dead endpoint).
+  2. TD-D14: same for the NHFR / facility list.
+  3. Met per sub-item if the EMR uses a valid cached value set OR blocks with a clear message, and any code sent is valid (TS0 check on the SHR).
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-07.1
+  text: Terminology server unavailable (TD-D13) — cached valid codes or clear block; no invented codes
+  critical: false
+- id: TS3-07.2
+  text: Facility registry unavailable (TD-D14) — cached NHFR list or clear block; no free-typed facility
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

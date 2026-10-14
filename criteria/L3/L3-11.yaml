@@ -1,0 +1,20 @@
+id: L3-11
+status: active
+section: Privacy
+title: Governance dashboard shows de-identified, aggregated data only (no patient names or IDs to dashboard viewers)
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator
+evidence: Dashboard screenshots
+developer_guide: |
+  Restrict dashboard viewers to de-identified, aggregated data — no names or IDs in views or exports.
+
+  Purpose: Monitoring does not expose individual patients.
+validator_guide: Log in as dashboard viewer; Met if no patient-identifying data can be seen or exported.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-11
+  sources: []
+  ig_requirements: []

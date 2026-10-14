@@ -1,0 +1,29 @@
+id: L3-05
+status: active
+section: Aggregated Data
+title: Counts of Deferred / Denied and Redirected referrals match
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Report screenshot + Test Data
+developer_guide: |
+  Count deferred / denied and redirected referrals.
+
+  Purpose: Unaccepted referrals are counted correctly.
+validator_guide: |
+  Count the 2 values that show MATCH in Test Data.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Calculation rule: IND-05.
+sub_items:
+- id: L3-05.1
+  text: Deferred / denied referrals match
+  critical: false
+- id: L3-05.2
+  text: Redirected referrals match
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

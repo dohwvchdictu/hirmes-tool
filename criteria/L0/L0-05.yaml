@@ -1,0 +1,31 @@
+id: L0-05
+status: active
+section: Coordination
+title: Contact persons (from L0-02) attended the initial coordination meeting with the Regional Validation Team (in person or virtual)
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Attendance sheet or minutes of the coordination meeting
+developer_guide: |
+  Ensure the three contact persons attend the initial coordination meeting with the Regional Validation Team (in person or virtual) to agree on the process and schedule.
+
+  Purpose: The vendor understands the process and the schedule before testing begins.
+validator_guide: |
+  Count the contact persons in the attendance / minutes of the coordination meeting.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L0-05.1
+  text: Product / technical lead attended the coordination meeting
+  critical: false
+- id: L0-05.2
+  text: Integration (FHIR) developer attended the coordination meeting
+  critical: false
+- id: L0-05.3
+  text: Data privacy contact attended the coordination meeting
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

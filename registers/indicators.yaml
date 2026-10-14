@@ -1,0 +1,157 @@
+title: Indicator Definitions for Level 3 (IND-) — PROPOSED
+source: Technical Reference Guide (legacy Rev 9)
+entries:
+- id: IND-01
+  indicator: Total referrals (linelist total)
+  numerator_value: Number of distinct referrals in the period
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: All referrals sent (outgoing) or addressed to (incoming) the facility
+    Excl.: Cancelled referrals (IND-03); test / draft referrals never sent
+  date_status_rule: |
+    Period assigned by date/time referred (ServiceRequest.authoredOn) converted to Philippine Standard Time (UTC+8); a month runs 00:00:00 day 1 to 23:59:59 last day
+    Status: Any status except cancelled / entered-in-error
+  duplicates: Count once per referral identifier (IND-02)
+  formula_rounding: Integer
+  fhir_source: ServiceRequest.authoredOn, ServiceRequest.identifier, Task.status
+  criteria: L3-03, L3-10, L3-17
+- id: IND-02
+  indicator: Duplicate rule (applies to all counts)
+  numerator_value: —
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: —
+    Excl.: Second and later records with the same referral business identifier (or the same ServiceRequest id)
+  date_status_rule: |
+    —
+    Status: —
+  duplicates: Latest version of a referral is used; corrections update, not add
+  formula_rounding: —
+  fhir_source: ServiceRequest.identifier / id; Resource version (meta.versionId)
+  criteria: L3-18.1, all counts
+- id: IND-03
+  indicator: Cancelled referrals
+  numerator_value: Referrals whose Task.status = cancelled (or ServiceRequest.status = revoked)
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Cancelled within the period
+    Excl.: —
+  date_status_rule: |
+    Period by date referred
+    Status: Status as of report run time
+  duplicates: Count once (IND-02)
+  formula_rounding: Integer; shown separately, excluded from IND-01 and IND-05
+  fhir_source: Task.status, ServiceRequest.status
+  criteria: L3-18.2
+- id: IND-04
+  indicator: Status-as-of rule (applies to all status counts)
+  numerator_value: —
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: —
+    Excl.: —
+  date_status_rule: |
+    —
+    Status: Status = latest Task.status at the moment the report is run (not the status at first retrieval)
+  duplicates: —
+  formula_rounding: —
+  fhir_source: Task.status, Task.lastModified
+  criteria: L3-19
+- id: IND-05
+  indicator: Incoming / Outgoing / Received / Deferred-Denied / Redirected
+  numerator_value: Distinct referrals in each category
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Outgoing = requester's organization is the facility; Incoming = performer / Task.owner is the facility; Received = incoming with status received, accepted, in-progress or completed; Deferred-Denied = rejected; Redirected = referred onward
+    Excl.: Cancelled (IND-03)
+  date_status_rule: |
+    Period by date referred
+    Status: IND-04
+  duplicates: IND-02
+  formula_rounding: Integer
+  fhir_source: ServiceRequest.requester / performer, Task.owner, Task.status, Task.businessStatus
+  criteria: L3-04, L3-05
+- id: IND-06
+  indicator: Top reasons for referral
+  numerator_value: Distinct referrals per Reason for Referral code
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: All non-cancelled referrals in the period
+    Excl.: Cancelled
+  date_status_rule: |
+    Period by date referred
+    Status: Any
+  duplicates: IND-02
+  formula_rounding: Rank descending by count; ties ordered by code display A–Z
+  fhir_source: ServiceRequest.reasonCode (EReferralReason VS)
+  criteria: L3-06
+- id: IND-07
+  indicator: Counts by ownership and service capability
+  numerator_value: Distinct referrals per ownership (Government / Private) and receiving capability
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Ownership and capability taken from the NHFR record of the facility at report time
+    Excl.: Cancelled
+  date_status_rule: |
+    Period by date referred
+    Status: Any
+  duplicates: IND-02
+  formula_rounding: Integer
+  fhir_source: Organization.identifier (NHFR) → NHFR attributes
+  criteria: L3-07, L3-08
+- id: IND-08
+  indicator: Turnaround time (TAT)
+  numerator_value: Sum of (first 'received' date/time − date/time referred) in minutes
+  denominator: Number of referrals that have a 'received' timestamp
+  inclusions_exclusions: |
+    Incl.: Incoming referrals with a received timestamp
+    Excl.: Referrals never received; cancelled before receipt
+  date_status_rule: |
+    Period by date referred
+    Status: Uses the FIRST time status became 'received' (TS2-13.2); later updates do not change it
+  duplicates: IND-02
+  formula_rounding: Average in minutes, rounded to the nearest minute; tolerance ±1 minute
+  fhir_source: Task.authoredOn / ServiceRequest.authoredOn; Task history (received)
+  criteria: L3-09, L3-19.2
+- id: IND-09
+  indicator: Report consistency (linelist ↔ aggregates ↔ export)
+  numerator_value: Totals of linelist, aggregate report and export for the same filters
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Same filters and period
+    Excl.: —
+  date_status_rule: |
+    Same as the report
+    Status: Same as the report
+  duplicates: IND-02
+  formula_rounding: All three totals equal
+  fhir_source: —
+  criteria: L3-10, L3-21
+- id: IND-10
+  indicator: Top morbidity of referred cases
+  numerator_value: Distinct referrals per working-impression code (ICD-10)
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Non-cancelled referrals with a coded working impression
+    Excl.: Cancelled; uncoded working impression (listed separately as 'not coded')
+  date_status_rule: |
+    Period by date referred
+    Status: Any
+  duplicates: IND-02
+  formula_rounding: Rank descending by count; ties by ICD-10 code A–Z
+  fhir_source: Condition.code (category encounter-diagnosis)
+  criteria: L3-16
+- id: IND-11
+  indicator: Disaggregation (sex, age group, municipality, facility)
+  numerator_value: Distinct referrals per group
+  denominator: —
+  inclusions_exclusions: |
+    Incl.: Non-cancelled referrals
+    Excl.: Cancelled
+  date_status_rule: |
+    Period by date referred; age computed on the date referred
+    Status: Any
+  duplicates: IND-02
+  formula_rounding: 'Age groups: 0–4, 5–9, 10–19, 20–59, 60+ years (DOH to confirm); municipality from the patient address PSGC'
+  fhir_source: Patient.gender, Patient.birthDate, Patient.address (PSGC)
+  criteria: L3-15

@@ -1,0 +1,29 @@
+id: TEC-13
+status: active
+section: Interface protection
+title: Outgoing connections verify server certificates, and any API the EMR exposes is protected against abuse
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Connection error screenshot / log + throttling response or documented control
+developer_guide: |
+  Validate the certificate of the SHR / terminology server on every connection (no 'trust all certificates' setting). If the EMR exposes its own API to the internet, apply rate limiting or equivalent abuse controls.
+
+  Purpose: Prevents interception (man-in-the-middle) and denial-of-service by request flooding.
+validator_guide: |
+  1. TD-D22: the DOH provides a sandbox endpoint with an invalid / expired / untrusted certificate; point the EMR to it. Met if the EMR refuses to connect (N/A with reason if the DOH has not provisioned the endpoint).
+  2. If the EMR exposes an internet-facing API: send repeated requests (within the agreed test limit) and confirm throttling or a documented control. N/A if no API is exposed.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: TEC-13.1
+  text: Connection refused to an endpoint with an invalid / untrusted certificate (TD-D22)
+  critical: false
+- id: TEC-13.2
+  text: Rate limiting / abuse control on any internet-facing API exposed by the EMR (N/A if none)
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

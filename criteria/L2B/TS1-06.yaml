@@ -1,0 +1,52 @@
+id: TS1-06
+status: active
+section: Referral request
+title: Referral request details are submitted correctly
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the ServiceRequest (EReferral ServiceRequest) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: ServiceRequest.authoredOn; .category (Referral Category VS); .priority (EReferralPriority); .reasonCode (Reason for Referral VS) with .reasonReference → Condition; .subject → Patient; .requester → referring PractitionerRole; .performer → receiving facility / practitioner; .intent = order (fixed); .status.
+  Source: SRC-02, SRC-03, SRC-09 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+
+  Purpose: The receiving facility sees what is requested, how urgent it is and why.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the ServiceRequest in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-06.1
+  text: Date of referral — ServiceRequest.authoredOn
+  critical: false
+- id: TS1-06.2
+  text: Referral category — ServiceRequest.category (Emergency / Outpatient)
+  critical: true
+- id: TS1-06.3
+  text: Priority — ServiceRequest.priority (routine / urgent / stat)
+  critical: true
+- id: TS1-06.4
+  text: Reason for referral — ServiceRequest.reasonCode
+  critical: true
+- id: TS1-06.5
+  text: Links — subject → Patient, requester → referring PractitionerRole, performer → receiving facility
+  critical: true
+- id: TS1-06.6
+  text: Fixed values — intent = order; status per IG
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-023
+  - TR-024
+  - TR-025
+  - TR-026
+  - TR-027
+  - TR-028
+  - TR-029
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

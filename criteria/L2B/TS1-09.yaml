@@ -1,0 +1,22 @@
+id: TS1-09
+status: active
+section: Attachments
+title: Laboratory result attachment is submitted with the referral
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Send laboratory results as DiagnosticReport.presentedForm (Attachment with contentType and data or url). Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+
+  Purpose: Lab results travel with the patient.
+validator_guide: |
+  Attach the Test Data lab file and submit. Met if the server-side evidence shows a DiagnosticReport whose presentedForm carries the file with a contentType.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability:
+  - TR-034
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

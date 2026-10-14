@@ -1,0 +1,34 @@
+id: TEC-10
+status: active
+section: Session lifecycle
+title: 'Sessions and accounts end when they should: log-out invalidates the session, expired sessions / tokens are refused, and revoked accounts lose access'
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots / HTTP responses + time of each step
+developer_guide: |
+  Invalidate the session on the server at log-out; refuse expired sessions and tokens; when an administrator deactivates an account, block new log-ins immediately and end its active sessions within the TB-12 limit.
+
+  Purpose: Departed staff and stolen sessions cannot keep accessing patient data.
+validator_guide: |
+  1. Log in, copy the session (or note the page), log out, then press Back / replay the request: access must be refused.
+  2. Wait past the idle / token expiry (TB-06 / TB-12) and repeat an action: re-authentication is required.
+  3. Administrator deactivates a logged-in test user: the user cannot log in again, and the open session ends within the TB-12 limit.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: TEC-10.1
+  text: Session invalid after log-out (Back / replayed request refused)
+  critical: false
+- id: TEC-10.2
+  text: Expired session / token refused; re-authentication required
+  critical: false
+- id: TEC-10.3
+  text: 'Deactivated account: new log-in blocked immediately; active session ended within the TB-12 limit'
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-12
+  sources: []
+  ig_requirements: []

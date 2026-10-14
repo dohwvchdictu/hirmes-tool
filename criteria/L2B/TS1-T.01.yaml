@@ -1,0 +1,22 @@
+id: TS1-T.01
+status: active
+section: Transaction
+title: The complete referral is accepted by the SHR (no error response)
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator (server-side check)
+evidence: Server response with status code (IOL log or raw payload)
+developer_guide: |
+  Send the complete referral to the SHR — as one FHIR transaction Bundle (recommended) or by the interactions declared in L1-03 — and handle success and error responses.
+
+  Purpose: The whole referral arrives in one piece.
+validator_guide: |
+  Submit the Test Data referral; Met if the server-side evidence shows a success response (HTTP 200 / 201) for every resource of the referral.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-07
+  sources: []
+  ig_requirements: []

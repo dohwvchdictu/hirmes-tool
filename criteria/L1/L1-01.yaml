@@ -1,0 +1,19 @@
+id: L1-01
+status: active
+section: Workflow
+title: 'Process flows of the eReferral module as implemented in the system, for ALL three: (a) referring, (b) receiving, (c) back-referral'
+critical: 'no'
+weight: 3
+scoring: binary
+validation_role: Validator
+evidence: Process flow diagrams
+developer_guide: |
+  Submit process flow diagrams of the eReferral module for referring, receiving and back-referral, showing the actual system screens and steps.
+
+  Purpose: Shows how the system moves a referral step by step. All three are required (all-or-nothing, per DOH draft).
+validator_guide: Check that diagrams exist for all three flows and show the system screens/steps. If any one is missing, mark Not Met.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

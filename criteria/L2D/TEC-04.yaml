@@ -1,0 +1,53 @@
+id: TEC-04
+status: active
+section: Security
+title: Audit trail records who did what and when
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Audit log extract
+developer_guide: |
+  Log user, date/time and action for create, view, edit, send, receive, accept, decline, print, export and log-in events, with the fields required by TB-08. The storage format (database table, log file, FHIR AuditEvent, SIEM) is the vendor's choice.
+
+  Purpose: Needed for accountability and privacy compliance.
+validator_guide: |
+  Perform the 10 actions listed in the Notes (create, view, edit, send, receive, accept, decline, print, export, log-in). Count the actions found in the audit log with user and time.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: TEC-04.1
+  text: '"Create" logged with user and date/time'
+  critical: false
+- id: TEC-04.2
+  text: '"View" logged with user and date/time'
+  critical: false
+- id: TEC-04.3
+  text: '"Edit" logged with user and date/time'
+  critical: false
+- id: TEC-04.4
+  text: '"Send" logged with user and date/time'
+  critical: false
+- id: TEC-04.5
+  text: '"Receive" logged with user and date/time'
+  critical: false
+- id: TEC-04.6
+  text: '"Accept" logged with user and date/time'
+  critical: false
+- id: TEC-04.7
+  text: '"Decline" logged with user and date/time'
+  critical: false
+- id: TEC-04.8
+  text: '"Print" logged with user and date/time'
+  critical: false
+- id: TEC-04.9
+  text: '"Export" logged with user and date/time'
+  critical: false
+- id: TEC-04.10
+  text: '"Log-in" logged with user and date/time'
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-08
+  sources: []
+  ig_requirements: []

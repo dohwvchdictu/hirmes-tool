@@ -1,0 +1,21 @@
+id: L3-03
+status: active
+section: Accuracy
+title: Linelist total equals the number of test referrals (Test Data Section B)
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator
+evidence: Linelist export + Test Data match
+developer_guide: |
+  Ensure the linelist shows every referral exactly once (no loss, no duplicates).
+
+  Purpose: The system does not lose or duplicate referrals.
+validator_guide: |
+  Compare the linelist count with the Expected value "Total referrals in linelist" in Test Data. All-or-nothing.
+  Calculation rule: IND-01 (Reference Guide, Ch. 6), IND-02.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

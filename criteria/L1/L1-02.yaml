@@ -1,0 +1,43 @@
+id: L1-02
+status: active
+section: Manual
+title: 'User manual of the eReferral module contains ALL seven required sections (all-or-nothing): (1) system overview & user roles, (2) referring workflow step-by-step, (3) receiving workflow step-by-step, (4) back-referral workflow, (5) downtime/offline behaviour, (6) troubleshooting & error messages, (7) vendor support contacts & escalation'
+critical: 'no'
+weight: 2
+scoring: all-or-nothing
+validation_role: Validator
+evidence: User manual
+developer_guide: |
+  Submit the eReferral module user manual with a table of contents covering ALL 7 required sections, including how users check the server status and what the system does during downtime or offline operation. Titles, order and format (printed, PDF or online help) are the vendor's choice — only the content is checked.
+
+  Purpose: Checks the CONTENT of the manual once, at product level. All seven sections are required: a manual missing any one section scores 0% (all-or-nothing).
+validator_guide: |
+  Check the table of contents and the body of the manual for each of the 7 sections. Mark each sub-item (↳) below so missing sections are listed.
+  All-or-nothing: the criterion scores 100% only if ALL 7 sub-items are Met; if any one is Not Met the score is 0%.
+sub_items:
+- id: L1-02.1
+  text: System overview & user roles
+  critical: false
+- id: L1-02.2
+  text: Referring workflow step-by-step
+  critical: false
+- id: L1-02.3
+  text: Receiving workflow step-by-step
+  critical: false
+- id: L1-02.4
+  text: Back-referral workflow
+  critical: false
+- id: L1-02.5
+  text: Server status check & downtime / offline behaviour
+  critical: false
+- id: L1-02.6
+  text: Troubleshooting & error messages
+  critical: false
+- id: L1-02.7
+  text: Vendor support contacts & escalation
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

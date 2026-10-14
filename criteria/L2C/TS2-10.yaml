@@ -1,0 +1,41 @@
+id: TS2-10
+status: active
+section: Receiving practitioner
+title: Receiving practitioner / care navigator is assigned and kept separate from the referring practitioner
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of receiving EMR + server-side evidence / resource ID
+developer_guide: |
+  Read the receiving PractitionerRole referenced by Task.owner (and ServiceRequest.performer) from the SHR and display it in the receiving view exactly as sent — no re-typing. Screen layout and labels are the vendor's choice; the value and its meaning must match.
+
+  Purpose: Referring and receiving practitioners share the same resource types; the system must keep them as different people (intended behaviour).
+validator_guide: |
+  1. Open the received Test Data referral in the receiving EMR.
+  2. Compare each sub-item on screen with the Test Data value (write what is seen in Test Data column D).
+  3. Confirm with the server-side evidence that the value was read from the SHR, not typed in.
+  4. Assign the receiving practitioner / care navigator in the receiving EMR; confirm Task.owner on the SHR and that both practitioners appear separately on screen.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS2-10.1
+  text: Name of receiving practitioner
+  critical: false
+- id: TS2-10.2
+  text: Care navigator at the receiving facility — Task.owner (N/A if the facility does not assign one)
+  critical: false
+- id: TS2-10.3
+  text: Practitioner role (receiving)
+  critical: true
+- id: TS2-10.4
+  text: Referring and receiving practitioners are stored and displayed as separate people — not merged or overwritten
+  critical: true
+traces:
+  fhir_traceability:
+  - TR-012
+  - TR-040
+  - TR-046
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

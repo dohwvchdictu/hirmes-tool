@@ -1,0 +1,43 @@
+id: TS1-03
+status: active
+section: Referring practitioner
+title: Referring practitioner (and care navigator, if assigned) is submitted correctly and linked as the requester
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the PractitionerRole + Practitioner (referring facility) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: Practitioner.name; PractitionerRole.code (Practitioner Role VS); referenced by ServiceRequest.requester and Task.requester. A care navigator at the referring facility, where assigned, is a separate PractitionerRole (role code from the Practitioner Role VS).
+  Source: SRC-01, SRC-12 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+
+  Purpose: The receiving facility knows who is accountable for the referral and whom to call back.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the PractitionerRole + Practitioner in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-03.1
+  text: Name of referring practitioner — Practitioner.name
+  critical: false
+- id: TS1-03.2
+  text: Practitioner role — PractitionerRole.code
+  critical: true
+- id: TS1-03.3
+  text: Care navigator at the referring facility, if assigned — separate PractitionerRole (N/A if the facility does not assign one)
+  critical: false
+- id: TS1-03.4
+  text: Referring practitioner is the requester of the ServiceRequest and the Task (not the receiving practitioner)
+  critical: true
+traces:
+  fhir_traceability:
+  - TR-009
+  - TR-010
+  - TR-011
+  - TR-012
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

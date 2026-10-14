@@ -1,0 +1,39 @@
+id: TS2-11
+status: active
+section: Referral status
+title: Receiving facility response updates the referral Task on the SHR (received → accepted / rejected → completed)
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots + server-side evidence of each Task update
+developer_guide: |
+  Update the Task on the SHR when the receiving facility acts: received, then accepted or rejected (with reason in Task.statusReason), then completed (Task.executionPeriod.end). Receiving responses follow the eReferral Receiving Facility Response VS. Any update method is accepted.
+
+  Purpose: Both facilities and the dashboards see the true status of every referral.
+validator_guide: |
+  1. In the receiving EMR, mark the Test Data referral Received, then Accepted, then Completed.
+  2. Use a second test referral to Reject with a reason.
+  3. Confirm each new status on the SHR with the server-side evidence. (Status timestamps are checked in TS2-13.)
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS2-11.1
+  text: Received — Task.status = received
+  critical: true
+- id: TS2-11.2
+  text: Accepted — Task.status = accepted
+  critical: true
+- id: TS2-11.3
+  text: Rejected with reason — Task.status = rejected + statusReason (second test referral)
+  critical: false
+- id: TS2-11.4
+  text: Completed — Task.status = completed
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-038
+  - TR-047
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

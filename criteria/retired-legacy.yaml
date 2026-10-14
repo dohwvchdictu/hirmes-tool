@@ -1,0 +1,41 @@
+retired:
+- id: TEC-06
+  legacy_revision: Rev 7
+  action: Moved
+  replaced_by: TS3-05
+  reason: Downtime handling now tested with retry / duplication checks in the TS3 exception scenarios of Level 2D.
+- id: L4-06
+  legacy_revision: Rev 7
+  action: Moved
+  replaced_by: TS2-13
+  reason: Status timestamps are fundamental — now critical in Level 2.
+- id: L4-08
+  legacy_revision: Rev 7
+  action: Moved
+  replaced_by: TS1-16
+  reason: Patient de-duplication is fundamental — now critical in Level 2.
+- id: L4-09
+  legacy_revision: Rev 7
+  action: Merged
+  replaced_by: TS0-06.2
+  reason: NHFR-sourced facility data checked with the NHFR critical sub-item.
+- id: TS2-11.5
+  legacy_revision: Rev 7
+  action: Merged
+  replaced_by: TS2-13.2
+  reason: Received date/time now checked in the status-history criterion.
+- id: L4-07
+  legacy_revision: After Rev 2
+  action: Moved
+  replaced_by: TS0-07
+  reason: 'Identifier format validation (Connectathon Issue #5) moved to TS0-07 as a critical item. Number not reused.'
+- id: L4-12
+  legacy_revision: Rev 6
+  action: Removed
+  replaced_by: null
+  reason: Official conformance suite (Inferno) — removed until an official PHeReF test kit exists.
+- id: L4-13
+  legacy_revision: Rev 6
+  action: Removed
+  replaced_by: null
+  reason: SMART on FHIR launch — removed; maturity target outside current scope.

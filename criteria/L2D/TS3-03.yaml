@@ -1,0 +1,33 @@
+id: TS3-03
+status: active
+section: Exception · Invalid reference
+title: References to a facility, practitioner or patient that does not exist are prevented or the rejection is handled
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots + server-side evidence
+developer_guide: |
+  Resolve every reference before sending — facilities from the NHFR (TS0-06), practitioners from the registered list — OR handle the SHR rejection of an unresolvable reference clearly.
+
+  Purpose: A referral cannot be addressed to a facility that does not exist.
+validator_guide: |
+  1. Use TD-D06 (NHFR code not in the registry) and TD-D07 (practitioner not registered in the sandbox).
+  2. Met per sub-item if the system blocks it OR shows the SHR rejection clearly and keeps the referral as not sent.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-03.1
+  text: Unknown receiving facility NHFR code (TD-D06) — prevented or handled
+  critical: false
+- id: TS3-03.2
+  text: Unregistered practitioner as requester (TD-D07) — prevented or handled
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-003
+  - TR-007
+  - TR-012
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

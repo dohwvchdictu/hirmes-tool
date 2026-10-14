@@ -1,0 +1,34 @@
+id: TS3-09
+status: active
+section: Exception · Receiving side
+title: 'Receiving side: retrieval during an SHR outage is handled, nothing is missed after recovery, and the same referral is never listed twice'
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots of incoming list + server-side evidence
+developer_guide: |
+  When the SHR is unreachable, show the user that the incoming list may be out of date; after recovery, retrieve every referral addressed to the facility. If the same notification or resource is delivered twice, show the referral once (match by resource ID / business identifier).
+
+  Purpose: No incoming referral is lost or duplicated at the receiving facility.
+validator_guide: |
+  1. TD-D16: make the SHR unreachable from the receiving EMR; submit two referrals from the referring side; restore.
+  2. TD-D17: re-deliver / re-read the same referral (e.g., replay the notification or force a second poll).
+  Met per sub-item as described.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-09.1
+  text: Outage shown to the user (list marked out of date / connection error)
+  critical: false
+- id: TS3-09.2
+  text: After recovery, both referrals appear without manual ID entry (TD-D16)
+  critical: false
+- id: TS3-09.3
+  text: Duplicate delivery (TD-D17) — referral listed once only
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

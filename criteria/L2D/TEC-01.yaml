@@ -1,0 +1,24 @@
+id: TEC-01
+status: active
+section: Security
+title: All data exchange is encrypted in transit and meets Technical Baseline TB-01 and TB-02 (TLS 1.2 or higher, strong cipher suites, valid certificate)
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator (server-side check)
+evidence: Endpoint list + TLS scan report per endpoint
+developer_guide: |
+  Encrypt every endpoint used for the eReferral (EMR ↔ SHR, terminology server, user access) with TLS 1.2 or higher and a valid certificate; disable plain HTTP or redirect it to HTTPS; disable SSL, TLS 1.0/1.1 and weak cipher suites (TB-01, TB-02). Any web server, gateway, proxy or cloud service may be used.
+
+  Purpose: Patient data cannot be read or changed while travelling over the network.
+validator_guide: |
+  1. List every endpoint used.
+  2. Validator (server-side) scans each endpoint with a TLS testing tool (e.g., testssl.sh, nmap ssl-enum-ciphers or an online TLS checker).
+  3. Met only if EVERY endpoint uses https://, negotiates TLS 1.2 or 1.3 only, offers no cipher suite listed as not acceptable in TB-02, and has a valid, unexpired certificate matching the host name.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-01
+  - TB-02
+  sources: []
+  ig_requirements: []

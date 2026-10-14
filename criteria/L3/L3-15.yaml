@@ -1,0 +1,35 @@
+id: L3-15
+status: active
+section: Features
+title: Reports can be disaggregated by (1) sex, (2) age group, (3) municipality (PSGC), (4) facility
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Screenshots
+developer_guide: |
+  Allow filtering by sex, age group, municipality (PSGC) and facility.
+
+  Purpose: Supports equity analysis and LGU planning.
+validator_guide: |
+  Count the disaggregations available.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-15.1
+  text: Sex
+  critical: false
+- id: L3-15.2
+  text: Age group
+  critical: false
+- id: L3-15.3
+  text: Municipality (PSGC)
+  critical: false
+- id: L3-15.4
+  text: Facility
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-019
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

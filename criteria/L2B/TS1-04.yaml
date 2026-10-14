@@ -1,0 +1,63 @@
+id: TS1-04
+status: active
+section: Patient
+title: Patient demographics and identifiers are submitted correctly
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the Patient (ERefPatient / PH Core Patient) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: Patient.name; Patient.identifier (PH Core PhilSys and PhilHealth slices); Patient.birthDate; Patient.gender; Patient.maritalStatus; Patient.address (PSGC-coded); Patient.telecom; PWD Disability Registration extension. Age is NOT sent — the receiving system computes it from birthDate (checked in TS2-04).
+  Source: SRC-05, SRC-10, SRC-13, SRC-14 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+
+  Purpose: The patient is identified unambiguously across facilities.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the Patient in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-04.1
+  text: Full name — Patient.name
+  critical: false
+- id: TS1-04.2
+  text: PhilSys number — Patient.identifier (PH Core PhilSys system)
+  critical: true
+- id: TS1-04.3
+  text: PhilHealth ID — Patient.identifier (PH Core PhilHealth system)
+  critical: true
+- id: TS1-04.4
+  text: Birth date — Patient.birthDate
+  critical: false
+- id: TS1-04.5
+  text: Sex — Patient.gender
+  critical: true
+- id: TS1-04.6
+  text: Civil status — Patient.maritalStatus
+  critical: false
+- id: TS1-04.7
+  text: Address, PSGC-coded — Patient.address
+  critical: false
+- id: TS1-04.8
+  text: Contact number — Patient.telecom
+  critical: false
+- id: TS1-04.9
+  text: PWD registration — PWD Disability Registration extension (N/A if the test patient has none)
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-013
+  - TR-014
+  - TR-015
+  - TR-016
+  - TR-017
+  - TR-018
+  - TR-019
+  - TR-020
+  - TR-021
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

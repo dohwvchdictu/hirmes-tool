@@ -1,0 +1,160 @@
+sheets:
+- key: L0
+  tab: L0 Application
+  title: Level 0 — Application & Commitment
+  intro: The vendor/developer formally applies and commits to the process. All items are documents. Critical items (red) must all be Met.
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 0 — APPLICATION & COMMITMENT
+  order:
+  - L0-01
+  - L0-02
+  - L0-03
+  - L0-04
+  - L0-05
+  - L0-06
+- key: L1
+  tab: L1 Documentation
+  title: Level 1 — Product Documentation
+  intro: Documentation of the EMR system itself. Facility-level legal, privacy, infrastructure and personnel requirements are outside the scope of this tool.
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 1 — PRODUCT DOCUMENTATION
+  order:
+  - L1-01
+  - L1-02
+  - L1-03
+  - L1-04
+  - L1-05
+  - L1-06
+- key: L2A
+  tab: L2-TS0 Terminology
+  title: Level 2A — TS0 Terminology & Registry Validation (GATE)
+  intro: 'Before submitting (TS1) or reading (TS2) an eReferral, every coded element must use the official terminology and every registry value or patient identifier must follow the official registry — the exact server, registry or API for each concept is named in the Terminology & Registry Sources (Reference Guide, Ch. 4) (SRC-01 to SRC-15). CRITICAL (must be 100%): the IG-required bindings (TS0-01, TS0-02), invalid-code handling (TS0-03), PSGC and NHFR (★ in TS0-06) and the PhilHealth / PhilSys identifiers (TS0-07) — TS1, TS2 and Level 3 cannot work without them. Other items (display text, code-system validity, NHWR, DSWD) carry normal weight but are not critical. How values are obtained (live look-up, scheduled sync or cached copy) is the vendor''s choice. Test this part FIRST.'
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 2A — TS0 TERMINOLOGY & REGISTRY VALIDATION (GATE)
+  order:
+  - TS0-01
+  - TS0-02
+  - TS0-03
+  - TS0-04
+  - TS0-05
+  - TS0-06
+  - TS0-07
+  - TS0-08
+- key: L2B
+  tab: L2-TS1 Submission
+  title: Level 2B — TS1 eReferral Submission by Referring Facility
+  intro: 'The referring facility submits the Test Data referral to the Shared Health Record (SHR). Every item is verified ON THE SERVER using any one form of server-side evidence: an Interoperability Layer log (e.g., OpenHIM), an Inferno / FHIR validator report, or the raw request / response payload from the developer. Fields are grouped by FHIR resource — open the resource once and tick its fields. ★ marks critical sub-items. How the data is sent (HTTP verbs, bundle style) is the vendor''s choice.'
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 2B — TS1 EREFERRAL SUBMISSION
+  order:
+  - TS1-01
+  - TS1-02
+  - TS1-03
+  - TS1-04
+  - TS1-05
+  - TS1-06
+  - TS1-07
+  - TS1-08
+  - TS1-09
+  - TS1-10
+  - TS1-11
+  - TS1-12
+  - TS1-13
+  - TS1-14
+  - TS1-15
+  - TS1-16
+  - TS1-T.01
+  - TS1-T.02
+  - TS1-T.03
+  - TS1-T.04
+- key: L2C
+  tab: L2-TS2 Retrieval
+  title: Level 2C — TS2 eReferral Retrieval and Status Update by Receiving Facility
+  intro: The receiving facility retrieves the referral from the SHR, displays it, and updates the referral status. Compare every value with the Test Data sheet and confirm with server-side evidence (IOL log, Inferno / validator report, or raw payload). Fields are grouped by screen area / FHIR resource. ★ marks critical sub-items. Screen layout is the vendor's choice.
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 2C — TS2 EREFERRAL RETRIEVAL
+  order:
+  - TS2-01
+  - TS2-02
+  - TS2-03
+  - TS2-04
+  - TS2-05
+  - TS2-06
+  - TS2-07
+  - TS2-08
+  - TS2-09
+  - TS2-10
+  - TS2-11
+  - TS2-12
+  - TS2-13
+- key: L2D
+  tab: L2-Security
+  title: Level 2D — Security, Reliability & Exception Handling
+  intro: 'Baseline technical safeguards required before live patient data is exchanged. Each criterion states the OUTCOME tested; the minimum measurable specification is given in the Technical Baseline (Reference Guide, Ch. 3) (TB-01 to TB-14). Any product, platform or method that meets or exceeds the baseline is acceptable. Outcomes are tested by using the system (black-box); where documents are needed, vendors may choose any evidence option in Instructions 4B — internals and trade secrets are never required. DISCLAIMER: this is SECURITY CONFORMANCE TESTING of defined controls. Passing it is NOT equivalent to passing a vulnerability assessment and penetration test (VAPT) or a full cybersecurity assessment (TEC-14 only checks that an independent assessment exists). EXCEPTION HANDLING (TS3-01 to TS3-09): the EMR must not show a failed exchange as successful, must explain the error, allow correction, and leave exactly one correct referral on the SHR — inputs and expected results are in Test Data Section D (TD-D##).'
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 2D — SECURITY, RELIABILITY & EXCEPTION HANDLING (conformance testing — not a VAPT)
+  order:
+  - TEC-01
+  - TEC-02
+  - TEC-03
+  - TEC-04
+  - TEC-05
+  - TEC-07
+  - TEC-08
+  - TEC-09
+  - TEC-10
+  - TEC-11
+  - TEC-12
+  - TEC-13
+  - TEC-14
+  - TS3-01
+  - TS3-02
+  - TS3-03
+  - TS3-04
+  - TS3-05
+  - TS3-06
+  - TS3-07
+  - TS3-08
+  - TS3-09
+- key: L3
+  tab: L3 Reports
+  title: Level 3 — Report Generation & Dashboard
+  intro: Reports must contain the required features and AGGREGATED DATA must be complete. Completeness is checked with the 10 known referrals in Test Data Section B — the aggregated figures must match the expected numbers.
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 3 — REPORTS & DASHBOARD
+  order:
+  - L3-01
+  - L3-02
+  - L3-03
+  - L3-04
+  - L3-05
+  - L3-06
+  - L3-07
+  - L3-08
+  - L3-09
+  - L3-10
+  - L3-11
+  - L3-12
+  - L3-13
+  - L3-14
+  - L3-15
+  - L3-16
+  - L3-17
+  - L3-18
+  - L3-19
+  - L3-20
+  - L3-21
+- key: L4
+  tab: L4 Advanced
+  title: Level 4 — Advanced Interoperability
+  intro: 'Advanced interoperability. Rev 7 separates two tracks: CORE-TRACK items are fundamental interoperability requirements that will MIGRATE to Level 2 (minimum conformance) as soon as the PHeReF IG models them (back-referral and the multi-tier referral chain are not yet modelled in IG v0.1.0); MATURITY items are capability targets that remain optional. Moved to Level 2 in Rev 7: status timestamps (L4-06 → TS2-13), patient de-duplication (L4-08 → TS1-16) and NHFR-sourced facility data (L4-09 → TS0-06.2). The track is shown in the Section column.'
+  note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
+  report_heading: LEVEL 4 — ADVANCED INTEROPERABILITY (Core-track / Maturity)
+  order:
+  - L4-01
+  - L4-02
+  - L4-03
+  - L4-04
+  - L4-05
+  - L4-10
+  - L4-11

@@ -1,0 +1,21 @@
+id: L3-10
+status: active
+section: Aggregated Data
+title: Linelist reconciles with the aggregate counts (same totals in both) (from DOH draft)
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator
+evidence: Both reports
+developer_guide: |
+  Make the linelist and aggregate reports use the same data and filters.
+
+  Purpose: Detailed and summary reports tell the same story.
+validator_guide: |
+  Add up the linelist by direction; Met only if it equals the aggregate report totals.
+  Calculation rule: IND-09.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

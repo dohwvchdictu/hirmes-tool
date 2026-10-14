@@ -1,0 +1,36 @@
+id: TS0-05
+status: active
+section: SNOMED CT / LOINC
+title: 'International code systems used where the PH Core / PHeReF IG binds them are valid codes on the DOH terminology server: SNOMED CT, LOINC and ICD-10'
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: $validate-code / $validate output
+developer_guide: |
+  Where the IG binds a field to SNOMED CT (practitioner role, referral category, reason for referral) or LOINC (vital-sign Observation codes), or ICD-10 (working impression, where bound), send codes that exist in the edition loaded on the DOH terminology server, with the correct system URI.
+
+  Purpose: Codes are valid and comparable across facilities.
+validator_guide: |
+  Validator (server-side) runs CodeSystem/$validate-code on the DOH terminology server (or $validate on the submitted bundle) for every SNOMED CT, LOINC and ICD-10 code in the Test Data referral. A sub-item is Met only if every code of that system is valid.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS0-05.1
+  text: SNOMED CT — codes valid; system = http://snomed.info/sct
+  critical: false
+- id: TS0-05.2
+  text: LOINC — vital-sign codes valid; system = http://loinc.org
+  critical: false
+- id: TS0-05.3
+  text: ICD-10 — working-impression codes valid; system = http://hl7.org/fhir/sid/icd-10 (N/A if not bound)
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-031
+  - TR-033
+  technical_baseline: []
+  sources:
+  - SRC-06
+  - SRC-07
+  - SRC-08
+  ig_requirements: []

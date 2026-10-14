@@ -1,0 +1,42 @@
+id: TS0-01
+status: active
+section: PH Core
+title: 'PH Core coded elements: values match the official PH Core / base FHIR value sets (required bindings — not locally invented)'
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of each dropdown + server response ($expand / $validate-code)
+developer_guide: |
+  Use the PH Core / base FHIR value sets for each coded field listed (sex, contact point) — source SRC-05. Use the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4) — for coded values, the DOH HIE terminology server (runtime look-up, scheduled sync or cached copy: vendor's choice).
+
+  Purpose: These bindings are REQUIRED in the IG; a wrong code makes the whole referral fail validation (TS1-T.02), so this is critical.
+validator_guide: |
+  1. Check that the system's configured terminology endpoint is the DOH HIE terminology server (Terminology & Registry Sources — Reference Guide, Ch. 4).
+  2. Open each field / dropdown listed as a sub-item and compare the options with the value set on the server ($expand), or check the submitted code ($validate-code).
+  3. A sub-item is Met only if every option / submitted code belongs to the bound value set.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS0-01.1
+  text: Sex — AdministrativeGender (required binding)
+  critical: true
+- id: TS0-01.2
+  text: Contact number — ContactPointSystem / ContactPointUse (required binding)
+  critical: true
+- id: TS0-01.3
+  text: Civil status — MaritalStatus value set (required binding in ERefPatient)
+  critical: true
+- id: TS0-01.4
+  text: Accompanied by / next of kin relationship — RelatedPerson relationship type (required binding on Patient.contact.relationship)
+  critical: true
+traces:
+  fhir_traceability:
+  - TR-005
+  - TR-017
+  - TR-018
+  - TR-020
+  - TR-022
+  technical_baseline: []
+  sources:
+  - SRC-05
+  ig_requirements: []

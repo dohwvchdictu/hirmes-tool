@@ -1,0 +1,23 @@
+id: TS3-08
+status: active
+section: Exception · Authentication failure
+title: A rejected or expired system credential (EMR ↔ SHR) is reported clearly, nothing is silently dropped, and no secret appears in the message
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of the message + server-side evidence (401 / 403, then success after restore)
+developer_guide: |
+  Detect HTTP 401 / 403 from the SHR, tell the user (or administrator) that the connection credential failed, keep the referral as not sent / queued, and never display tokens, passwords or keys in messages or logs (TB-07, TB-13).
+
+  Purpose: Expired credentials are a common cause of silent referral loss.
+validator_guide: |
+  TD-D15: the DOH revokes or expires the system credential of the test EMR (or the developer configures an invalid one). Send a referral.
+  Met only if the user sees an understandable failure, the referral remains not sent / queued, it is sent after the credential is restored, and no secret is shown.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-13
+  sources: []
+  ig_requirements: []

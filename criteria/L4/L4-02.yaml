@@ -1,0 +1,31 @@
+id: L4-02
+status: active
+section: Core-track · Back-referral
+title: 'Back-referral contains: (1) final diagnosis/outcome, (2) treatment given, (3) follow-up instructions/recommendations'
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot
+developer_guide: |
+  Include final diagnosis/outcome, treatment given, and follow-up instructions in the back-referral.
+
+  Purpose: The home facility has what it needs to continue care.
+validator_guide: |
+  Count the 3 elements present and correct at the referring EMR.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L4-02.1
+  text: Final diagnosis / outcome
+  critical: false
+- id: L4-02.2
+  text: Treatment given
+  critical: false
+- id: L4-02.3
+  text: Follow-up instructions / recommendations
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

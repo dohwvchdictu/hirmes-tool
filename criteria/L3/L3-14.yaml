@@ -1,0 +1,22 @@
+id: L3-14
+status: active
+section: Features
+title: Reports can be exported (CSV or Excel)
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator
+evidence: Exported file
+developer_guide: |
+  Provide export to CSV or Excel that matches the on-screen report.
+
+  Purpose: Data can be used for further analysis and submission.
+validator_guide: |
+  Export the linelist; Met if the file opens and matches the screen.
+  Totals reconciliation of exports is checked in L3-21.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-03
+  sources: []
+  ig_requirements: []

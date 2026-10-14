@@ -1,0 +1,52 @@
+id: L4-03
+status: active
+section: Maturity · Auto-population
+title: Referral form is pre-filled from data already in the patient's EMR record (no re-typing)
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screen recording
+developer_guide: |
+  Pre-fill the referral form from data already in the patient's record (demographics, vitals, diagnosis) instead of re-entry.
+
+  Purpose: Main gap found at the Connectathon: data was re-keyed instead of reused.
+validator_guide: |
+  Register the test patient with demographics, vitals and diagnosis first. Open a new referral and count the 10 fields listed in the Notes that are pre-filled correctly.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L4-03.1
+  text: Patient full name — pre-filled from the EMR record
+  critical: false
+- id: L4-03.2
+  text: Birth date — pre-filled from the EMR record
+  critical: false
+- id: L4-03.3
+  text: Sex — pre-filled from the EMR record
+  critical: false
+- id: L4-03.4
+  text: PhilSys number — pre-filled from the EMR record
+  critical: false
+- id: L4-03.5
+  text: PhilHealth ID — pre-filled from the EMR record
+  critical: false
+- id: L4-03.6
+  text: Patient address — pre-filled from the EMR record
+  critical: false
+- id: L4-03.7
+  text: Contact number — pre-filled from the EMR record
+  critical: false
+- id: L4-03.8
+  text: Chief complaint — pre-filled from the EMR record
+  critical: false
+- id: L4-03.9
+  text: Working impression — pre-filled from the EMR record
+  critical: false
+- id: L4-03.10
+  text: Blood pressure — pre-filled from the EMR record
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

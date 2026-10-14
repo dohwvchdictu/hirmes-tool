@@ -1,0 +1,19 @@
+id: L3-21
+status: active
+section: Edge cases
+title: Exported report totals equal the on-screen totals and the expected values
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator
+evidence: Exported files + screenshots
+developer_guide: |
+  Generate exports from the same query as the screen (IND-09).
+
+  Purpose: Data submitted outside the system must match what users saw.
+validator_guide: 'Export the linelist and the aggregate report for the Section B and Section C windows; sum the exported rows. Met only if every total equals the screen and the expected values. Calculation rule: IND-09.'
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

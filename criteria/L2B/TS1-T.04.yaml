@@ -1,0 +1,22 @@
+id: TS1-T.04
+status: active
+section: Transaction
+title: 'Onward referral: when the receiving facility refers the patient onward, the chain is kept and the prior referral is closed'
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator (server-side check)
+evidence: Server-side evidence for both ServiceRequests
+developer_guide: |
+  On onward referral: set the Task outcome to referred-onward, create a new ServiceRequest that references the previous one (ServiceRequest.replaces, per IG) and update the previous ServiceRequest status.
+
+  Purpose: Prevents a patient from appearing as referred to two places at once.
+validator_guide: |
+  Perform one onward referral; Met if the server-side evidence shows (1) Task = referred-onward, (2) the new ServiceRequest references the earlier one, and (3) the earlier ServiceRequest status changed.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability:
+  - TR-049
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

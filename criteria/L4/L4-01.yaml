@@ -1,0 +1,19 @@
+id: L4-01
+status: active
+section: Core-track · Back-referral
+title: Receiving facility sends a back-referral that arrives at the original referring facility
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots at both EMRs + SHR resource ID
+developer_guide: |
+  Implement back-referral per the PHeReF IG, sent to the SHR and addressed to the original referring facility.
+
+  Purpose: Closes the care loop — the patient's home facility knows what happened.
+validator_guide: Complete the Test Data referral and send a back-referral; Met if it appears at the referring EMR and on the SHR.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

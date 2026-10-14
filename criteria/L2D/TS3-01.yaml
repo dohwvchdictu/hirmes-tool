@@ -1,0 +1,37 @@
+id: TS3-01
+status: active
+section: Exception · Mandatory element
+title: A referral missing an element the IG makes mandatory is not shown as sent, the reason is shown to the user, and the corrected referral is accepted
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of the block / error + server-side evidence of the rejected and the accepted submission
+developer_guide: |
+  Prevent sending, OR handle the SHR rejection (HTTP 4xx with OperationOutcome) of a referral that lacks an element with minimum cardinality ≥ 1 in the PHeReF / PH Core profiles (see FHIR Traceability (Reference Guide, Ch. 5), column 'Cardinality'). Show the user which item is missing, keep the referral as not sent, and allow correction and resend.
+
+  Purpose: A referral that the SHR refused must never look 'sent' to the referring clinician.
+validator_guide: |
+  1. Use TD-D01 (patient birth date left blank) and TD-D02 (receiving facility not selected).
+  2. For each sub-item: try to submit. Met if EITHER the EMR blocks it before sending with a clear message, OR the SHR rejects it and the EMR shows the rejection in understandable terms and keeps the referral as NOT sent.
+  3. Correct the value and resend; confirm on the SHR that exactly one accepted referral exists.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-01.1
+  text: Missing Patient.birthDate (1..1) — blocked or rejection shown; referral not marked sent (TD-D01)
+  critical: true
+- id: TS3-01.2
+  text: Missing receiving facility (ServiceRequest.performer) — blocked or rejection shown (TD-D02)
+  critical: true
+- id: TS3-01.3
+  text: After correction, the referral is accepted and exactly one ServiceRequest / Task exists on the SHR
+  critical: true
+traces:
+  fhir_traceability:
+  - TR-013
+  - TR-016
+  - TR-028
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

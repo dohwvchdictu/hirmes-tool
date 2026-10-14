@@ -1,0 +1,19 @@
+id: L0-06
+status: active
+section: Access
+title: Access to the test (sandbox) endpoint requested and granted
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator
+evidence: Access confirmation
+developer_guide: |
+  Request sandbox (test endpoint) access from the Regional Validation Team and confirm a successful connection.
+
+  Purpose: The vendor can connect to the test servers.
+validator_guide: Check the confirmation email / access log from the endpoint administrator.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

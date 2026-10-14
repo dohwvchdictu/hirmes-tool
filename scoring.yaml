@@ -1,0 +1,57 @@
+# Scoring policy. Thresholds and pass rules are DOH policy: change them only with a recorded
+# TWG decision, and commit with type `policy` citing that decision.
+policy:
+  status: Proposed
+  approved_by: ''
+  date_approved: ''
+  reference: ''
+thresholds:
+  L0: 0.9
+  L1: 0.85
+  L2A: 0.85
+  L2B: 0.85
+  L2C: 0.85
+  L2D: 0.85
+  L3: 0.85
+  L4: 0.75
+levels:
+- key: L0
+  name: Level 0 — Application & Commitment
+  parts:
+  - L0
+- key: L1
+  name: Level 1 — Product Documentation
+  parts:
+  - L1
+- key: L2
+  name: Level 2 — Interoperability Testing (all parts)
+  parts:
+  - L2A
+  - L2B
+  - L2C
+  - L2D
+- key: L3
+  name: Level 3 — Reports & Dashboard
+  parts:
+  - L3
+- key: L4
+  name: Level 4 — Advanced Interoperability
+  parts:
+  - L4
+conformant_after: L3
+answers:
+  standard:
+  - Met
+  - Not Met
+  - Not Tested
+  - N/A
+  tier:
+  - Fully integrated
+  - Standalone - manual encoding
+  - Not Met
+  - Not Tested
+tier_scores:
+  Fully integrated: 1
+  Standalone - manual encoding: 0.5
+  Not Met: 0
+  Not Tested: 0

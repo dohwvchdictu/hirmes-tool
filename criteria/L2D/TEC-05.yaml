@@ -1,0 +1,20 @@
+id: TEC-05
+status: active
+section: Security
+title: Automatic log-out after inactivity
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot / configuration
+developer_guide: |
+  Log the user out, or lock the session and require re-authentication, after an idle period the facility can configure; the default must not exceed the TB-06 value.
+
+  Purpose: Unattended screens do not expose patient data.
+validator_guide: Check the configured idle period (default per TB-06), then leave a session idle for that time. Met if the user is logged out or the session is locked and requires re-authentication.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-06
+  sources: []
+  ig_requirements: []

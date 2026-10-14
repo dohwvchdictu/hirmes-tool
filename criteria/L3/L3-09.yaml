@@ -1,0 +1,21 @@
+id: L3-09
+status: active
+section: Aggregated Data
+title: Average turnaround time (TAT = date/time received − date/time referred) matches the expected value (±1 minute)
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator
+evidence: Aggregated report / data + Test Data
+developer_guide: |
+  Compute turnaround time from the recorded date/time referred and date/time received.
+
+  Purpose: TAT is a key performance measure for referral.
+validator_guide: |
+  Compare the system value with the Expected TAT in Test Data. Met if MATCH.
+  Calculation rule: IND-08.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

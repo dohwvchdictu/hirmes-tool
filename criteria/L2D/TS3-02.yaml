@@ -1,0 +1,35 @@
+id: TS3-02
+status: active
+section: Exception · Malformed data
+title: Malformed values (wrong data type or format) are prevented or the SHR rejection is handled without data loss
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots + server-side evidence (where submitted)
+developer_guide: |
+  Validate data types and formats before sending (dates in ISO 8601, numeric vital signs with UCUM units, identifier formats per PH Core), OR handle the SHR rejection clearly. Entered data must not be lost when an error occurs.
+
+  Purpose: Bad formats are caught early and do not reach other facilities.
+validator_guide: |
+  1. Use TD-D03 (impossible date, e.g., 2026-02-30), TD-D04 (non-numeric heart rate) and TD-D05 (birth date in the future).
+  2. Met per sub-item if the system blocks the value OR shows the SHR rejection clearly, and the rest of the entered referral is kept for correction.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-02.1
+  text: Impossible date (TD-D03) — prevented or rejection handled
+  critical: false
+- id: TS3-02.2
+  text: Non-numeric vital-sign value (TD-D04) — prevented or rejection handled
+  critical: false
+- id: TS3-02.3
+  text: Birth date in the future (TD-D05) — prevented or rejection handled
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-016
+  - TR-033
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

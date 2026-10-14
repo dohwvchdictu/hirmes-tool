@@ -1,0 +1,35 @@
+id: TS3-05
+status: active
+section: Exception · Interruption & retry
+title: 'Connection loss during or before sending: no data is lost, the referral is sent (automatically or by documented fallback) after recovery, and exactly one copy arrives'
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots + server-side evidence + fallback record (if manual)
+developer_guide: |
+  Queue referrals made during connection loss and resend automatically, OR provide a documented manual fallback (user manual L1-02.5). After recovery the referral must arrive once, with the original date/time referred (absorbs Rev 6 TEC-06).
+
+  Purpose: Referrals continue during outages without loss or duplication.
+validator_guide: |
+  1. TD-D10: disconnect the network, create and send a referral; reconnect.
+  2. TD-D11: interrupt the connection while a send is in progress (e.g., disable the network adapter immediately after Send).
+  3. Met per sub-item if, after recovery, exactly one copy is on the SHR with the original authoredOn, and the user was told the status (queued / failed / sent).
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS3-05.1
+  text: Offline creation (TD-D10) — queued or documented fallback followed; user sees status
+  critical: true
+- id: TS3-05.2
+  text: Interruption mid-send (TD-D11) — no loss; exactly one copy after recovery
+  critical: true
+- id: TS3-05.3
+  text: Original date/time referred kept after delayed sending (ServiceRequest.authoredOn)
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-023
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

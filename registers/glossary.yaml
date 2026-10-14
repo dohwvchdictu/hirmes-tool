@@ -1,0 +1,669 @@
+title: Glossary
+source: Technical Reference Guide (legacy Rev 9)
+sections:
+- section: 2.1 Validation process and roles2.1 Validation process and roles2.1 Validation process and roles
+  terms:
+  - term: Validation process
+    meaning: 'The four steps this tool follows: 1.0 Registration, 2.0 Assessment of submitted documents, 3.0 Validation (testing), 4.0 Issuance of certificate.'
+  - term: Applicant
+    meaning: The vendor or in-house developer that applies to have its EMR system validated.
+  - term: Vendor / developer
+    meaning: The company (third-party EMR provider) or the facility's own IT team (in-house developer) that builds and maintains the EMR system.
+  - term: Third-party EMR provider / in-house system
+    meaning: 'Applicant categories: a commercial product offered to many facilities, or a system developed by or for one facility / LGU.'
+  - term: Regional Validation Team
+    meaning: 'The team that conducts the evaluation: 1 Technical Lead, 2 to 3 Validators, 1 Administrator and 1 to 2 Observers. Recorded in System Profile section C.'
+  - term: Technical Lead
+    meaning: Supervises the evaluation, decides on equivalent controls, and approves the validation results and the conformance decision.
+  - term: Validator
+    meaning: Conducts the testing using the Validator's Guide, records results and evidence references, re-tests corrected items and recommends approval.
+  - term: Administrator
+    meaning: Processes the application, assigns the Application No., keeps the logbook and evidence repository, schedules sessions, invites Observers and facilitates signing of the certificate.
+  - term: Observer
+    meaning: A representative of an LGU, hospital, academic or research institution or other agency who witnesses the validation to ensure unbiased processing. Observers do not score.
+  - term: Conducting office
+    meaning: The DOH office or region that conducts the validation (System Profile C.14); printed on the report letterhead.
+  - term: Application No.
+    meaning: The reference number the Administrator assigns when the application is registered (System Profile A.0).
+  - term: Letter of application
+    meaning: The signed letter by which the vendor formally applies for validation (L0-01).
+  - term: Authorized signatory / proof of authority
+    meaning: The officer allowed to sign for the company, shown by a document such as a secretary's certificate, board resolution or office order.
+  - term: Undertaking
+    meaning: A signed promise by the vendor — here, to follow the IGs, to be re-tested after changes, and to use only test data (L0-04).
+  - term: Attestation (signed)
+    meaning: A signed statement by an authorized officer that something is true (e.g., that backups are encrypted), accepted as evidence when the full document is confidential.
+  - term: Confidentiality undertaking
+    meaning: A signed promise by the Regional Validation Team to use the vendor's evidence only for this validation and keep it private.
+  - term: Coordination meeting
+    meaning: The first meeting between the vendor's contact persons and the Regional Validation Team before testing (L0-05).
+  - term: Sign-Off
+    meaning: The signature section of the Printed Evaluation Report; names come from System Profile section C.
+  - term: Conforme
+    meaning: Signature of the vendor's authorized signatory acknowledging the evaluation result.
+  - term: Certificate of conformance
+    meaning: The document issued after approval stating that a specific product version passed Levels 0 to 3 (see Chapter 7).
+  - term: Conformance / conformant
+    meaning: Meeting the rules of the standard. A system is conformant for use in the HIE when Levels 0 to 3 are PASSED and no critical item is Not Met.
+  - term: Revalidation
+    meaning: Repeating the validation (fully or partly) after a new major release, a change in the IGs, or another trigger in Chapter 7.
+  - term: Retest / regression test
+    meaning: 'Retest: testing a failed item again after the vendor corrects it. Regression test: re-testing related items to make sure a change did not break them; needed when the build changes.'
+  - term: Deployment type (cloud / on-premise / hybrid)
+    meaning: 'Where the system runs: on an internet provider''s servers (cloud), on the facility''s own servers (on-premise), or both (hybrid).'
+  - term: Certificate validity
+    meaning: 'How long a certificate remains valid before revalidation is due (proposed: 2 years or until a major change / IG major version).'
+  - term: Release / version / build
+    meaning: A release is a published version of the software; the version or build number identifies exactly which code was tested (System Profile A.3 and D.1).
+  - term: Release notes
+    meaning: The vendor's list of what changed in a version (L1-06).
+  - term: Major change / minor change / patch
+    meaning: Change classes that decide whether a new version needs full revalidation, partial regression testing or only a notice (Chapter 7).
+  - term: Transition period
+    meaning: 'The time allowed for certified systems to adopt a new IG version before revalidation is due (proposed: 6 months).'
+  - term: Surveillance
+    meaning: Spot checks of a certified system in production to confirm it still conforms.
+  - term: Suspension / revocation
+    meaning: Temporary (suspension) or permanent (revocation) withdrawal of a certificate for the reasons listed in Chapter 7.
+  - term: Proposed (policy value)
+    meaning: A threshold, default or rule drafted in this tool that takes effect only after DOH approval is recorded on the Summary sheet.
+  - term: Provisional result
+    meaning: A conformance result shown while the pass thresholds are still PROPOSED.
+  - term: DOH policy default
+    meaning: A value (e.g., idle time-out of 15 minutes) set by the DOH before evaluation and applied equally to all systems; may be adjusted only by the DOH.
+  - term: Equivalent control
+    meaning: A different security measure the vendor considers equal to or stronger than the Technical Baseline; accepted only if the Technical Lead approves it before testing.
+  - term: Connectathon
+    meaning: 'An interoperability testing event where vendors exchange data with each other; items tagged "(Connectathon Issue #n)" come from the June 2026 PHeReF Connectathon issue log.'
+- section: 2.2 Workbook, scoring and reporting terms2.2 Workbook, scoring and reporting terms2.2 Workbook, scoring and reporting terms
+  terms:
+  - term: Level
+    meaning: One of five gated stages (0 to 4). Each must be PASSED before the next counts.
+  - term: Gate
+    meaning: A level or part that must be passed before the next one counts. TS0 is the gate inside Level 2.
+  - term: Part (2A to 2D)
+    meaning: 'The four sub-sections of Level 2: 2A TS0 Terminology & Registries, 2B TS1 Submission, 2C TS2 Retrieval, 2D Security, Reliability & Exception Handling.'
+  - term: Test Scenario (TS)
+    meaning: 'A scripted test performed on the sandbox: TS0 terminology, TS1 submission, TS2 retrieval, TS3 exception (error-path) scenarios. Not a real-world use of the EMR.'
+  - term: TEC
+    meaning: Prefix of the TECHNICAL security and reliability criteria in Level 2D (TEC-01 to TEC-14), e.g., encryption, accounts, roles, audit log, backup.
+  - term: TS3 (exception scenarios)
+    meaning: 'The error-path tests in Level 2D (TS3-01 to TS3-09): missing or malformed data, invalid references, duplicate submission, interruption and retry, partial failure, service outage, credential failure, receiving-side outage.'
+  - term: Core-track / Maturity
+    meaning: Level 4 tags. Core-track items are fundamental and will move to Level 2 when the IG models them; Maturity items stay optional targets.
+  - term: Criterion / Ref ID
+    meaning: One requirement row with its own ID (e.g., TS1-04). IDs are never renumbered or reused.
+  - term: Sub-item (↳)
+    meaning: One countable part of a Count criterion, with its own ID (e.g., TS1-04.2).
+  - term: Critical criterion (★ / "Yes")
+    meaning: A criterion that must be Met for the level to pass, whatever the score.
+  - term: ★ Critical sub-item
+    meaning: A sub-item that must be Met; if it is Not Met or N/A the whole criterion counts as a critical failure, although other sub-items still give partial credit. Shown as "★ subs" in the Critical column of the parent.
+  - term: Binary scoring
+    meaning: Met = 100%, Not Met = 0%.
+  - term: Count scoring
+    meaning: 'Partial credit: score = sub-items Met ÷ applicable sub-items (e.g., 8 of 10 = 80%).'
+  - term: All-or-nothing scoring
+    meaning: Marked like Count, but 100% only when every sub-item is Met; otherwise 0%.
+  - term: Tier scoring / integration level
+    meaning: 'Used only for L1-04: Fully integrated = 100%; Standalone – manual encoding = 50%; Not Met = 0%.'
+  - term: Fully integrated / standalone – manual encoding
+    meaning: 'Fully integrated: patient details already in the EMR reach the referral without re-typing. Standalone – manual encoding: some details must be typed again.'
+  - term: Info only (W0)
+    meaning: An item recorded for information, with weight 0, that does not affect the score.
+  - term: Weight (W)
+    meaning: 'How much a criterion counts in the score: critical items 2, others 1, information-only 0.'
+  - term: Required (n) / Achieved (n)
+    meaning: 'For Count criteria: number of applicable sub-items / number Met (calculated).'
+  - term: Result
+    meaning: The evaluator's choice for a row (Met, Not Met, Not Tested, N/A, or the Tier level); for Count criteria it is calculated ("Counted").
+  - term: Not Tested
+    meaning: Not yet evaluated; scores 0% and makes the sheet INCOMPLETE.
+  - term: N/A (not applicable)
+    meaning: Removes a non-critical item from the score; on a critical item it counts as Not Met. The reason must be written in Notes.
+  - term: Outstanding
+    meaning: The column that lists automatically which sub-items still need compliance.
+  - term: Needs compliance
+    meaning: A criterion or sub-item that is Not Met or only partly met; listed automatically in report section D.
+  - term: Threshold / pass mark
+    meaning: The minimum level score needed to pass (Summary column D).
+  - term: PASSED / NOT PASSED / INCOMPLETE / LOCKED
+    meaning: 'Sheet and level statuses: all tested, critical items Met and threshold reached / a condition failed / some items Not Tested / previous level not yet passed.'
+  - term: Evaluation progress
+    meaning: Share of items already evaluated (not the score).
+  - term: Count register
+    meaning: The live table on the Summary sheet that counts criteria, critical items and sub-items per part; quote these figures in presentations.
+  - term: Developer's Guide / Validator's Guide
+    meaning: 'For each row: what the vendor must prepare or implement / the steps the Validators follow to verify it.'
+  - term: Evidence / evidence reference
+    meaning: 'What a result is based on, written in the Notes column: file or screenshot name, SHR resource ID and version, IOL transaction ID.'
+  - term: Evidence option (documents)
+    meaning: 'The ways a vendor may prove a confidential design: full document, redacted copy plus signed attestation, independent certification, or view-only presentation.'
+  - term: Redacted
+    meaning: With confidential parts blacked out or removed.
+  - term: View-only presentation / "sighted"
+    meaning: The vendor shows a document on screen without handing it over; the Validator records it as "sighted".
+  - term: Server-side check / server-side evidence
+    meaning: 'Verification done on the Shared Health Record, not on the EMR screen, using one of: the Interoperability Layer log, a validator / Inferno report, or the raw request and response payload.'
+  - term: Black-box testing
+    meaning: Testing by using the system as a user would, without seeing its source code or internals.
+  - term: Design-neutral (outcome-based)
+    meaning: A criterion states WHAT must be achieved, not HOW; the vendor's technology choices are never scored.
+  - term: Test Data
+    meaning: 'The fictional values and expected results in the Test Data sheet: Section A test referral, Section B 10 known referrals, Section C Level 3 edge cases, Section D error inputs.'
+  - term: Reconciliation set / reconciliation
+    meaning: Known test referrals whose expected report values are calculated in advance; reconciliation means checking that the system's reports equal those values.
+  - term: Edge case / boundary case
+    meaning: An unusual but valid situation (e.g., a referral at 23:50 on the last day of a month) used to check that rules hold at the limits.
+  - term: Pre-loaded fixtures
+    meaning: Test records the DOH places on the SHR in advance with fixed timestamps (Test Data Section C).
+  - term: Placeholder [bracketed value]
+    meaning: A value in brackets in the Test Data that must be replaced with the official dummy value issued by the DOH.
+  - term: Dummy / fictional / synthetic data
+    meaning: Made-up test values that do not belong to any real person or facility.
+  - term: Printed Evaluation Report
+    meaning: The A4 report sheet that collects all results automatically for printing and signing; it has no input cells.
+  - term: Letterhead
+    meaning: The heading at the top of each report page (Republic of the Philippines · Department of Health · conducting office).
+  - term: Retired / moved ID
+    meaning: A criterion ID no longer used on its sheet; it is never reused (list in section 2.12).
+- section: 2.3 Health care, referral and reporting terms2.3 Health care, referral and reporting terms2.3 Health care, referral and reporting terms
+  terms:
+  - term: eReferral (electronic referral)
+    meaning: Sending a patient referral from one facility to another electronically through the HIE instead of on paper.
+  - term: Referring (initiating) facility / receiving facility
+    meaning: The facility that sends the referral / the facility the patient is referred to. In testing these are TEST facilities on the sandbox.
+  - term: Back-referral
+    meaning: The receiving facility's report back to the original facility after care (final diagnosis, treatment, follow-up instructions).
+  - term: Onward / multi-tier referral
+    meaning: A receiving facility refers the patient further (e.g., primary → district → apex hospital); each step must stay linked to the previous one.
+  - term: Referral chain
+    meaning: The linked sequence of referrals for one patient episode.
+  - term: Referral status
+    meaning: 'Where the referral stands: requested, received, accepted, rejected (declined), completed, cancelled; also referred onward.'
+  - term: Deferred / denied, redirected
+    meaning: 'Report categories: the receiving facility declined the referral (deferred / denied) or sent the patient elsewhere (redirected).'
+  - term: Cancelled (revoked) referral
+    meaning: A referral withdrawn by the referring facility before it is completed.
+  - term: Care navigator
+    meaning: The staff member assigned to coordinate a referral; at the receiving side recorded as the Task owner.
+  - term: Referral category
+    meaning: Emergency or Outpatient referral (PHeReF Referral Category value set).
+  - term: Priority
+    meaning: How urgent a referral is (e.g., routine, urgent, stat — "stat" means immediately).
+  - term: Reason for referral (service type)
+    meaning: 'What is requested of the receiving facility: Consultation, Diagnostics, Procedure or Others.'
+  - term: Chief complaint
+    meaning: The patient's main problem in their own words (e.g., headache and blurred vision).
+  - term: Working impression
+    meaning: The referring clinician's provisional diagnosis, coded in ICD-10.
+  - term: Clinical history
+    meaning: The relevant past and present medical history written by the referring clinician.
+  - term: Vital signs
+    meaning: 'Basic body measurements: blood pressure (BP), heart rate (HR), respiratory rate (RR), oxygen saturation (SpO2), body temperature and body weight.'
+  - term: BP / HR / RR / SpO2
+    meaning: Blood pressure; heart rate (beats per minute); respiratory (breathing) rate per minute; oxygen saturation (% of oxygen in the blood).
+  - term: mmHg
+    meaning: Millimetres of mercury — the unit of blood pressure (written mm[Hg] in UCUM).
+  - term: G2P1, 34 weeks AOG
+    meaning: 'Obstetric shorthand in the test case: gravida 2 (second pregnancy), para 1 (one previous delivery); AOG = age of gestation (pregnancy length) in weeks.'
+  - term: Severe pre-eclampsia
+    meaning: A dangerous pregnancy condition with very high blood pressure (ICD-10 O14.1); used as the fictional test diagnosis.
+  - term: Initial stabilization
+    meaning: First treatment given to make the patient safe before transfer.
+  - term: Encounter
+    meaning: A patient visit or stay at a facility (e.g., the emergency visit at the referring facility).
+  - term: Next of kin / accompanying person
+    meaning: The relative or companion who comes with the patient or can be contacted.
+  - term: Civil status
+    meaning: Marital status (single, married, widowed, etc.).
+  - term: De-duplication (patient matching)
+    meaning: Making sure the same patient exists only once on the SHR by matching PhilSys / PhilHealth identifiers before creating a new record (TS1-16).
+  - term: Time Called / mode of transportation
+    meaning: When the receiving facility was called about the referral, and how the patient travels (e.g., ambulance); recorded for information only until the IG defines them.
+  - term: Laboratory result attachment
+    meaning: A file (usually PDF) of lab results sent with the referral.
+  - term: Professional signature
+    meaning: The referring practitioner's signature on the referral, recorded with its date and time.
+  - term: HCPN (Health Care Provider Network)
+    meaning: A group of facilities organised under the Universal Health Care Act to provide coordinated care; the referring facility's network.
+  - term: RHU / Infirmary / Level 1, 2, 3 hospital
+    meaning: 'Facility service capability: Rural Health Unit (primary care), infirmary, and hospital levels of increasing capability.'
+  - term: Facility ownership (government / private)
+    meaning: Whether a facility is publicly or privately owned (used in Level 3 reports).
+  - term: Linelist
+    meaning: A report listing each referral as one row.
+  - term: Aggregated data / aggregate report
+    meaning: Summary counts (totals) rather than individual records.
+  - term: Disaggregation
+    meaning: Breaking a total down by groups such as sex, age group, municipality or facility.
+  - term: Numerator / denominator
+    meaning: The top and bottom of a calculated rate or average (e.g., total minutes ÷ number of referrals received).
+  - term: TAT (turnaround time)
+    meaning: Minutes from the time a referral is sent to the time it is first received.
+  - term: Top morbidity
+    meaning: The most frequent diagnoses (working impressions) among referred cases, ranked.
+  - term: Dashboard
+    meaning: A summary screen of indicators for managers.
+  - term: De-identified
+    meaning: Data with names and identifiers removed so a person cannot be recognised.
+  - term: Reporting period / month rule
+    meaning: Referrals are counted in the month of the date referred (ServiceRequest.authoredOn) in Philippine Standard Time (IND-01).
+  - term: Indicator / indicator definition
+    meaning: A measure shown in reports, and its documented calculation rule (Chapter 6).
+  - term: Pop-up / alert notification
+    meaning: An on-screen message telling the receiving user that a new referral arrived, without manual refresh.
+  - term: Universal Health Care (UHC) Act
+    meaning: Republic Act 11223 (2019), which calls for integrated, coordinated health services and networks.
+- section: 2.4 Interoperability and FHIR terms2.4 Interoperability and FHIR terms2.4 Interoperability and FHIR terms
+  terms:
+  - term: Interoperability
+    meaning: The ability of different systems to exchange data and use it correctly without re-typing.
+  - term: HIE (Health Information Exchange)
+    meaning: The network through which facilities exchange patient and referral data using the national FHIR standards via the Shared Health Record.
+  - term: SHR (Shared Health Record)
+    meaning: The central FHIR server where referrals and related records are stored and from which receiving facilities retrieve them.
+  - term: IOL (Interoperability Layer)
+    meaning: The middleware between the EMRs and the SHR that routes, authenticates and logs every transaction (e.g., OpenHIM).
+  - term: OpenHIM
+    meaning: Open Health Information Mediator — open-source interoperability-layer software that keeps a log of each transaction.
+  - term: Sandbox / test environment
+    meaning: The DOH test servers used for validation; only fictional data is used there.
+  - term: Endpoint / base URL
+    meaning: The internet address of a server or service the EMR connects to.
+  - term: API (Application Programming Interface)
+    meaning: A defined way for one system to request data or actions from another.
+  - term: HL7
+    meaning: Health Level Seven International — the organisation that publishes health data standards, including FHIR.
+  - term: FHIR
+    meaning: Fast Healthcare Interoperability Resources — the HL7 standard for exchanging health data as "resources" over the web.
+  - term: FHIR R4 (4.0.1)
+    meaning: Release 4 of FHIR, the version required by Technical Baseline TB-10.
+  - term: IG (Implementation Guide)
+    meaning: A published set of FHIR rules for a country or use case.
+  - term: PH Core IG
+    meaning: 'The Philippine base FHIR rules: patient, practitioner, organization, identifiers, addresses, etc.'
+  - term: PHeReF IG
+    meaning: 'The Philippine eReferral FHIR rules built on PH Core: referral request, task, clinical content, value sets.'
+  - term: TDG / CDG
+    meaning: Technical Design Group / Clinical Design Group of the PHeReF IG project, which maintain the technical mappings and clinical content.
+  - term: UPM-NTHC
+    meaning: University of the Philippines Manila — National Telehealth Center, which hosts the PH Core and PHeReF IG source (GitHub) and the SNOMED CT National Release Center.
+  - term: Resource
+    meaning: One type of FHIR record, such as Patient or ServiceRequest. Each stored resource has a resource ID.
+  - term: Resource ID / version
+    meaning: The server's identifier of a stored resource, and its version number (meta.versionId); old versions can be read through _history.
+  - term: Profile / StructureDefinition
+    meaning: A profile constrains a FHIR resource for local use (which elements are required, which codes are allowed); it is published as a StructureDefinition.
+  - term: meta.profile
+    meaning: The element in which a resource declares which profile it follows (TS1-T.03).
+  - term: Canonical URL
+    meaning: The permanent web address that identifies a profile, value set or code system (e.g., https://fhir.doh.gov.ph/pheref/StructureDefinition/ereferral-task).
+  - term: Snapshot
+    meaning: The fully expanded form of a profile showing every element with its final rules; used to build the FHIR Traceability table.
+  - term: Element / element path
+    meaning: One field inside a resource, written as Resource.element (e.g., Patient.birthDate).
+  - term: Cardinality (0..1, 1..1, 0..*, 1..*)
+    meaning: 'How many times an element may or must appear: minimum..maximum. 1..1 = exactly once (mandatory); 0..* = optional, repeating.'
+  - term: Mandatory element
+    meaning: An element with minimum cardinality 1; a resource without it is invalid.
+  - term: Must Support (MS)
+    meaning: 'An IG flag: the sender must send the element when the data exists and the receiver must be able to use it.'
+  - term: Slice
+    meaning: A named sub-type of a repeating element in a profile (e.g., PHCorePhilSysID and PHCorePhilHealthID of Patient.identifier; NhfrCode of Organization.identifier).
+  - term: Extension
+    meaning: An extra element defined by an IG for data the base FHIR standard does not have (e.g., PWD registration, PSGC address parts).
+  - term: Binding / binding strength
+    meaning: 'The link between a coded element and its value set. Strength: required (only those codes), extensible, preferred or example (illustration only).'
+  - term: Fixed value
+    meaning: A value the profile requires exactly (e.g., ServiceRequest.intent = order).
+  - term: Reference
+    meaning: A link from one resource to another (e.g., ServiceRequest.subject → Patient).
+  - term: Bundle / transaction Bundle
+    meaning: 'A Bundle is a package of resources. A transaction Bundle is processed all-or-nothing: either every entry is saved or none.'
+  - term: Interaction (create, read, update, search; POST, PUT, GET)
+    meaning: 'The operations a system performs on a FHIR server: create (HTTP POST), update (HTTP PUT), read / search (HTTP GET).'
+  - term: Conditional update / conditional create (If-None-Exist)
+    meaning: A create or update that first searches for an existing match (e.g., Patient by PhilSys number) so that no duplicate is made.
+  - term: Business identifier
+    meaning: An identifier assigned by the business process (e.g., a referral number), used to recognise the same referral across systems.
+  - term: Idempotent sending
+    meaning: Sending the same referral more than once leaves the same single result on the server.
+  - term: Polling / subscription / notification
+    meaning: 'Ways the receiving EMR learns of new referrals: asking the server regularly (polling), registering to be told (subscription), or receiving a message from the IOL (notification).'
+  - term: Payload / request / response
+    meaning: The data sent to the server (request), what the server sends back (response), and the content they carry (payload).
+  - term: HTTP status code (2xx, 4xx, 401, 403)
+    meaning: 'The server''s reply code: 2xx = success (200 OK, 201 Created); 4xx = request error; 401 = not authenticated; 403 = not allowed.'
+  - term: OperationOutcome
+    meaning: The FHIR resource a server returns to explain errors or warnings (e.g., why a submission was rejected).
+  - term: CapabilityStatement
+    meaning: A FHIR resource (or equivalent document) listing which resources and interactions a system supports (L1-03).
+  - term: $validate
+    meaning: A FHIR operation that checks a resource against its profile and reports errors.
+  - term: $expand
+    meaning: A terminology-server operation that lists all codes of a value set.
+  - term: $validate-code
+    meaning: A terminology-server operation that checks whether one code belongs to a value set or code system.
+  - term: Validator report / Inferno
+    meaning: Output of the official HL7 FHIR validator or of Inferno (an open-source FHIR testing tool) showing errors found in submitted resources.
+  - term: Terminology server
+    meaning: A server that holds code systems and value sets and answers $expand / $validate-code requests; the DOH HIE terminology server runs Ontoserver.
+  - term: Ontoserver
+    meaning: A commercial FHIR terminology server used for the DOH HIE terminology server.
+  - term: JSON / XML
+    meaning: Text formats for structured data; FHIR resources are sent as JSON (application/fhir+json) or XML.
+  - term: UTF-8
+    meaning: The standard character encoding that supports all letters, including ñ.
+  - term: ISO 8601
+    meaning: The international date-time format, e.g., 2026-10-14T09:30:00+08:00.
+  - term: Philippine Standard Time (PST) / UTC
+    meaning: Local time (UTC+8) / Coordinated Universal Time, the world reference time.
+  - term: URI / URL
+    meaning: Uniform Resource Identifier / Locator — a text identifier or web address (e.g., an identifier system).
+  - term: Identifier system
+    meaning: The URI that says which numbering scheme an identifier belongs to (e.g., http://philsys.gov.ph/fhir/Identifier/philsys-id).
+  - term: Hardcoded
+    meaning: Written directly into program code or screens instead of taken from the official source.
+  - term: Data type
+    meaning: The kind of value an element holds (date, number, code, text).
+  - term: Malformed
+    meaning: Not in the correct format (e.g., an impossible date, letters in a number).
+  - term: Orphan / half-saved record
+    meaning: Part of a referral left on the server after a failed submission, without the rest of the referral.
+  - term: Error path / negative test / exception scenario
+    meaning: A test that deliberately sends wrong or incomplete data or interrupts the exchange, to check the system fails safely.
+  - term: Partial failure
+    meaning: Some parts of a submission succeed and others fail.
+  - term: Queue / retry / fallback
+    meaning: Holding a referral to send later (queue), sending again after failure (retry), and the documented manual alternative when the system cannot send (fallback).
+  - term: Downtime / outage
+    meaning: A period when a server, service or network is unavailable.
+  - term: Cached copy / scheduled sync
+    meaning: A local copy of a code list or registry kept by the EMR (cache), refreshed at set times (scheduled sync).
+  - term: SMART on FHIR
+    meaning: A standard for launching apps inside an EMR with secure access to FHIR data (removed from Level 4 in Rev 6).
+  - term: Traceability (FHIR Traceability matrix)
+    meaning: The table linking each data requirement to its FHIR profile, element, rules and the criteria that test it (Chapter 5).
+  - term: IG discrepancy
+    meaning: A difference between this tool and the published IG that the TDG must resolve.
+  - term: REF-n (TDG row)
+    meaning: Row numbers in the TDG's eReferral data mapping (e.g., REF-15 Time Called).
+- section: 2.5 FHIR resources used in eReferral2.5 FHIR resources used in eReferral2.5 FHIR resources used in eReferral
+  terms:
+  - term: ERef… profiles (ERefPatient, ERefServiceRequest, ERefTask, ERefPractitionerRole, ERefRelatedPerson, ERefEncounter, ERefDiagnosticReport …)
+    meaning: 'The PHeReF profile names: "ERef" + the FHIR resource, i.e., the eReferral version of that resource with its Philippine rules.'
+  - term: PHCore… profiles / PHCorePhilSysID, PHCorePhilHealthID
+    meaning: The PH Core profile names, and the identifier slices for the PhilSys number and PhilHealth ID.
+  - term: ExampleERefSubmissionBundle
+    meaning: The example referral submission (transaction Bundle) published in the PHeReF IG; shows the expected interactions.
+  - term: Patient
+    meaning: 'The person being referred: name, identifiers, birth date, sex, address, contacts.'
+  - term: Practitioner
+    meaning: A health worker as a person (name, licence).
+  - term: PractitionerRole
+    meaning: A practitioner's role at a specific facility (e.g., doctor at Facility A); used as the requester and as the care navigator.
+  - term: Organization
+    meaning: A health facility or network (name, NHFR code, address).
+  - term: RelatedPerson
+    meaning: A relative or companion of the patient (next of kin / accompanying person).
+  - term: ServiceRequest
+    meaning: 'The referral itself: what is requested, by whom, for whom, why, how urgent.'
+  - term: Task
+    meaning: Tracks the referral workflow and its status (requested, received, accepted, rejected, completed).
+  - term: Condition
+    meaning: A problem or diagnosis — chief complaint and working impression.
+  - term: Observation
+    meaning: A measurement such as a vital sign.
+  - term: DiagnosticReport
+    meaning: A laboratory or imaging report, which can carry the attached result file.
+  - term: MedicationAdministration / Procedure
+    meaning: Treatment given before referral — a medicine given / a procedure performed.
+  - term: Encounter
+    meaning: The visit at the referring facility during which the referral was made.
+  - term: Provenance
+    meaning: Who did what and when to a record — used for the professional signature and its date/time.
+  - term: AuditEvent
+    meaning: A FHIR resource for audit-log entries (one accepted way to store the audit trail).
+  - term: CodeSystem / ValueSet
+    meaning: A full list of codes from one source / the subset of codes allowed for a specific field.
+- section: 2.6 FHIR elements named in the criteria2.6 FHIR elements named in the criteria2.6 FHIR elements named in the criteria
+  terms:
+  - term: identifier
+    meaning: An ID number of a resource (e.g., Patient.identifier = PhilSys / PhilHealth number; Organization.identifier = NHFR code).
+  - term: name / telecom / address / gender / birthDate / maritalStatus
+    meaning: Person or facility name; contact numbers / e-mail; address (with PSGC codes); administrative sex; date of birth; civil status.
+  - term: contact / contact.relationship
+    meaning: A patient's next of kin or companion and how they are related.
+  - term: code / category
+    meaning: The main coded meaning of a record / its classification (e.g., ServiceRequest.category = Emergency or Outpatient).
+  - term: subject
+    meaning: The patient a record is about.
+  - term: requester / performer / owner
+    meaning: Who asks for the referral (referring PractitionerRole) / who is expected to perform it (receiving facility) / who is responsible for the Task (receiving facility or care navigator).
+  - term: focus
+    meaning: The record a Task is about (Task.focus → the ServiceRequest).
+  - term: intent
+    meaning: The kind of request; fixed to "order" for referrals.
+  - term: status / statusReason / businessStatus
+    meaning: Workflow state of a record / why it is in that state (e.g., reason for rejection) / a local workflow state such as "referred onward".
+  - term: authoredOn
+    meaning: When the referral or task was created (date/time referred).
+  - term: lastModified / executionPeriod
+    meaning: When the Task was last updated / when the work started and ended.
+  - term: reasonCode / reasonReference
+    meaning: Coded reason for referral / link to a Condition or Observation that explains it.
+  - term: priority
+    meaning: Urgency of the request (routine, urgent, asap, stat).
+  - term: occurrence[x]
+    meaning: When the requested service should happen; per the IG comment, may hold Time Called.
+  - term: supportingInfo / relevantHistory / replaces
+    meaning: Links to supporting clinical records / to Provenance records / to the earlier referral that this one replaces (onward referral).
+  - term: value[x] / valueQuantity / component
+    meaning: The measured value of an Observation, with its unit / the parts of a panel such as systolic and diastolic blood pressure.
+  - term: presentedForm
+    meaning: An attached file (e.g., a PDF lab result) in a DiagnosticReport.
+  - term: signature / recorded
+    meaning: The digital signature in Provenance / the date-time it was recorded.
+  - term: note
+    meaning: Free-text comment (used for clinical history).
+  - term: _history / meta.versionId
+    meaning: The list of previous versions of a resource / the current version number.
+- section: 2.7 Code systems, value sets and registries2.7 Code systems, value sets and registries2.7 Code systems, value sets and registries
+  terms:
+  - term: EReferralPriority / EReferralReason / EReferralReceivingResponse
+    meaning: PHeReF value sets for referral priority, reason for referral (service type), and the receiving facility's response (received, accepted, rejected, referred onward).
+  - term: PSGC API operations (provincesByRegion, municipalityByProvince, barangayByMunicipality)
+    meaning: Look-up functions of the PSA PSGC service that return the provinces of a region, municipalities of a province and barangays of a municipality.
+  - term: DSWD API operations (getUBID, verifyPCN)
+    meaning: dxCLOUD functions to look up a Unified Beneficiary Database ID and to verify a PhilSys Card Number (PCN).
+  - term: PCN
+    meaning: PhilSys Card Number — the number printed on the national ID card.
+  - term: Code / code system / value set
+    meaning: A code is a short identifier for a concept (e.g., 73770003 = Emergency); a code system is the full catalogue; a value set is the list allowed for one field.
+  - term: Display text
+    meaning: The official human-readable label of a code.
+  - term: SNOMED CT
+    meaning: Systematized Nomenclature of Medicine — Clinical Terms; international clinical terminology used for practitioner role, referral category and reason for referral.
+  - term: LOINC
+    meaning: Logical Observation Identifiers Names and Codes; used for vital signs (e.g., 85354-9 blood pressure panel).
+  - term: ICD-10
+    meaning: International Classification of Diseases, 10th revision (WHO); used for the working impression and top morbidity (e.g., J18.9, O14.1, I10, A09).
+  - term: UCUM
+    meaning: Unified Code for Units of Measure (e.g., mm[Hg], /min, %, Cel for °C, kg).
+  - term: AdministrativeGender
+    meaning: 'FHIR value set for sex: male, female, other, unknown.'
+  - term: ContactPointSystem / ContactPointUse
+    meaning: FHIR value sets for the type of contact (phone, e-mail …) and its use (home, work, mobile …).
+  - term: MaritalStatus
+    meaning: FHIR value set for civil status.
+  - term: TaskStatus / RequestPriority
+    meaning: FHIR value sets for task states and request urgency.
+  - term: RelatedPerson relationship type (v3 RoleCode)
+    meaning: HL7 version 3 codes for relationships (next of kin, spouse, parent, guardian …).
+  - term: HL7 v2 table 0203
+    meaning: HL7 version 2 list of identifier types used to label PhilSys / PhilHealth identifiers.
+  - term: PSOC / PCW
+    meaning: Philippine Standard Occupational Classification (used for Barangay Health Worker) / Primary Care Worker code in the PHeReF practitioner-role list.
+  - term: Registry (national)
+    meaning: An official master list kept by a government agency (facilities, health workers, places).
+  - term: NHFR
+    meaning: National Health Facility Registry (DOH) — official list and codes of health facilities.
+  - term: NHWR
+    meaning: National Health Workforce Registry (DOH) — official list of health workers.
+  - term: PRC licence
+    meaning: Professional Regulation Commission licence number of a health professional.
+  - term: PSGC
+    meaning: Philippine Standard Geographic Code (PSA) — official codes of regions, provinces, cities / municipalities and barangays.
+  - term: Barangay
+    meaning: The smallest local government unit in the Philippines.
+  - term: PhilSys number
+    meaning: The national ID number issued by the Philippine Identification System (PSA).
+  - term: PhilHealth ID (PIN)
+    meaning: The PhilHealth Identification Number of a member or dependent.
+  - term: PWD registration
+    meaning: Registration as a person with disability; sent through a PH Core extension.
+  - term: DSWD UBD / Listahanan / Pantawid (4Ps)
+    meaning: 'DSWD beneficiary databases: Unified Beneficiary Database, the national household targeting system, and the Pantawid Pamilyang Pilipino Program.'
+  - term: dxCLOUD API
+    meaning: DSWD's data-exchange service; optional source for household / beneficiary IDs (TS0-08).
+  - term: Release (of a code system or registry)
+    meaning: A dated edition of a terminology or registry (e.g., PSGC 2024 release); the release used must match the DOH server.
+- section: 2.8 Security and reliability terms2.8 Security and reliability terms2.8 Security and reliability terms
+  terms:
+  - term: Encryption in transit / at rest
+    meaning: Scrambling data while it travels over the network (in transit) / while stored on disks and backups (at rest), so others cannot read it.
+  - term: HTTPS / TLS / SSL
+    meaning: Secure web connection (HTTPS) using Transport Layer Security (TLS 1.2 or 1.3 required). SSL and TLS 1.0 / 1.1 are older, insecure versions.
+  - term: Certificate (TLS) / certificate authority (CA)
+    meaning: A digital document proving a server's identity, issued by a trusted certificate authority. Self-signed, expired or host-name-mismatched certificates are not accepted.
+  - term: Cipher suite / forward secrecy
+    meaning: The set of encryption methods a TLS connection uses; forward secrecy (ECDHE / DHE key exchange) keeps past traffic safe even if a key is later stolen.
+  - term: AES / AES-GCM / ChaCha20-Poly1305
+    meaning: Strong modern encryption methods (AES-128 or AES-256).
+  - term: RSA / ECDSA
+    meaning: Methods used for certificate keys (RSA ≥ 2048-bit, ECDSA ≥ P-256).
+  - term: RC4 / DES / 3DES / NULL / EXPORT ciphers
+    meaning: Weak or no-encryption methods that are not accepted.
+  - term: MD5 / SHA-1 / SHA-256
+    meaning: Hash functions. MD5 and SHA-1 are broken; a single fast SHA-256 is not acceptable for passwords.
+  - term: Hash / salted adaptive hash
+    meaning: A one-way fingerprint of a password; "salted adaptive" means a random value is added and the calculation is deliberately slow (Argon2id, bcrypt, scrypt, PBKDF2) — TB-04.
+  - term: Key / key management (KMS, HSM, vault)
+    meaning: Encryption keys must be stored separately from the data, e.g., in a key management service, a hardware security module (HSM) or a secrets vault.
+  - term: Full-disk / volume encryption (BitLocker, LUKS) / TDE
+    meaning: Encrypting a whole disk (Windows BitLocker, Linux LUKS) or a database (transparent data encryption).
+  - term: Authentication / authorization
+    meaning: Proving who you are (log-in) / what you are allowed to do.
+  - term: MFA / OTP
+    meaning: Multi-factor authentication — a second proof besides the password, such as a one-time password (OTP) by app, SMS or e-mail.
+  - term: SSO / LDAP / Active Directory / OpenID Connect
+    meaning: 'Ways to sign in with one central account: single sign-on, directory services, and a web sign-in standard.'
+  - term: RBAC (role-based access control)
+    meaning: 'Access by role: referring clinician, receiving clinician, administrator, report viewer (TEC-03).'
+  - term: Access boundary
+    meaning: The limit of what a user may see or do — by role and by facility (TEC-09).
+  - term: User enumeration
+    meaning: Discovering valid user names from different error messages; prevented by identical messages (TEC-09.1).
+  - term: Lock-out / throttling
+    meaning: Blocking or slowing log-in after repeated failed attempts (TB-05).
+  - term: Direct object reference (IDOR)
+    meaning: Changing a record ID in a web address or API call to open someone else's record; must be blocked (TEC-09.3).
+  - term: Privilege escalation
+    meaning: A user gaining rights they were not given (e.g., making themselves administrator) — must be impossible (TEC-09.4).
+  - term: Session / token / session time-out
+    meaning: A logged-in period; a token is the digital pass that represents it. Idle sessions end after the time-out (TB-06).
+  - term: Replay
+    meaning: Re-sending an old request or session to get access again; must be refused after log-out (TEC-10.1).
+  - term: Revocation / deactivation
+    meaning: Removing a user's or system's access; deactivated accounts must lose access within the TB-12 limit.
+  - term: System-to-system authentication (OAuth 2.0 client credentials, SMART Backend Services, mutual TLS, API key, JWT)
+    meaning: How the EMR proves its identity to the SHR without a person logging in; the method is issued by the SHR operator (TB-07). JWT = JSON Web Token, a signed digital pass.
+  - term: Secrets
+    meaning: Passwords, tokens and keys; must never appear in browser code, URLs, messages or logs.
+  - term: Information leakage / stack trace / SQL
+    meaning: 'Showing internal details in errors: a stack trace is a programming error dump; SQL is the database query language.'
+  - term: Audit trail / audit log
+    meaning: A record of who did what and when (TB-08); must be append-only — entries cannot be edited or deleted.
+  - term: Security event
+    meaning: A security-relevant action such as a failed log-in, role change or account deactivation.
+  - term: SIEM
+    meaning: Security Information and Event Management — a central system that collects and analyses logs.
+  - term: NTP / synchronised clock
+    meaning: Network Time Protocol — keeps server clocks accurate so log times can be trusted.
+  - term: Rate limiting / abuse control
+    meaning: Limiting the number of requests a client can make, to protect an internet-facing API (TEC-13).
+  - term: Man-in-the-middle (MITM)
+    meaning: An attacker secretly intercepting a connection; prevented by verifying certificates.
+  - term: Denial-of-service
+    meaning: Making a service unavailable by flooding it with requests.
+  - term: Reverse proxy / API gateway / load balancer / TLS termination
+    meaning: Servers in front of an application that forward traffic, enforce security and handle the TLS connection.
+  - term: VAPT
+    meaning: Vulnerability assessment and penetration test — an independent security assessment that looks for weaknesses and tries to exploit them; required as evidence by TEC-14, not performed by this tool.
+  - term: Authenticated vulnerability scan
+    meaning: An automated scan for known weaknesses run with a valid log-in, so it can see more of the system.
+  - term: Critical / high finding (security)
+    meaning: The most serious weaknesses reported by a VAPT or scan.
+  - term: Security conformance testing vs VAPT
+    meaning: This tool checks that defined controls work (black-box). It does not replace a VAPT or a full cybersecurity assessment.
+  - term: Backup / restore / system-only data
+    meaning: Copies of data kept to recover from loss, and recovering them; system-only data = user accounts, roles, audit log and configuration that exist only in the EMR (TB-09, TEC-07).
+  - term: Privacy-by-design / privacy-by-default
+    meaning: Building privacy into the system and collecting / showing only the data needed by default (TB-11).
+  - term: Data minimisation / retention / disposal / anonymisation
+    meaning: Collecting only what is needed / keeping it only as long as required / deleting it securely / removing identity from it.
+  - term: Lawful basis
+    meaning: The legal reason under the Data Privacy Act for processing personal data.
+  - term: Personal information / sensitive personal information
+    meaning: Data that identifies a person; sensitive personal information includes health data and government IDs (RA 10173).
+  - term: DPO / PIA
+    meaning: Data Protection Officer / Privacy Impact Assessment — facility-level duties under the NPC rules, outside this tool.
+  - term: SLA (service level agreement)
+    meaning: A contract stating the service levels a vendor commits to (e.g., support response time); facility-level, outside this tool.
+  - term: Data sharing agreement
+    meaning: A contract governing exchange of personal data between parties; facility-level, outside this tool.
+  - term: Workstation / source IP
+    meaning: The computer or network address from which an action was done (recorded in the audit log).
+  - term: UI
+    meaning: User interface — the screens of the system.
+  - term: CSV / Excel / PDF / A4
+    meaning: File formats for exported data (comma-separated values, spreadsheet), printable documents, and the paper size used for the report.
+- section: 2.9 Agencies, laws, standards and tools2.9 Agencies, laws, standards and tools2.9 Agencies, laws, standards and tools
+  terms:
+  - term: DOH / CHD / ICTU
+    meaning: Department of Health / Center for Health Development (DOH regional office) / Information and Communications Technology Unit.
+  - term: DICT
+    meaning: Department of Information and Communications Technology.
+  - term: PhilHealth
+    meaning: Philippine Health Insurance Corporation.
+  - term: PSA
+    meaning: Philippine Statistics Authority — issues PSGC and runs PhilSys.
+  - term: DSWD
+    meaning: Department of Social Welfare and Development.
+  - term: PRC
+    meaning: Professional Regulation Commission.
+  - term: LGU
+    meaning: Local Government Unit.
+  - term: NPC / NPC Circular 2023-06
+    meaning: National Privacy Commission / its circular on the Security of Personal Data in government and private sectors.
+  - term: RA 10173 (Data Privacy Act of 2012)
+    meaning: The Philippine law protecting personal information.
+  - term: RA 11223
+    meaning: Universal Health Care Act.
+  - term: WHO
+    meaning: World Health Organization (publishes ICD-10).
+  - term: NIST / NIST SP 800-52, 800-63B
+    meaning: US National Institute of Standards and Technology / its Special Publications on TLS configuration and digital identity (passwords, MFA).
+  - term: OWASP / ASVS
+    meaning: Open Worldwide Application Security Project / its Application Security Verification Standard.
+  - term: ISO/IEC 27001 / SOC 2
+    meaning: International information-security management standard / an independent audit report on a service provider's security controls.
+  - term: RFC
+    meaning: Request for Comments — a published internet standard (e.g., for date-time formats).
+  - term: testssl.sh / nmap ssl-enum-ciphers
+    meaning: Free tools used to scan a server's TLS settings (TEC-01).
+  - term: JavaScript
+    meaning: The programming language running in web browsers; secrets must not be placed in it.
+  - term: GitHub
+    meaning: The online service where the PH Core and PHeReF IG sources are published.

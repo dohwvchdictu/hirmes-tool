@@ -1,0 +1,20 @@
+id: TEC-02
+status: active
+section: Security
+title: Each user has a unique account; no shared logins
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: User account list
+developer_guide: |
+  Require one account per user; no generic or shared accounts. Protect accounts per TB-05 (minimum password length, failed-attempt lock-out or throttling, no default passwords). Any identity method is acceptable (local accounts, LDAP / Active Directory, single sign-on, OpenID Connect).
+
+  Purpose: Every action can be traced to a person.
+validator_guide: Check that the system requires a unique account per user and that no generic/shared accounts are used for test referrals. Then try (a) a password shorter than the TB-05 minimum and (b) repeated failed log-ins. Met only if all three behave as TB-05 requires.
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-05
+  sources: []
+  ig_requirements: []

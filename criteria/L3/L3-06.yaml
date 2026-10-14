@@ -1,0 +1,35 @@
+id: L3-06
+status: active
+section: Aggregated Data
+title: Top reasons for referral are counted and ranked correctly
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Report screenshot + Test Data
+developer_guide: |
+  Count and rank referrals by reason for referral.
+
+  Purpose: Shows the true pattern of referral needs.
+validator_guide: |
+  Count the 4 reason values that show MATCH in Test Data.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Calculation rule: IND-06.
+sub_items:
+- id: L3-06.1
+  text: 'Reason: Consultation matches'
+  critical: false
+- id: L3-06.2
+  text: 'Reason: Diagnostics matches'
+  critical: false
+- id: L3-06.3
+  text: 'Reason: Procedure matches'
+  critical: false
+- id: L3-06.4
+  text: 'Reason: Others matches'
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

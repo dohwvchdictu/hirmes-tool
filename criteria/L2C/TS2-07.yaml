@@ -1,0 +1,44 @@
+id: TS2-07
+status: active
+section: Vital signs
+title: Vital signs are retrieved and displayed correctly (value and unit)
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of receiving EMR + server-side evidence / resource ID
+developer_guide: |
+  Read the Observation resources from the SHR and display it in the receiving view exactly as sent — no re-typing. Screen layout and labels are the vendor's choice; the value and its meaning must match.
+
+  Purpose: Vital signs are shown exactly as measured.
+validator_guide: |
+  1. Open the received Test Data referral in the receiving EMR.
+  2. Compare each sub-item on screen with the Test Data value (write what is seen in Test Data column D).
+  3. Confirm with the server-side evidence that the value was read from the SHR, not typed in.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS2-07.1
+  text: Blood pressure (systolic / diastolic)
+  critical: true
+- id: TS2-07.2
+  text: Heart rate
+  critical: false
+- id: TS2-07.3
+  text: Respiratory rate
+  critical: false
+- id: TS2-07.4
+  text: Oxygen saturation
+  critical: false
+- id: TS2-07.5
+  text: Body temperature
+  critical: false
+- id: TS2-07.6
+  text: Body weight
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-033
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

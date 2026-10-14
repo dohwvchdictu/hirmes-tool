@@ -1,0 +1,24 @@
+id: TS1-05
+status: active
+section: Accompanying person
+title: Accompanied By / Next of Kin is submitted correctly
+critical: 'no'
+weight: 1
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Send the accompanying person / next of kin (name, relationship, contact number) as a RelatedPerson (ERefRelatedPerson) per the IG. Patient.contact is accepted as an equivalent while the IG is in draft, provided the values are complete and pass $validate. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+
+  Purpose: The receiving facility knows who is with the patient and whom to contact.
+validator_guide: |
+  1. Enter the Test Data value and submit.
+  2. In the server-side evidence, find the RelatedPerson (or Patient.contact) and compare name, relationship and contact number with the Test Data.
+  Met only if all three match.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability:
+  - TR-022
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

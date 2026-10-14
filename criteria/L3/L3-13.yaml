@@ -1,0 +1,31 @@
+id: L3-13
+status: active
+section: Features
+title: Pop-up or alert notification for each new incoming referral, without manual refresh (from DOH draft)
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator
+evidence: Screen recording / screenshots
+developer_guide: |
+  Show an alert / pop-up for each new incoming referral.
+
+  Purpose: Staff are alerted immediately.
+validator_guide: |
+  Submit 3 referrals; count the ones that trigger a notification automatically.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-13.1
+  text: 'Test referral #1 triggered an alert automatically'
+  critical: false
+- id: L3-13.2
+  text: 'Test referral #2 triggered an alert automatically'
+  critical: false
+- id: L3-13.3
+  text: 'Test referral #3 triggered an alert automatically'
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

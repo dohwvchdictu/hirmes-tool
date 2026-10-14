@@ -1,0 +1,42 @@
+id: TS0-06
+status: active
+section: Registry
+title: 'Geographic, facility and health-worker values come from the official national registries and match them: PSGC, NHFR, NHWR'
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of each field + registry / server response
+developer_guide: |
+  Take PSGC codes from the PSA PSGC release announced by the DOH (SRC-10), facility codes from the NHFR (SRC-11) and practitioner identifiers from the NHWR / PRC (SRC-12). How the registry is accessed (API, scheduled sync or official download) is the vendor's choice; the release must match the DOH server.
+
+  Purpose: PSGC and NHFR are critical — the receiving facility finds its referrals by NHFR code (TS2-01) and the Level 3 reports group by facility and municipality.
+validator_guide: |
+  1. Open each field listed as a sub-item and compare the values with the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4).
+  2. Server-side check: confirm the submitted codes exist in that registry / the DOH terminology server.
+  3. For NHFR (TS0-06.2): try to type a facility that is not in the NHFR — the system must only allow selecting NHFR facilities (absorbs Rev 6 L4-09).
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS0-06.1
+  text: PSGC code — Philippine Standard Geographic Code (PSA)
+  critical: true
+- id: TS0-06.2
+  text: NHFR code — National Health Facility Registry; facilities selected only from the NHFR, not free-typed (absorbs Rev 6 L4-09)
+  critical: true
+- id: TS0-06.3
+  text: NHWR — health worker identifier / licence no. (National Health Workforce Registry)
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-003
+  - TR-004
+  - TR-007
+  - TR-008
+  - TR-009
+  - TR-019
+  technical_baseline: []
+  sources:
+  - SRC-10
+  - SRC-11
+  - SRC-12
+  ig_requirements: []

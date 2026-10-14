@@ -1,0 +1,50 @@
+id: TS0-02
+status: active
+section: PHeReF
+title: 'PHeReF coded elements: values match the official PHeReF value sets (not locally invented)'
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of each dropdown + server response ($expand / $validate-code)
+developer_guide: |
+  Use the PHeReF value sets for each coded field — sources SRC-01 to SRC-04 and SRC-09. Use the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4) — for coded values, the DOH HIE terminology server (runtime look-up, scheduled sync or cached copy: vendor's choice).
+  Referral Category → ServiceRequest.category (Referral Category VS, SNOMED CT: 73770003 Emergency / 440655000 Outpatient — required). Priority → ServiceRequest.priority (EReferralPriority: routine / urgent / stat — required). Reason for Referral → ServiceRequest.reasonCode (Reason for Referral (Service Type) VS, SNOMED CT). Practitioner Role → PractitionerRole.code (Practitioner Role VS — required). Task status → Task.status (FHIR TaskStatus: requested, received, accepted, rejected, completed).
+
+  Purpose: TS1, TS2 and the Level 3 reports cannot work if these codes are wrong — all five are critical.
+validator_guide: |
+  1. Check that the system's configured terminology endpoint is the DOH HIE terminology server (Terminology & Registry Sources — Reference Guide, Ch. 4).
+  2. Open each field / dropdown listed as a sub-item and compare the options with the value set on the server ($expand), or check the submitted code ($validate-code).
+  3. A sub-item is Met only if every option / submitted code belongs to the bound value set.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS0-02.1
+  text: Practitioner Role — PHeReF Practitioner Role VS (required binding)
+  critical: true
+- id: TS0-02.2
+  text: Referral Category — PHeReF Referral Category VS, SNOMED CT Emergency / Outpatient (required binding)
+  critical: true
+- id: TS0-02.3
+  text: 'Priority — EReferralPriority: routine / urgent / stat (required binding)'
+  critical: true
+- id: TS0-02.4
+  text: Reason for Referral (service type) — PHeReF Reason for Referral VS, SNOMED CT
+  critical: true
+- id: TS0-02.5
+  text: Task status — FHIR TaskStatus (requested / received / accepted / rejected / completed)
+  critical: true
+traces:
+  fhir_traceability:
+  - TR-010
+  - TR-024
+  - TR-025
+  - TR-026
+  - TR-038
+  technical_baseline: []
+  sources:
+  - SRC-01
+  - SRC-02
+  - SRC-03
+  - SRC-04
+  - SRC-09
+  ig_requirements: []

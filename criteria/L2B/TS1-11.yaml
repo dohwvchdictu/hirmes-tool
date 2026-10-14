@@ -1,0 +1,34 @@
+id: TS1-11
+status: active
+section: Signature
+title: Professional signature and its date / time are submitted
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the Provenance (EReferral Provenance) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: Provenance.signature; Provenance.recorded; Provenance.target → ServiceRequest.
+
+  Purpose: The referral is attested by an accountable professional.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the Provenance in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-11.1
+  text: Professional signature — Provenance.signature
+  critical: false
+- id: TS1-11.2
+  text: Date & time of signature — Provenance.recorded
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-036
+  - TR-037
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

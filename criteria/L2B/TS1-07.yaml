@@ -1,0 +1,39 @@
+id: TS1-07
+status: active
+section: Clinical findings
+title: Chief complaint, working impression and clinical history are submitted correctly
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the Condition (EReferral Condition) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: Chief complaint → Condition.code.text (category problem-list-item); working impression → Condition.code (ICD-10 / SNOMED CT; category encounter-diagnosis), referenced from ServiceRequest.reasonReference; clinical history → Condition.note.
+  Source: SRC-06, SRC-08 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+
+  Purpose: The receiving clinician understands the clinical reason for the referral.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the Condition in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-07.1
+  text: Chief complaint — Condition.code.text
+  critical: false
+- id: TS1-07.2
+  text: Working impression — Condition.code (coded)
+  critical: true
+- id: TS1-07.3
+  text: Clinical history — Condition.note
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-030
+  - TR-031
+  - TR-032
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

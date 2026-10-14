@@ -1,0 +1,42 @@
+id: TEC-09
+status: active
+section: Access boundaries
+title: 'Access boundaries hold: failed log-ins are handled safely, users cannot see or act on another facility''s referrals, and users cannot raise their own privileges'
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots / HTTP responses per step (black-box)
+developer_guide: |
+  Enforce authorisation on the SERVER side for every screen and API call: by role (TEC-03) and by facility (a user acts only for the facility/ies assigned). Reject guessed or changed record IDs that belong to another facility. Use generic log-in error messages and lock-out / throttling per TB-05.
+
+  Purpose: Prevents the most common real-world breaches — staff or outsiders reading records they are not entitled to.
+validator_guide: |
+  Use two test accounts: User A (referring clinician, Facility A) and User B (receiving clinician, Facility B), plus TD-D18 to TD-D21.
+  1. Enter a wrong password for a valid user and for a non-existent user: messages must be identical; after the TB-05 limit the account is locked or throttled.
+  2. As User A, try to open a referral addressed only to Facility C (list, search, direct link).
+  3. Change the referral / patient ID in the URL or API call to one belonging to Facility C.
+  4. As a non-administrator, open an administrator page by direct URL / API and try to change your own role.
+  5. Call the EMR's API without a valid session / token.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TEC-09.1
+  text: 'Failed log-in: generic message (no user enumeration) and lock-out / throttling per TB-05 (TD-D18)'
+  critical: false
+- id: TEC-09.2
+  text: Cross-facility access blocked — referrals of another facility cannot be listed, searched or opened (TD-D19)
+  critical: true
+- id: TEC-09.3
+  text: Direct object reference blocked — changing an ID in the URL / API does not reveal another facility's data (TD-D20)
+  critical: true
+- id: TEC-09.4
+  text: No privilege escalation — admin functions unreachable by direct URL / API; users cannot change their own role (TD-D21)
+  critical: true
+- id: TEC-09.5
+  text: Requests without a valid session / token are refused (HTTP 401 / 403 or redirect to log-in)
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

@@ -1,0 +1,168 @@
+title: Terminology & Registry Sources (SRC-)
+source: Technical Reference Guide (legacy Rev 9)
+entries:
+- ref: SRC-01
+  group: Terminology
+  source_authority: PHeReF IG (DOH / TDG)
+  concept: Practitioner role
+  used_in: TS1-03.2, TS2-03.2, TS2-10.3
+  what_the_system_must_use: PHeReF Practitioner Role value set (SNOMED CT codes, e.g., 158965000 Doctor). Store code, system and display.
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06) — ValueSet/$expand, CodeSystem/$validate-code
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-02.1, TS0-04.1
+  notes_doh_decision: null
+- ref: SRC-02
+  group: Terminology
+  source_authority: PHeReF IG (DOH / TDG)
+  concept: Referral category
+  used_in: TS1-06.2, TS2-05.2
+  what_the_system_must_use: 'PHeReF Referral Category value set → ServiceRequest.category (SNOMED CT: 73770003 Emergency; 440655000 Outpatient). Required binding.'
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06)
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-02.2, TS0-04.2
+  notes_doh_decision: null
+- ref: SRC-03
+  group: Terminology
+  source_authority: PHeReF IG (DOH / TDG)
+  concept: Reason for referral (service type)
+  used_in: TS1-06.4, TS2-05.4, L3-06
+  what_the_system_must_use: PHeReF Reason for Referral (Service Type) value set → ServiceRequest.reasonCode (e.g., Consultation — SNOMED CT 11429006)
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06)
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-02.4, TS0-04.3
+  notes_doh_decision: null
+- ref: SRC-04
+  group: Terminology
+  source_authority: PHeReF IG / base FHIR
+  concept: Referral status (Task status)
+  used_in: TS1-12.1, TS2-11, TS2-12
+  what_the_system_must_use: 'FHIR TaskStatus as used by the PHeReF Task profile: requested (referring) → received → accepted / rejected → completed (receiving); referred-onward outcome per IG'
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06)
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-02.5
+  notes_doh_decision: null
+- ref: SRC-05
+  group: Terminology
+  source_authority: PH Core IG (DOH)
+  concept: Sex; contact point system / use; civil status; next-of-kin relationship (Rev 7)
+  used_in: TS1-01.5, TS1-04.5, TS1-04.8, TS2-04.6, TS0-01.3, TS0-01.4
+  what_the_system_must_use: 'Base FHIR value sets bound in PH Core: AdministrativeGender; ContactPointSystem / ContactPointUse Rev 7: also MaritalStatus (Patient.maritalStatus) and RelatedPerson relationship type (Patient.contact.relationship) — required bindings in ERefPatient (PHeReF v0.1.0).'
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06)
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-01
+  notes_doh_decision: null
+- ref: SRC-06
+  group: Terminology
+  source_authority: SNOMED CT — National Release Center (UP Manila NTHC, DOH stewardship)
+  concept: Codes the IG binds to SNOMED CT (practitioner role, referral category, reason for referral)
+  used_in: TS1 / TS2 coded elements
+  what_the_system_must_use: system = http://snomed.info/sct; edition / version loaded on the DOH terminology server
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06) — $validate-code
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-05.1
+  notes_doh_decision: null
+- ref: SRC-07
+  group: Terminology
+  source_authority: LOINC (Regenstrief)
+  concept: Vital-sign Observation codes
+  used_in: TS1-08, TS2-07
+  what_the_system_must_use: 'system = http://loinc.org; FHIR vital-signs codes: 85354-9 BP panel (8480-6 systolic, 8462-4 diastolic), 8867-4 heart rate, 9279-1 respiratory rate, 2708-6 oxygen saturation, 8310-5 body temperature, 29463-7 body weight'
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06) — $validate-code
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-05.2
+  notes_doh_decision: null
+- ref: SRC-08
+  group: Terminology
+  source_authority: ICD-10 (WHO; as adopted by DOH / PhilHealth)
+  concept: Working impression / diagnosis
+  used_in: TS1-07.2, TS2-06.2, L3-16
+  what_the_system_must_use: system = http://hl7.org/fhir/sid/icd-10 — where the IG version binds Condition.code to ICD-10
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06) — $validate-code
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required where bound (N/A if the IG binds SNOMED CT only)
+  tested_in: TS0-05.3
+  notes_doh_decision: null
+- ref: SRC-09
+  group: Terminology
+  source_authority: PHeReF IG (DOH / TDG)
+  concept: Referral priority
+  used_in: TS1-06.3, TS2-05.3
+  what_the_system_must_use: EReferralPriority value set → ServiceRequest.priority (routine / urgent / stat). Required binding.
+  where_to_retrieve_verify: DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06) — $validate-code
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-02.3
+  notes_doh_decision: 'Rev 7 note: the 9 Sep 2026 v0.1.0 build does not profile ServiceRequest.priority (base RequestPriority only); EReferralPriority exists only in the workflow-branch build — TDG to confirm (see FHIR Traceability TR-025).'
+- ref: SRC-10
+  group: Registry
+  source_authority: PSA — Philippine Standard Geographic Code (PSGC)
+  concept: Region, province, city / municipality, barangay in addresses
+  used_in: TS1-01.4, TS1-02.3, TS1-04.7, L3-15
+  what_the_system_must_use: 'PSGC code using the PSGC CodeSystem URL published in PH Core (must match exactly — Connectathon Issue #32). PSGC release announced by the DOH for the test cycle. Note: 2024 releases use a 9-digit code, 2025 and later releases a 10-digit code (as described in the DSWD dxCLOUD PSGC documentation).'
+  where_to_retrieve_verify: 'Authoritative: PSA Statistical Classification Systems — https://classification.psa.gov.ph/ . Machine-readable: PSGC CodeSystem on the DOH HIE terminology server (Ontoserver, read-only, pre-loaded; base URL issued with sandbox access — L0-06); alternative API: DSWD dxCLOUD API — https://dxcloud.dswd.gov.ph/api/documentation (GET /api/psgc/regions, /provincesByRegion, /municipalityByProvince, /barangayByMunicipality; "version" parameter)'
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable; the release used must equal the one on the DOH terminology server
+  requirement: Required
+  tested_in: TS0-06.1
+  notes_doh_decision: null
+- ref: SRC-11
+  group: Registry
+  source_authority: DOH — National Health Facility Registry (NHFR)
+  concept: Health facility code / name (referring and receiving)
+  used_in: TS1-01.3, TS1-02.2, TS2-02.3, TS2-02.7, TS2-01, L4-09
+  what_the_system_must_use: NHFR facility code as Organization.identifier per PH Core; name as registered
+  where_to_retrieve_verify: NHFR — https://nhfr.doh.gov.ph (official list), or the facility list loaded by the DOH on the sandbox
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable; no free-typed facilities
+  requirement: Required (codes are critical in TS1 / TS2)
+  tested_in: TS0-06.2
+  notes_doh_decision: null
+- ref: SRC-12
+  group: Registry
+  source_authority: DOH — National Health Workforce Registry (NHWR); PRC licence
+  concept: Practitioner identifier / licence no.
+  used_in: TS1-03.1, TS2-03.1, TS2-10.1
+  what_the_system_must_use: 'Practitioner.identifier per PH Core (PRC licence no.; practitioner identifier model still pending — Connectathon Issue #10)'
+  where_to_retrieve_verify: NHWR (DOH) / list issued by the DOH for the sandbox
+  retrieval_method_allowed: Runtime look-up, scheduled sync or cached copy (vendor's choice); endpoint must be configurable
+  requirement: Required
+  tested_in: TS0-06.3
+  notes_doh_decision: null
+- ref: SRC-13
+  group: Registry
+  source_authority: PhilHealth
+  concept: PhilHealth ID (PIN)
+  used_in: TS1-04.3, TS2-04.3, L4-08
+  what_the_system_must_use: 'Patient.identifier — PH Core PhilHealth slice (PHCorePhilHealthID): identifier system and format exactly as published in PH Core'
+  where_to_retrieve_verify: Format validation in the system; PhilHealth verification service only where PhilHealth makes one available for the sandbox
+  retrieval_method_allowed: Validate before save / send
+  requirement: CRITICAL
+  tested_in: TS0-07.1
+  notes_doh_decision: null
+- ref: SRC-14
+  group: Registry
+  source_authority: PSA — Philippine Identification System (PhilSys)
+  concept: PhilSys number
+  used_in: TS1-04.2, TS2-04.2, L4-08
+  what_the_system_must_use: 'Patient.identifier — PH Core PhilSys slice (PHCorePhilSysID): identifier system and format exactly as published in PH Core'
+  where_to_retrieve_verify: 'Format validation in the system. Optional live verification: PhilSys Verifier (DICT / PSA), e.g., through DSWD dxCLOUD API — https://dxcloud.dswd.gov.ph/api/documentation POST /api/person/verifyPCN or /api/person/verify — JWT bearer token (POST /api/auth/login); only under an agreement with DSWD and a data sharing arrangement (NPC Circular 2023-06 §20)'
+  retrieval_method_allowed: Validate before save / send
+  requirement: CRITICAL
+  tested_in: TS0-07.2
+  notes_doh_decision: null
+- ref: SRC-15
+  group: Registry
+  source_authority: DSWD — Unified Beneficiary Database (UBD) / Listahanan / Pantawid
+  concept: DSWD household / beneficiary identifier (Household No. or UBD ID)
+  used_in: Patient record (no TS1 / TS2 element yet)
+  what_the_system_must_use: Patient.identifier — slice and system to be defined by the TDG (not yet in PH Core / PHeReF)
+  where_to_retrieve_verify: DSWD dxCLOUD API — https://dxcloud.dswd.gov.ph/api/documentation — POST /api/person/getUBID, /api/person/getInfo, /api/person/verifyPantawid (JWT bearer). A household-number look-up endpoint is not listed in the documentation as viewed on 5 Oct 2026 — confirm with DSWD ICT.
+  retrieval_method_allowed: Only after DSWD grants API access and a data sharing agreement is in place
+  requirement: OPTIONAL — not scored
+  tested_in: TS0-08
+  notes_doh_decision: null

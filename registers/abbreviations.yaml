@@ -1,0 +1,237 @@
+title: Abbreviations
+source: Technical Reference Guide (legacy Rev 9)
+entries:
+- abbreviation: A4
+  stands_for: International paper size (210 × 297 mm)
+- abbreviation: AES
+  stands_for: Advanced Encryption Standard
+- abbreviation: AOG
+  stands_for: Age of gestation
+- abbreviation: API
+  stands_for: Application Programming Interface
+- abbreviation: ASVS
+  stands_for: Application Security Verification Standard (OWASP)
+- abbreviation: BP
+  stands_for: Blood pressure
+- abbreviation: CA
+  stands_for: Certificate authority
+- abbreviation: CDG
+  stands_for: Clinical Design Group
+- abbreviation: CHD
+  stands_for: Center for Health Development
+- abbreviation: CSV
+  stands_for: Comma-separated values (file)
+- abbreviation: DES / 3DES
+  stands_for: Data Encryption Standard (obsolete)
+- abbreviation: DHE / ECDHE
+  stands_for: (Elliptic-curve) Diffie–Hellman ephemeral key exchange
+- abbreviation: DICT
+  stands_for: Department of Information and Communications Technology
+- abbreviation: DOH
+  stands_for: Department of Health
+- abbreviation: DPO
+  stands_for: Data Protection Officer
+- abbreviation: DSWD
+  stands_for: Department of Social Welfare and Development
+- abbreviation: ECDSA
+  stands_for: Elliptic Curve Digital Signature Algorithm
+- abbreviation: EMR
+  stands_for: Electronic Medical Record
+- abbreviation: FHIR
+  stands_for: Fast Healthcare Interoperability Resources
+- abbreviation: GCM
+  stands_for: Galois/Counter Mode (of AES)
+- abbreviation: HCPN
+  stands_for: Health Care Provider Network
+- abbreviation: HIE
+  stands_for: Health Information Exchange
+- abbreviation: HL7
+  stands_for: Health Level Seven International
+- abbreviation: HR
+  stands_for: Heart rate
+- abbreviation: HSM
+  stands_for: Hardware security module
+- abbreviation: HTTP / HTTPS
+  stands_for: Hypertext Transfer Protocol / … Secure
+- abbreviation: ICD-10
+  stands_for: International Classification of Diseases, 10th revision
+- abbreviation: ICT / ICTU
+  stands_for: Information and Communications Technology / … Unit
+- abbreviation: ID
+  stands_for: Identifier
+- abbreviation: IDOR
+  stands_for: Insecure direct object reference
+- abbreviation: IEC
+  stands_for: International Electrotechnical Commission
+- abbreviation: IG
+  stands_for: Implementation Guide
+- abbreviation: IND
+  stands_for: Indicator definition (Level 3 rule)
+- abbreviation: IOL
+  stands_for: Interoperability Layer
+- abbreviation: IP
+  stands_for: Internet Protocol (address)
+- abbreviation: ISO
+  stands_for: International Organization for Standardization
+- abbreviation: JSON
+  stands_for: JavaScript Object Notation
+- abbreviation: JWT
+  stands_for: JSON Web Token
+- abbreviation: KMS
+  stands_for: Key management service
+- abbreviation: L0–L4
+  stands_for: Levels 0 to 4 of this tool
+- abbreviation: LDAP
+  stands_for: Lightweight Directory Access Protocol
+- abbreviation: LGU
+  stands_for: Local Government Unit
+- abbreviation: LOINC
+  stands_for: Logical Observation Identifiers Names and Codes
+- abbreviation: LUKS
+  stands_for: Linux Unified Key Setup (disk encryption)
+- abbreviation: MD5
+  stands_for: Message Digest 5 (obsolete hash)
+- abbreviation: MFA
+  stands_for: Multi-factor authentication
+- abbreviation: MITM
+  stands_for: Man-in-the-middle
+- abbreviation: MS
+  stands_for: Must Support
+- abbreviation: N/A
+  stands_for: Not applicable
+- abbreviation: NHFR
+  stands_for: National Health Facility Registry
+- abbreviation: NHWR
+  stands_for: National Health Workforce Registry
+- abbreviation: NIST
+  stands_for: National Institute of Standards and Technology (US)
+- abbreviation: NPC
+  stands_for: National Privacy Commission
+- abbreviation: NTHC
+  stands_for: National Telehealth Center (UP Manila)
+- abbreviation: NTP
+  stands_for: Network Time Protocol
+- abbreviation: OS
+  stands_for: Operating system
+- abbreviation: OTP
+  stands_for: One-time password
+- abbreviation: OWASP
+  stands_for: Open Worldwide Application Security Project
+- abbreviation: PBKDF2
+  stands_for: Password-Based Key Derivation Function 2
+- abbreviation: PCN
+  stands_for: PhilSys Card Number
+- abbreviation: PCW
+  stands_for: Primary Care Worker
+- abbreviation: PDF
+  stands_for: Portable Document Format
+- abbreviation: PH Core
+  stands_for: Philippine Core FHIR Implementation Guide
+- abbreviation: PHeReF
+  stands_for: Philippine eReferral FHIR Implementation Guide
+- abbreviation: PIA
+  stands_for: Privacy Impact Assessment
+- abbreviation: PIN
+  stands_for: PhilHealth Identification Number
+- abbreviation: PRC
+  stands_for: Professional Regulation Commission
+- abbreviation: PSA
+  stands_for: Philippine Statistics Authority
+- abbreviation: PSGC
+  stands_for: Philippine Standard Geographic Code
+- abbreviation: PSOC
+  stands_for: Philippine Standard Occupational Classification
+- abbreviation: PST
+  stands_for: Philippine Standard Time (UTC+8)
+- abbreviation: PWD
+  stands_for: Person with disability
+- abbreviation: R4
+  stands_for: FHIR Release 4
+- abbreviation: RA
+  stands_for: Republic Act
+- abbreviation: RBAC
+  stands_for: Role-based access control
+- abbreviation: RC4
+  stands_for: Rivest Cipher 4 (obsolete)
+- abbreviation: RFC
+  stands_for: Request for Comments (internet standard)
+- abbreviation: RHU
+  stands_for: Rural Health Unit
+- abbreviation: RR
+  stands_for: Respiratory rate
+- abbreviation: RSA
+  stands_for: Rivest–Shamir–Adleman (encryption method)
+- abbreviation: SHA
+  stands_for: Secure Hash Algorithm
+- abbreviation: SHR
+  stands_for: Shared Health Record
+- abbreviation: SIEM
+  stands_for: Security Information and Event Management
+- abbreviation: SLA
+  stands_for: Service level agreement
+- abbreviation: SMART
+  stands_for: Substitutable Medical Applications, Reusable Technologies (SMART on FHIR)
+- abbreviation: SMS
+  stands_for: Short Message Service (text message)
+- abbreviation: SNOMED CT
+  stands_for: Systematized Nomenclature of Medicine — Clinical Terms
+- abbreviation: SOC 2
+  stands_for: System and Organization Controls 2 (audit report)
+- abbreviation: SP
+  stands_for: Special Publication (NIST)
+- abbreviation: SpO2
+  stands_for: Peripheral oxygen saturation
+- abbreviation: SQL
+  stands_for: Structured Query Language
+- abbreviation: SRC
+  stands_for: Terminology / registry source (Chapter 4)
+- abbreviation: SSL
+  stands_for: Secure Sockets Layer (obsolete)
+- abbreviation: SSO
+  stands_for: Single sign-on
+- abbreviation: TAT
+  stands_for: Turnaround time
+- abbreviation: TB
+  stands_for: Technical Baseline item (Chapter 3)
+- abbreviation: TD-D
+  stands_for: Test Data Section D input
+- abbreviation: TDE
+  stands_for: Transparent data encryption
+- abbreviation: TDG
+  stands_for: Technical Design Group
+- abbreviation: TEC
+  stands_for: Technical security & reliability criterion (Level 2D)
+- abbreviation: TLS
+  stands_for: Transport Layer Security
+- abbreviation: TR
+  stands_for: FHIR Traceability row (Chapter 5)
+- abbreviation: TS / TS0–TS3
+  stands_for: Test Scenario 0 to 3
+- abbreviation: UBD
+  stands_for: Unified Beneficiary Database (DSWD)
+- abbreviation: UCUM
+  stands_for: Unified Code for Units of Measure
+- abbreviation: UHC
+  stands_for: Universal Health Care
+- abbreviation: UI
+  stands_for: User interface
+- abbreviation: UP / UPM
+  stands_for: University of the Philippines / … Manila
+- abbreviation: URI / URL
+  stands_for: Uniform Resource Identifier / Locator
+- abbreviation: UTC
+  stands_for: Coordinated Universal Time
+- abbreviation: UTF-8
+  stands_for: Unicode Transformation Format, 8-bit
+- abbreviation: V2 / V3
+  stands_for: HL7 version 2 / version 3 standards
+- abbreviation: VAPT
+  stands_for: Vulnerability assessment and penetration test
+- abbreviation: VS
+  stands_for: Value set
+- abbreviation: W / W0
+  stands_for: Weight / weight 0 (information only)
+- abbreviation: WHO
+  stands_for: World Health Organization
+- abbreviation: XML
+  stands_for: Extensible Markup Language

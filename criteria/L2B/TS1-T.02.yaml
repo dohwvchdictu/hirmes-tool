@@ -1,0 +1,21 @@
+id: TS1-T.02
+status: active
+section: Transaction
+title: The submitted referral passes validation against the PHeReF / PH Core profiles with 0 errors
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator (server-side check)
+evidence: Validator report showing 0 errors
+developer_guide: |
+  Validate outgoing resources against the PHeReF / PH Core profiles (e.g., $validate, the HL7 validator or Inferno) during development until 0 errors.
+
+  Purpose: The data follows the national standard, not just the vendor's format.
+validator_guide: Run $validate / the official validator / Inferno on the submitted referral (or accept the developer's validator report produced on the same payload during the session). Met only if 0 errors.
+traces:
+  fhir_traceability:
+  - TR-050
+  technical_baseline:
+  - TB-10
+  sources: []
+  ig_requirements: []

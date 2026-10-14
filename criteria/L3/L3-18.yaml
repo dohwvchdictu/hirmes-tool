@@ -1,0 +1,28 @@
+id: L3-18
+status: active
+section: Edge cases
+title: Duplicate and cancelled referrals are counted according to the indicator rules (IND-02, IND-03)
+critical: 'no'
+weight: 2
+scoring: count
+validation_role: Validator
+evidence: Report screenshots + Test Data Section C
+developer_guide: |
+  Count each referral once by its identifier (IND-02) and exclude cancelled referrals from the active totals while showing them as cancelled (IND-03).
+
+  Purpose: The same referral sent twice, or one that was cancelled, must not inflate the figures.
+validator_guide: |
+  C3 is a second copy of C2 with the same business identifier and C4 was cancelled by the referring side (both pre-loaded by the DOH). Compare the Section C totals with the Expected Results.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-18.1
+  text: Duplicate C3 counted once (IND-02)
+  critical: false
+- id: L3-18.2
+  text: Cancelled C4 excluded from active totals and shown as cancelled (IND-03; N/A if cancellation is not supported by the IG version)
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

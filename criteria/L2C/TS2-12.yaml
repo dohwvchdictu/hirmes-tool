@@ -1,0 +1,22 @@
+id: TS2-12
+status: active
+section: Referral status
+title: Status changes made by the receiving facility are shown at the referring facility
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot at referring EMR + server-side evidence
+developer_guide: |
+  Read the updated Task from the SHR (polling, subscription or IOL notification — vendor's choice) and show the current status to the referring facility.
+
+  Purpose: The referring facility knows whether the patient is expected.
+validator_guide: |
+  Change the status at the receiving EMR (TS2-11); Met if the referring EMR shows the new status, including a rejection and its reason.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+traces:
+  fhir_traceability:
+  - TR-047
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

@@ -1,0 +1,36 @@
+id: TEC-03
+status: active
+section: Security
+title: 'Role-based access works: (1) referring clinician, (2) receiving clinician, (3) administrator, (4) report/dashboard viewer see only what their role allows'
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots per role
+developer_guide: |
+  Implement role-based access for referring clinician, receiving clinician, administrator and report viewer.
+
+  Purpose: Staff only see the data they need.
+validator_guide: |
+  Log in with each of the 4 roles and try one action outside the role. Count roles that behave correctly.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: TEC-03.1
+  text: Referring clinician role restricted correctly
+  critical: false
+- id: TEC-03.2
+  text: Receiving clinician role restricted correctly
+  critical: false
+- id: TEC-03.3
+  text: Administrator role restricted correctly
+  critical: false
+- id: TEC-03.4
+  text: Report / dashboard viewer role restricted correctly
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline:
+  - TB-05
+  - TB-11
+  sources: []
+  ig_requirements: []

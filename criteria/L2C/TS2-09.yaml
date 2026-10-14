@@ -1,0 +1,37 @@
+id: TS2-09
+status: active
+section: Treatment & signature
+title: Treatment given and the professional signature are retrieved and displayed correctly
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of receiving EMR + server-side evidence / resource ID
+developer_guide: |
+  Read the MedicationAdministration / Procedure and Provenance resources from the SHR and display it in the receiving view exactly as sent — no re-typing. Screen layout and labels are the vendor's choice; the value and its meaning must match.
+
+  Purpose: The receiving facility knows what was given and who attested the referral.
+validator_guide: |
+  1. Open the received Test Data referral in the receiving EMR.
+  2. Compare each sub-item on screen with the Test Data value (write what is seen in Test Data column D).
+  3. Confirm with the server-side evidence that the value was read from the SHR, not typed in.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS2-09.1
+  text: Treatment given
+  critical: false
+- id: TS2-09.2
+  text: Professional signature
+  critical: false
+- id: TS2-09.3
+  text: Date & time of signature
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-035
+  - TR-036
+  - TR-037
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

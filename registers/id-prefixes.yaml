@@ -1,0 +1,51 @@
+title: ID prefixes
+source: Technical Reference Guide (legacy Rev 9)
+entries:
+- prefix: L0-
+  meaning: Level 0 Application & Commitment criteria
+  where: Workbook — L0 Application
+- prefix: L1-
+  meaning: Level 1 Product Documentation criteria
+  where: Workbook — L1 Documentation
+- prefix: TS0-
+  meaning: Test Scenario 0 — Terminology & Registries (Level 2A)
+  where: Workbook — L2-TS0 Terminology
+- prefix: TS1-
+  meaning: Test Scenario 1 — eReferral Submission (Level 2B); TS1-T. = transaction checks
+  where: Workbook — L2-TS1 Submission
+- prefix: TS2-
+  meaning: Test Scenario 2 — eReferral Retrieval (Level 2C)
+  where: Workbook — L2-TS2 Retrieval
+- prefix: TEC-
+  meaning: TECHNICAL security & reliability criteria (Level 2D)
+  where: Workbook — L2-Security (upper part)
+- prefix: TS3-
+  meaning: Test Scenario 3 — exception & error-path scenarios (Level 2D)
+  where: Workbook — L2-Security (lower part)
+- prefix: L3-
+  meaning: Level 3 Reports & Dashboard criteria
+  where: Workbook — L3 Reports
+- prefix: L4-
+  meaning: Level 4 Advanced Interoperability criteria (Core-track / Maturity)
+  where: Workbook — L4 Advanced
+- prefix: xx-nn.n
+  meaning: A ↳ sub-item of criterion xx-nn (★ = critical sub-item)
+  where: Workbook
+- prefix: TD-D
+  meaning: Test Data Section D error / exception input
+  where: Workbook — Test Data
+- prefix: C1–C6
+  meaning: Test Data Section C edge-case referrals
+  where: Workbook — Test Data
+- prefix: TB-
+  meaning: Technical Baseline minimum specification
+  where: Guide — Chapter 3
+- prefix: SRC-
+  meaning: Terminology / registry source
+  where: Guide — Chapter 4
+- prefix: TR-
+  meaning: FHIR Traceability row
+  where: Guide — Chapter 5
+- prefix: IND-
+  meaning: Level 3 indicator calculation rule
+  where: Guide — Chapter 6

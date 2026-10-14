@@ -1,0 +1,37 @@
+id: TS0-04
+status: active
+section: Terminology
+title: Codes are displayed with their official display text (no locally renamed labels)
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Screenshots side-by-side
+developer_guide: |
+  Display the official display text from the terminology server; do not rename code labels locally. A local translation may be shown in addition to, not instead of, the official text.
+
+  Purpose: Everyone sees the same meaning for the same code.
+validator_guide: |
+  Compare displayed labels for 3 value sets against the terminology server display. Count matching value sets.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS0-04.1
+  text: Practitioner Role — official display text
+  critical: false
+- id: TS0-04.2
+  text: Referral Category — official display text
+  critical: false
+- id: TS0-04.3
+  text: Reason for Referral — official display text
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-010
+  - TR-024
+  - TR-026
+  technical_baseline: []
+  sources:
+  - SRC-01
+  - SRC-02
+  - SRC-03
+  ig_requirements: []

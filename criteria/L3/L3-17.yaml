@@ -1,0 +1,31 @@
+id: L3-17
+status: active
+section: Edge cases
+title: 'Month boundary: referrals are assigned to the correct reporting period by the documented date rule (IND-01)'
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Report screenshots + Test Data Section C
+developer_guide: |
+  Assign each referral to a period by the date/time referred (ServiceRequest.authoredOn) in Philippine Standard Time, as defined in IND-01.
+
+  Purpose: Monthly reports must not move referrals between months.
+validator_guide: |
+  Retrieve the Section C referrals C1–C6 that the DOH pre-loaded on the SHR with fixed timestamps (Test Data Section C). Filter the linelist / counts by the Section C reporting month and by the following month. Compare with the Section C Expected Results. Calculation rule: IND-01 (Reference Guide, Ch. 6).
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-17.1
+  text: Referral C1 (23:50 last day of month, received after midnight) counted in the month referred
+  critical: false
+- id: L3-17.2
+  text: Section C month total matches the expected value
+  critical: false
+- id: L3-17.3
+  text: Following month shows only the referrals expected for it
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

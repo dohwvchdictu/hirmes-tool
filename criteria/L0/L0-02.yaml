@@ -1,0 +1,31 @@
+id: L0-02
+status: active
+section: Contacts
+title: 'Vendor/developer contact persons designated: (1) product/technical lead, (2) integration (FHIR) developer, (3) data privacy contact'
+critical: 'yes'
+weight: 2
+scoring: count
+validation_role: Validator
+evidence: Designation / contact list
+developer_guide: |
+  Name three contact persons — product/technical lead, FHIR integration developer, data privacy contact — with position, email and mobile number.
+
+  Purpose: The DOH knows who is accountable for the product, the integration and privacy questions during testing.
+validator_guide: |
+  Count the roles with a named person, position and contact details in the letter or designation.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L0-02.1
+  text: Product / technical lead named (position, email, mobile)
+  critical: false
+- id: L0-02.2
+  text: Integration (FHIR) developer named (position, email, mobile)
+  critical: false
+- id: L0-02.3
+  text: Data privacy contact named (position, email, mobile)
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

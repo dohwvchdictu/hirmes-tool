@@ -1,0 +1,22 @@
+id: TS0-03
+status: active
+section: Terminology
+title: 'Invalid codes are handled gracefully: the system prevents a code outside the bound value set, OR clearly shows the SHR''s rejection to the user and lets them correct and resend (Connectathon Issue #25)'
+critical: 'yes'
+weight: 2
+scoring: binary
+validation_role: Validator + server-side check + Observer
+evidence: Screenshot of the block / error message + server-side evidence of the rejected and corrected submission
+developer_guide: |
+  Either (a) validate coded fields before saving / sending (e.g., pick-lists built from the value set, $validate-code) so an out-of-value-set code cannot be entered, or (b) when the SHR rejects the referral, show the user a clear error naming the field and allow correction and resend. Which approach is used is the vendor's choice.
+
+  Purpose: Wrong codes never silently enter the referral or the dashboards, and users are never left with a failed referral they cannot see.
+validator_guide: |
+  Validator (server-side) attempts to submit one code outside the value set (e.g., for Reason for Referral).
+  Met if EITHER the EMR blocks / flags it before sending, OR the EMR displays the SHR's rejection in understandable terms and the user can correct and resend successfully.
+  Not Met if the error is not shown to the user, or the code is accepted.
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

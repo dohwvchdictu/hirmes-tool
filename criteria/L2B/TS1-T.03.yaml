@@ -1,0 +1,63 @@
+id: TS1-T.03
+status: active
+section: Transaction
+title: 'Each resource declares its PH Core / PHeReF profile (meta.profile) (Connectathon Issue #25)'
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator (server-side check)
+evidence: Bundle excerpt / raw payload
+developer_guide: |
+  Populate meta.profile of each resource with the canonical URL of its PH Core / PHeReF profile.
+
+  Purpose: Lets the server check the data against the correct rules.
+validator_guide: |
+  Count the resource types in the submitted referral that declare the correct profile.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+sub_items:
+- id: TS1-T.03.1
+  text: Organization declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.2
+  text: Practitioner declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.3
+  text: PractitionerRole declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.4
+  text: Patient declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.5
+  text: RelatedPerson (N/A if Patient.contact is used) declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.6
+  text: ServiceRequest declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.7
+  text: Task declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.8
+  text: Condition declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.9
+  text: Observation declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.10
+  text: DiagnosticReport declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.11
+  text: MedicationAdministration or Procedure declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.12
+  text: Provenance declares its PH Core / PHeReF profile
+  critical: false
+- id: TS1-T.03.13
+  text: Encounter declares its PH Core / PHeReF profile
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-050
+  technical_baseline:
+  - TB-10
+  sources: []
+  ig_requirements: []

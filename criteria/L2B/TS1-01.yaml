@@ -1,0 +1,47 @@
+id: TS1-01
+status: active
+section: Referring facility
+title: Referring (initiating) facility details are submitted correctly
+critical: subs
+weight: 2
+scoring: count
+validation_role: Validator + server-side check + Observer
+evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
+developer_guide: |
+  Capture the fields below in the EMR and send them in the Organization (referring facility) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  FHIR elements: Organization.name; Organization.identifier (NHFR; HCPN); Organization.address (PSGC-coded); Organization.telecom
+  Source: SRC-10, SRC-11, SRC-05 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+
+  Purpose: The receiving facility knows exactly where the patient comes from.
+validator_guide: |
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
+  2. Open the Organization in the server-side evidence and compare each sub-item with the Test Data value.
+  3. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+sub_items:
+- id: TS1-01.1
+  text: HCPN name — Organization.identifier (HCPN)
+  critical: false
+- id: TS1-01.2
+  text: Facility name — Organization.name
+  critical: false
+- id: TS1-01.3
+  text: NHFR code — Organization.identifier (NHFR)
+  critical: true
+- id: TS1-01.4
+  text: Address, PSGC-coded — Organization.address
+  critical: false
+- id: TS1-01.5
+  text: Contact number — Organization.telecom
+  critical: false
+traces:
+  fhir_traceability:
+  - TR-001
+  - TR-002
+  - TR-003
+  - TR-004
+  - TR-005
+  technical_baseline: []
+  sources: []
+  ig_requirements: []

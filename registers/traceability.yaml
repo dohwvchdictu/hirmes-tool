@@ -1,0 +1,635 @@
+title: FHIR Traceability (TR-)
+source: Technical Reference Guide (legacy Rev 9)
+entries:
+- id: TR-001
+  data_requirement: HCPN name
+  criteria: TS1 TS1-01.1 · TS2 TS2-02.1 · L3-01.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.identifier (HCPN)
+  card: 0..*
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    TDG to confirm
+    No HCPN identifier slice in PH Core 0.2.0 — identifier system to be defined.
+- id: TR-002
+  data_requirement: Initiating facility name
+  criteria: TS1 TS1-01.2 · TS2 TS2-02.2 · L3-01.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.name
+  card: 0..1 MS
+  binding_fixed: null
+  source: SRC-11
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-003
+  data_requirement: Initiating facility NHFR code ★
+  criteria: TS1 TS1-01.3 · TS2 TS2-02.3 · TS0-06.2, TS3-03.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.identifier:NhfrCode (system https://fhir.doh.gov.ph/phcore/Identifier/doh-nhfr-code)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-11
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    IG example uses conditional PUT Organization?identifier=<NHFR system>|<code>.
+- id: TR-004
+  data_requirement: Initiating facility address (PSGC)
+  criteria: TS1 TS1-01.4 · TS2 TS2-02.4 · TS0-06.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.address (+ PH Core PSGC extensions)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-10
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-005
+  data_requirement: Initiating facility contact number
+  criteria: TS1 TS1-01.5 · TS2 TS2-02.5 · TS0-01.2
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.telecom
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-05
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-006
+  data_requirement: Receiving facility name
+  criteria: TS1 TS1-02.1 · TS2 TS2-02.6 · L3-01.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.name (via ServiceRequest.performer)
+  card: 0..1 MS
+  binding_fixed: null
+  source: SRC-11
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-007
+  data_requirement: Receiving facility NHFR code ★
+  criteria: TS1 TS1-02.2 · TS2 TS2-02.7 · TS0-06.2, TS2-01, TS3-03.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.identifier:NhfrCode
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-11
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-008
+  data_requirement: Receiving facility address (PSGC)
+  criteria: TS1 TS1-02.3 · TS0-06.1
+  resource_profile: |
+    Organization
+    ph-core-organization
+  element: Organization.address
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-10
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-009
+  data_requirement: Name of referring practitioner
+  criteria: TS1 TS1-03.1 · TS2 TS2-03.1 · TS0-06.3
+  resource_profile: |
+    Practitioner
+    ph-core-practitioner
+  element: Practitioner.name
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-12
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Practitioner identifier model pending (Connectathon Issue #10); IG example uses PRC licence.
+- id: TR-010
+  data_requirement: Referring practitioner role ★
+  criteria: TS1 TS1-03.2 · TS2 TS2-03.2 · TS0-02.1, TS0-04.1
+  resource_profile: |
+    PractitionerRole
+    ereferral-practitioner-role
+  element: PractitionerRole.code
+  card: 0..* MS
+  binding_fixed: required — PHeReF VS practitioner-role
+  source: SRC-01
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-011
+  data_requirement: Care navigator — referring facility
+  criteria: TS1 TS1-03.3 · TS2 TS2-03.3
+  resource_profile: |
+    PractitionerRole
+    ereferral-practitioner-role
+  element: separate PractitionerRole (no dedicated element)
+  card: 0..*
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    TDG to confirm
+    IG models the care navigator on the receiving side only (Task.owner / ServiceRequest.performer).
+- id: TR-012
+  data_requirement: Referring practitioner is the requester ★
+  criteria: TS1 TS1-03.4 · TS2 TS2-10.4 · TS3-03.2
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.requester → ERefPractitionerRole
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Task.requester is also 1..1 (see TS1-12.3).
+- id: TR-013
+  data_requirement: Patient full name
+  criteria: TS1 TS1-04.1 · TS2 TS2-04.1 · TS3-01, TD-D24
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.name
+  card: 1..* MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-014
+  data_requirement: PhilSys number ★
+  criteria: TS1 TS1-04.2 · TS2 TS2-04.2 · TS0-07.2, TS1-16
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.identifier:PHCorePhilSysID (system http://philsys.gov.ph/fhir/Identifier/philsys-id)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-14
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    IG example: PUT Patient?identifier=<PhilSys system>|<number> (patient matching).
+- id: TR-015
+  data_requirement: PhilHealth ID ★
+  criteria: TS1 TS1-04.3 · TS2 TS2-04.3 · TS0-07.1, TS1-16
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.identifier:PHCorePhilHealthID (system http://philhealth.gov.ph/fhir/Identifier/philhealth-id)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-13
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-016
+  data_requirement: Birth date
+  criteria: TS1 TS1-04.4 · TS2 TS2-04.4 / .5 · TS3-01.1, TS3-02.3
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.birthDate
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-017
+  data_requirement: Sex ★
+  criteria: TS1 TS1-04.5 · TS2 TS2-04.6 · TS0-01.1
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.gender
+  card: 1..1 MS
+  binding_fixed: required — FHIR VS administrative-gender
+  source: SRC-05
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-018
+  data_requirement: Civil status
+  criteria: TS1 TS1-04.6 · TS2 TS2-04.7 · TS0-01.3
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.maritalStatus
+  card: 0..1 MS
+  binding_fixed: required — FHIR VS marital-status
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Required binding in the IG — added to TS0-01 in Rev 7.
+- id: TR-019
+  data_requirement: Patient address (PSGC)
+  criteria: TS1 TS1-04.7 · TS2 TS2-04.8 · TS0-06.1, L3-15.3
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.address (+ PH Core PSGC extensions)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-10
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-020
+  data_requirement: Patient contact number
+  criteria: TS1 TS1-04.8 · TS2 TS2-04.9 · TS0-01.2
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.telecom (system / use required bindings)
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-05
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-021
+  data_requirement: PWD registration
+  criteria: TS1 TS1-04.9 · TS2 TS2-04.10
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Patient.extension (ph-core-pwd-disability)
+  card: 0..*
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-022
+  data_requirement: Accompanied by / next of kin
+  criteria: TS1 TS1-05 · TS2 TS2-04.11 · TS0-01.4
+  resource_profile: |
+    Patient / RelatedPerson
+    ereferral-patient
+  element: Patient.contact (relationship 1..*, name 1..1) or ERefRelatedPerson
+  card: 1..* MS
+  binding_fixed: required — FHIR VS relatedperson-relationshiptype
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Cardinality shown is for Patient.contact.relationship.
+- id: TR-023
+  data_requirement: Date of referral
+  criteria: TS1 TS1-06.1 · TS2 TS2-05.1 · IND-01, TS3-05.3
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.authoredOn
+  card: 0..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Basis of the reporting period (IND-01).
+- id: TR-024
+  data_requirement: Referral category ★
+  criteria: TS1 TS1-06.2 · TS2 TS2-05.2 · TS0-02.2, TS0-04.2
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.category
+  card: 0..* MS
+  binding_fixed: required — PHeReF VS referral-category
+  source: SRC-02
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-025
+  data_requirement: Priority ★
+  criteria: TS1 TS1-06.3 · TS2 TS2-05.3 · TS0-02.3
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.priority
+  card: 0..1
+  binding_fixed: required — FHIR VS request-priority
+  source: SRC-09
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    IG discrepancy — TDG to confirm
+    Rev 6 used EReferralPriority (routine | urgent | stat), which exists only in the workflow-branch build. The 9 Sep 2026 v0.1.0 main build does not profile priority: only the base FHIR required binding applies (RequestPriority: routine | urgent | asap | stat) and it is not Must Support. TDG to confirm the value set and whether priority stays critical.
+- id: TR-026
+  data_requirement: Reason for referral ★
+  criteria: TS1 TS1-06.4 · TS2 TS2-05.4 · TS0-02.4, TS0-04.3, IND-06
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.reasonCode
+  card: 0..* MS
+  binding_fixed: required — PHeReF VS reason-for-referral-service-type
+  source: SRC-03
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Now a REQUIRED binding in v0.1.0 (Rev 6 noted 'example').
+- id: TR-027
+  data_requirement: Subject link ★
+  criteria: TS1 TS1-06.5
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.subject → ERefPatient
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-028
+  data_requirement: Performer (receiving facility)
+  criteria: TS1 TS1-06.5 · TS2 TS2-01 · TS3-01.2
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.performer → Organization / ERefPractitionerRole
+  card: 0..* MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    0..* in the IG; mandatory by DOH rule (TS3-01.2) because the referral must be addressed.
+- id: TR-029
+  data_requirement: Intent / status
+  criteria: TS1 TS1-06.6
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.intent (fixed order); ServiceRequest.status
+  card: 1..1 MS
+  binding_fixed: required — FHIR VS request-intent; fixed Code = order
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-030
+  data_requirement: Chief complaint
+  criteria: TS1 TS1-07.1 · TS2 TS2-06.1
+  resource_profile: |
+    Condition
+    ereferral-condition
+  element: Condition.code.text (category problem-list-item)
+  card: 0..1 MS
+  binding_fixed: example — FHIR VS condition-code
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-031
+  data_requirement: Working impression ★
+  criteria: TS1 TS1-07.2 · TS2 TS2-06.2 · TS0-05.3, IND-10
+  resource_profile: |
+    Condition
+    ereferral-condition
+  element: Condition.code coded (category encounter-diagnosis)
+  card: 0..1 MS
+  binding_fixed: example — FHIR VS condition-code
+  source: SRC-08
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    TDG to confirm
+    Binding is 'example' in the IG; ICD-10 used by DOH decision (SRC-08).
+- id: TR-032
+  data_requirement: Clinical history
+  criteria: TS1 TS1-07.3 · TS2 TS2-06.3
+  resource_profile: |
+    Condition
+    ereferral-condition
+  element: Condition.note
+  card: 0..* MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-033
+  data_requirement: Vital signs (BP, HR, RR, SpO2, temp, weight) ★BP
+  criteria: TS1 TS1-08 · TS2 TS2-07 · TS0-05.2, TS3-02.2
+  resource_profile: |
+    Observation
+    ereferral-observation
+  element: Observation.code (LOINC) + value[x] / component (UCUM)
+  card: 1..1 MS
+  binding_fixed: example — FHIR VS observation-codes
+  source: SRC-07
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    Binding of Observation.code is 'example'; LOINC vital-sign codes per SRC-07.
+- id: TR-034
+  data_requirement: Laboratory result attachment
+  criteria: TS1 TS1-09 · TS2 TS2-08 · L4-05
+  resource_profile: |
+    DiagnosticReport
+    ereferral-diagnostic-report
+  element: DiagnosticReport.presentedForm
+  card: 0..* MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: |
+    Confirmed
+    ERefDiagnosticReport added to the IG on 9 Sep 2026.
+- id: TR-035
+  data_requirement: Treatment given
+  criteria: TS1 TS1-10 · TS2 TS2-09.1
+  resource_profile: |
+    MedicationAdministration / Procedure
+    ereferral-medication-administration
+  element: MedicationAdministration (or Procedure)
+  card: 1..1 MS
+  binding_fixed: example — FHIR VS medication-codes
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-036
+  data_requirement: Professional signature
+  criteria: TS1 TS1-11.1 · TS2 TS2-09.2
+  resource_profile: |
+    Provenance
+    ereferral-provenance
+  element: Provenance.signature
+  card: 0..* MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-037
+  data_requirement: Date & time of signature
+  criteria: TS1 TS1-11.2 · TS2 TS2-09.3
+  resource_profile: |
+    Provenance
+    ereferral-provenance
+  element: Provenance.recorded
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-038
+  data_requirement: Referral task status = requested ★
+  criteria: TS1 TS1-12.1 · TS2 TS2-11 · TS0-02.5, TS2-13.1
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.status
+  card: 1..1 MS
+  binding_fixed: required — FHIR VS task-status
+  source: SRC-04
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-039
+  data_requirement: Task linked to referral ★
+  criteria: TS1 TS1-12.2
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.focus → ERefServiceRequest
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-040
+  data_requirement: Task requester / owner
+  criteria: TS1 TS1-12.3 · TS2 TS2-10.2
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.requester (1..1); Task.owner (0..1)
+  card: 1..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-041
+  data_requirement: Date / time sent
+  criteria: TS1 TS1-12.4 · TS2-13.1
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.authoredOn
+  card: 0..1 MS
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-042
+  data_requirement: Encounter at referring facility
+  criteria: TS1 TS1-13 · TS2 TS2-06.4
+  resource_profile: |
+    Encounter
+    ereferral-encounter
+  element: ServiceRequest.encounter → ERefEncounter
+  card: 1..1 MS
+  binding_fixed: required — FHIR VS encounter-status
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: Confirmed
+- id: TR-043
+  data_requirement: Time called (info only)
+  criteria: TS1 TS1-14
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.occurrence[x] (per IG comment REF-15)
+  card: 0..1 MS
+  binding_fixed: null
+  source: —
+  expected: Info only
+  status_notes: |
+    TDG to confirm
+    IG v0.1.0 comments map Time Called to occurrence[x]; Rev 6 recorded 'no IG element'. Remains info-only until confirmed.
+- id: TR-044
+  data_requirement: Mode of transportation (info only)
+  criteria: TS1 TS1-15
+  resource_profile: |
+    —
+    —
+  element: No IG element
+  card: —
+  binding_fixed: null
+  source: —
+  expected: Info only
+  status_notes: TDG to confirm
+- id: TR-045
+  data_requirement: Patient matching (no duplicate) ★
+  criteria: TS1 TS1-16 · IND-02
+  resource_profile: |
+    Patient
+    ereferral-patient
+  element: Conditional update by PhilSys / PhilHealth identifier
+  card: 0..* MS
+  binding_fixed: null
+  source: SRC-13, SRC-14
+  expected: Single Patient for 3 referrals
+  status_notes: Confirmed
+- id: TR-046
+  data_requirement: Receiving practitioner / care navigator
+  criteria: TS2 TS2-10
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.owner → Practitioner / PractitionerRole / Organization
+  card: 0..1 MS
+  binding_fixed: null
+  source: SRC-01
+  expected: —
+  status_notes: Confirmed
+- id: TR-047
+  data_requirement: 'Receiving response: received / accepted / rejected / completed ★'
+  criteria: TS2 TS2-11, TS2-12 · TS2-13
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.status + statusReason + businessStatus (EReferralReceivingResponse)
+  card: 1..1 MS
+  binding_fixed: required — FHIR VS task-status
+  source: SRC-04
+  expected: —
+  status_notes: Confirmed
+- id: TR-048
+  data_requirement: Status timestamps ★
+  criteria: TS2 TS2-13 · IND-08
+  resource_profile: |
+    Task
+    ereferral-task
+  element: Task.authoredOn / lastModified / _history
+  card: 0..1 MS
+  binding_fixed: null
+  source: —
+  expected: —
+  status_notes: Confirmed
+- id: TR-049
+  data_requirement: Onward referral
+  criteria: TS1 TS1-T.04 · L4-10
+  resource_profile: |
+    ServiceRequest
+    ereferral-service-request
+  element: ServiceRequest.replaces / basedOn + Task businessStatus 'referred-onward'
+  card: 0..*
+  binding_fixed: null
+  source: —
+  expected: Accepted (2xx); value on SHR = Test Data; $validate 0 errors (TS1-T.02)
+  status_notes: TDG to confirm
+- id: TR-050
+  data_requirement: Profile declaration (all resources)
+  criteria: TS1 TS1-T.03 · TS1-T.02
+  resource_profile: |
+    All
+    —
+  element: meta.profile = PH Core / PHeReF canonical
+  card: —
+  binding_fixed: null
+  source: —
+  expected: Declared on every resource
+  status_notes: Confirmed

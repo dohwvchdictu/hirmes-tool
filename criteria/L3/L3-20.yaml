@@ -1,0 +1,31 @@
+id: L3-20
+status: active
+section: Edge cases
+title: Combined filters return the expected counts
+critical: 'no'
+weight: 1
+scoring: count
+validation_role: Validator
+evidence: Report screenshots + Test Data Section C
+developer_guide: |
+  Apply report filters together (AND logic) on the same data as the totals.
+
+  Purpose: Managers combine filters; each combination must be correct.
+validator_guide: |
+  Apply each filter combination listed under the Section C Expected Results (combinations use Section B and Section C data as labelled) and compare.
+  Mark each sub-item (↳) below; Achieved is counted automatically.
+sub_items:
+- id: L3-20.1
+  text: Incoming + Private + Emergency matches
+  critical: false
+- id: L3-20.2
+  text: Outgoing + Level 2 receiving capability + Consultation matches
+  critical: false
+- id: L3-20.3
+  text: Reporting month + one facility matches
+  critical: false
+traces:
+  fhir_traceability: []
+  technical_baseline: []
+  sources: []
+  ig_requirements: []
