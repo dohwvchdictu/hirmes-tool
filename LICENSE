@@ -1,8 +1,22 @@
-SPDX-License-Identifier: CC0-1.0
+This repository is dual-licensed by type of material.
 
-The content of this repository is dedicated to the public domain under the
-Creative Commons CC0 1.0 Universal Public Domain Dedication.
-Full legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+CONTENT — Creative Commons Attribution 4.0 International (CC BY 4.0)
+  The testing criteria, scoring policy, registers, sheet texts, documents and every
+  generated output (scorecard workbook, change summaries, web scorecard data):
+    criteria/  scoring.yaml  registers/  docs/  templates/  *.md
+  Full text: LICENSES/CC-BY-4.0.txt
+  https://creativecommons.org/licenses/by/4.0/
 
-(Proposed license, matching the PH Core and PHeReF implementation guides.
-To be confirmed by the TWG before the first release.)
+  Credit line when you reuse or adapt the content:
+    "HIE System Validation Testing Criteria, Department of Health – Western Visayas
+     Center for Health Development, licensed under CC BY 4.0"
+  and state what you changed.
+
+CODE — GNU General Public License v3.0 or later (GPL-3.0-or-later)
+  The scripts, web scorecard, tests and automation:
+    scripts/  tool/  tests/  schema/  .github/  cliff.toml
+  Full text: LICENSES/GPL-3.0-or-later.txt
+
+Copyright (C) 2026 Department of Health – Western Visayas Center for Health Development
+
+The file-by-file mapping is in REUSE.toml (REUSE specification, https://reuse.software).

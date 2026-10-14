@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Check that the workbook and the web scorecard score the same answers identically.
 
     python tests/test_scoring.py

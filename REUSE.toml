@@ -1,0 +1,17 @@
+version = 1
+SPDX-PackageName = "HIE System Validation Testing Criteria"
+SPDX-PackageSupplier = "Department of Health – Western Visayas Center for Health Development"
+
+# Content
+[[annotations]]
+path = ["criteria/**", "scoring.yaml", "registers/**", "docs/**", "templates/**", "tests/scenarios.yaml", "**/*.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Department of Health – Western Visayas Center for Health Development"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# Code
+[[annotations]]
+path = ["scripts/**", "tool/**", "tests/**.py", "schema/**", ".github/**", "cliff.toml", "requirements.txt", ".vscode/**", ".editorconfig", ".gitattributes", ".gitignore", "REUSE.toml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Department of Health – Western Visayas Center for Health Development"
+SPDX-License-Identifier = "GPL-3.0-or-later"

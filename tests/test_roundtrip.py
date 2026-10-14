@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Build the workbook and check every criterion row matches the YAML files exactly.
 
     python tests/test_roundtrip.py

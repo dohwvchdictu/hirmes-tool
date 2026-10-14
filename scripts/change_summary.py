@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Readable summary of what changed in the criteria between two versions.
 
     python scripts/change_summary.py                 # compare HEAD with the previous tag

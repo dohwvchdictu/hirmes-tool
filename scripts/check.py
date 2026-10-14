@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Check the repository content before anything is built.
 
     python scripts/check.py            # human-readable report, exit 1 on errors

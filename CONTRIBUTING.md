@@ -98,6 +98,7 @@ After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
 - `critical: subs` has at least one ★ sub-item
 - retired criteria have `retired_in` and `reason`; `replaced_by` points to an existing ID
 - trace IDs (TR-, TB-, SRC-) exist in the registers
+- every file carries a license: content CC BY 4.0, code GPL-3.0-or-later (`reuse lint`; new folders need an entry in `REUSE.toml`)
 - every sheet has a threshold; an Approved policy has its approval details
 - the generated workbook matches the YAML (round trip), and the workbook and web scorecard score the
   same test scenarios identically

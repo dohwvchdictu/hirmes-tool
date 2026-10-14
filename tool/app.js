@@ -1,3 +1,5 @@
+/* SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 /* Web scorecard: renders the criteria from data.json and scores answers with scoring.js. */
 (function () {
   "use strict";
@@ -55,7 +57,9 @@
     }
     $("#foot").innerHTML = "Criteria version " + esc(m.label) +
       (m.repository ? ' · <a href="' + esc(m.repository) + '">source repository</a>' : "") +
-      " · Scores follow the same rules as the scorecard workbook.";
+      " · Scores follow the same rules as the scorecard workbook.<br>Content © " + esc(m.owner || "") +
+      ' · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · Web scorecard code ' +
+      '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>';
   }
 
   function renderTabs() {
@@ -267,7 +271,8 @@
       ["Validated by", "Witnessed by", "Processed by (Administrator)", "Approved by (Technical Lead)", "Conforme (Vendor / Developer)"].map(function (x) {
         return "<tr><td>" + x + "</td><td></td><td></td><td></td></tr>";
       }).join("") + "</tbody></table>" +
-      "<h2>E. Testing criteria breakdown</h2>" + breakdown + "</section>";
+      "<h2>E. Testing criteria breakdown</h2>" + breakdown +
+      '<p class="rep-sub">' + esc(m.credit || "") + "</p></section>";
   }
 
   // ------------------------------------------------------------------ events

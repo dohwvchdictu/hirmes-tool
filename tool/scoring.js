@@ -1,3 +1,5 @@
+/* SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+ * SPDX-License-Identifier: GPL-3.0-or-later */
 /*
  * Scoring rules of the web scorecard. They mirror the workbook formulas exactly
  * (scripts/build_xlsx.py); tests/test_scoring.py runs the same scenarios through

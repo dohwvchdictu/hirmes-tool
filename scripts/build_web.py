@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Build the web scorecard: copy tool/ and write the criteria data it reads.
 
     python scripts/build_web.py [--out site]
@@ -14,7 +16,7 @@ import shutil
 from pathlib import Path
 
 from build_xlsx import retired_list
-from common import ROOT, active, active_subs, load_criteria, load_scoring, load_sheets, version_info
+from common import CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, active, active_subs, load_criteria, load_scoring, load_sheets, version_info
 
 
 def export(out: Path) -> Path:
@@ -24,7 +26,8 @@ def export(out: Path) -> Path:
     scoring = load_scoring()
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     data = {
-        "meta": {**info, "repository": f"https://github.com/{repo}" if repo else ""},
+        "meta": {**info, "repository": f"https://github.com/{repo}" if repo else "", "owner": OWNER,
+                 "content_license": CONTENT_LICENSE, "code_license": CODE_LICENSE, "credit": CREDIT},
         "scoring": scoring,
         "sheets": [
             {

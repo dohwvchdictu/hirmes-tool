@@ -65,5 +65,11 @@ python tests/test_scoring.py            # workbook and web give the same results
 
 ## License
 
-Content is released under CC0-1.0 (see [LICENSE](LICENSE)), the same as the PH Core and PHeReF
-implementation guides. Confirm with the TWG before the first release.
+| Material | License | Folders |
+| --- | --- | --- |
+| Content: criteria, scoring policy, registers, documents and every generated output | [CC BY 4.0](LICENSES/CC-BY-4.0.txt) | `criteria/`, `scoring.yaml`, `registers/`, `docs/`, `templates/`, Markdown files |
+| Code: scripts, web scorecard, tests, schemas, workflows | [GPL-3.0-or-later](LICENSES/GPL-3.0-or-later.txt) | `scripts/`, `tool/`, `tests/`, `schema/`, `.github/` |
+
+Copyright © 2026 Department of Health – Western Visayas Center for Health Development.
+See [LICENSE](LICENSE) for the credit line to use when you reuse or adapt the content; the
+file-by-file mapping is in [REUSE.toml](REUSE.toml).

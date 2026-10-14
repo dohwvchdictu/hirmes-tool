@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """One-time import of the legacy Rev 9 workbook (and Technical Reference Guide registers).
 
 Usage:

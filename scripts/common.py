@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Shared helpers: load the criteria, sheets, scoring rules and version information.
 
 Every build and check script reads the repository through these functions, so the
@@ -19,6 +21,11 @@ LEGACY_RETIRED_FILE = CRITERIA_DIR / "retired-legacy.yaml"
 SCORING_FILE = ROOT / "scoring.yaml"
 REGISTERS_DIR = ROOT / "registers"
 TEMPLATE_XLSX = ROOT / "templates" / "scorecard-template.xlsx"
+
+OWNER = "Department of Health – Western Visayas Center for Health Development"
+CONTENT_LICENSE = "CC BY 4.0"
+CODE_LICENSE = "GPL-3.0-or-later"
+CREDIT = f"HIE System Validation Testing Criteria, {OWNER}, licensed under {CONTENT_LICENSE}"
 
 # Values as they appear in the workbook <-> values stored in YAML
 CRITICAL_TO_XLSX = {"yes": "Yes", "no": "No", "subs": "★ subs"}
