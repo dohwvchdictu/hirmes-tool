@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "register.schema.json",
+  "title": "Reference register (TB-, SRC-, TR-, IND-, abbreviations, ID prefixes, glossary)",
+  "type": "object",
+  "required": ["title"],
+  "properties": {
+    "title": {"type": "string"},
+    "source": {"type": "string"},
+    "entries": {"type": "array", "items": {"type": "object"}},
+    "sections": {"type": "array", "items": {"type": "object", "required": ["section", "terms"]}}
+  }
+}

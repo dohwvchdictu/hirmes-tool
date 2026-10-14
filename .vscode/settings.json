@@ -1,0 +1,11 @@
+{
+  "yaml.schemas": {
+    "./schema/criterion.schema.json": ["criteria/*/*.yaml"],
+    "./schema/sheets.schema.json": ["criteria/sheets.yaml"],
+    "./schema/retired-legacy.schema.json": ["criteria/retired-legacy.yaml"],
+    "./schema/scoring.schema.json": ["scoring.yaml"],
+    "./schema/register.schema.json": ["registers/*.yaml"]
+  },
+  "files.eol": "\n",
+  "editor.renderWhitespace": "boundary"
+}

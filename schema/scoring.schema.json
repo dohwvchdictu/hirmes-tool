@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scoring.schema.json",
+  "title": "Scoring policy",
+  "type": "object",
+  "required": ["policy", "thresholds", "levels", "conformant_after", "answers", "tier_scores"],
+  "additionalProperties": false,
+  "properties": {
+    "policy": {
+      "type": "object",
+      "required": ["status", "approved_by", "date_approved", "reference"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {"enum": ["Proposed", "Approved"]},
+        "approved_by": {"type": "string"},
+        "date_approved": {"type": "string"},
+        "reference": {"type": "string"}
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "name", "parts"],
+        "properties": {"key": {"type": "string"}, "name": {"type": "string"}, "parts": {"type": "array", "items": {"type": "string"}, "minItems": 1}}
+      }
+    },
+    "conformant_after": {"type": "string"},
+    "answers": {
+      "type": "object",
+      "required": ["standard", "tier"],
+      "properties": {"standard": {"type": "array", "items": {"type": "string"}}, "tier": {"type": "array", "items": {"type": "string"}}}
+    },
+    "tier_scores": {"type": "object", "additionalProperties": {"type": "number"}}
+  }
+}

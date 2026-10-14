@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "retired-legacy.schema.json",
+  "title": "IDs retired before the repository existed",
+  "type": "object",
+  "required": ["retired"],
+  "properties": {
+    "retired": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "legacy_revision", "action", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "legacy_revision": {"type": "string"},
+          "action": {"enum": ["Moved", "Merged", "Removed"]},
+          "replaced_by": {"type": ["string", "null"]},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# generated outputs
+dist/
+site/
+# Python
+__pycache__/
+*.pyc
+.venv/
+# editors and OS
+.DS_Store
+Thumbs.db
+~$*
+*.tmp

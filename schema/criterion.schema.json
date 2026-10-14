@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "criterion.schema.json",
+  "title": "Testing criterion",
+  "description": "One criterion of the testing criteria. File name must be <id>.yaml inside the folder of its sheet.",
+  "type": "object",
+  "required": [
+    "id",
+    "status",
+    "section",
+    "title",
+    "critical",
+    "weight",
+    "scoring",
+    "validation_role",
+    "evidence",
+    "developer_guide",
+    "validator_guide",
+    "traces"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*-[A-Z0-9]+(\\.[0-9]{2})?$",
+      "description": "Never renumbered or reused."
+    },
+    "status": {
+      "enum": [
+        "active",
+        "retired",
+        "moved",
+        "merged"
+      ],
+      "description": "Only 'active' criteria appear in outputs; the others stay reserved."
+    },
+    "section": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Criterion (what is checked)."
+    },
+    "critical": {
+      "enum": [
+        "yes",
+        "no",
+        "subs"
+      ],
+      "description": "yes = must be Met; subs = critical sub-items (★) decide; no = not critical."
+    },
+    "weight": {
+      "type": "number",
+      "minimum": 0,
+      "description": "0 = information only (not scored)."
+    },
+    "scoring": {
+      "enum": [
+        "binary",
+        "count",
+        "all-or-nothing",
+        "tier"
+      ]
+    },
+    "validation_role": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "developer_guide": {
+      "type": "string",
+      "description": "What the vendor must prepare. A 'Purpose:' paragraph may follow a blank line."
+    },
+    "validator_guide": {
+      "type": "string",
+      "description": "How the Validators verify."
+    },
+    "sub_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "critical"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]*-[A-Z0-9]+(\\.[0-9]{2})?\\.[0-9]+$"
+          },
+          "text": {
+            "type": "string"
+          },
+          "critical": {
+            "type": "boolean",
+            "description": "true = ★ critical sub-item; Not Met or N/A makes the criterion a critical failure."
+          },
+          "status": {
+            "enum": [
+              "active",
+              "retired"
+            ]
+          },
+          "retired_in": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "traces": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fhir_traceability": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^TR-[0-9]{3}$"
+          }
+        },
+        "technical_baseline": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^TB-[0-9]{2}$"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^SRC-[0-9]{2}$"
+          }
+        },
+        "ig_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Requirement keys in the PHeReF Requirements resource."
+        }
+      }
+    },
+    "origin": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Where the criterion came from, e.g. connectathon-issue-12, gh-issue-45."
+    },
+    "added_in": {
+      "type": "string",
+      "description": "Release that introduced it, e.g. 1.1.0. Omitted for the initial content."
+    },
+    "retired_in": {
+      "type": "string"
+    },
+    "replaced_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

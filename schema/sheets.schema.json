@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sheets.schema.json",
+  "title": "Criteria sheets",
+  "type": "object",
+  "required": ["sheets"],
+  "properties": {
+    "sheets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "tab", "title", "intro", "order"],
+        "additionalProperties": false,
+        "properties": {
+          "key": {"type": "string", "description": "Folder name under criteria/."},
+          "tab": {"type": "string", "description": "Workbook tab name. Do not rename: the Summary and report formulas use it."},
+          "title": {"type": "string"},
+          "intro": {"type": "string"},
+          "note": {"type": ["string", "null"]},
+          "report_heading": {"type": ["string", "null"]},
+          "order": {"type": "array", "items": {"type": "string"}, "description": "Display order of the criteria IDs."}
+        }
+      }
+    }
+  }
+}
