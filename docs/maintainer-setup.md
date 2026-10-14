@@ -24,6 +24,8 @@ git push -u origin main
 ## 3. GitHub Pages (web scorecard)
 
 *Settings → Pages → Build and deployment → Source:* **GitHub Actions**.
+*Settings → Environments → github-pages → Deployment branches and tags*: keep `main` and **add a tag
+rule `v*`**, so a release tag can publish its own version of the web scorecard.
 Then *Actions → Publish web scorecard → Run workflow* (or push to `main`). The page address is shown
 on the workflow run and under *Settings → Pages*. Add it to the repository description.
 
