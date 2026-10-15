@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "b373025",
- "commit_date": "2026-10-15T15:22:28+08:00",
- "subject": "Merge pull request #3 from dohwvchdictu/ui-qol",
- "built": "2026-10-15 15:22 PHT",
- "built_iso": "2026-10-15T07:22:42+00:00",
+ "commit": "9000ab0",
+ "commit_date": "2026-10-15T16:05:46+08:00",
+ "subject": "feat(profile): enhance system profile layout and improve input styles",
+ "built": "2026-10-15 16:06 PHT",
+ "built_iso": "2026-10-15T08:06:07+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit b373025",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 9000ab0",
  "counts": {
   "criteria": 103,
   "sub_items": 272
