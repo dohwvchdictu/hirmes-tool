@@ -67,6 +67,7 @@
       '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>';
   }
 
+  var PHONE = 767;
   function tabState(key) {
     var r = result.sheets[key]; if (!r) return "";
     if (r.status === "PASSED") return "pass";
@@ -75,22 +76,31 @@
   }
   function tabParts(tab) { var m = /^(\S+)\s+(.*)$/.exec(tab); return m ? [m[1], m[2]] : [tab, ""]; }
 
+  /** Sidebar: overall progress, then Overview, Levels (status and progress each), Output and
+   *  the Reference contents (expanded while a reference page is open). */
   function renderTabs() {
     var head = current.split("/")[0];
     var link = function (key, inner, title, cls) {
       return '<a href="#' + key + '" class="' + (cls || "") + '"' + (head === key ? ' aria-current="page"' : "") + (title ? ' title="' + esc(title) + '"' : "") + ">" + inner + "</a>";
     };
+    var all = 0, done = 0;
     var levels = data.sheets.map(function (s) {
       var r = result.sheets[s.key], st = tabState(s.key), tp = tabParts(s.tab);
-      var tested = r.total - r.notTested;
+      var tested = r.total - r.notTested; all += r.total; done += tested;
       return link(s.key, '<span class="t-code">' + esc(tp[0]) + '</span><span class="t-name">' + esc(tp[1]) + "</span>" +
-        '<span class="t-state t-' + st + '" aria-hidden="true"></span><span class="t-meter"><span class="t-' + st + '" style="width:' + (r.progress * 100).toFixed(0) + '%"></span></span>',
+        '<span class="t-count">' + tested + "/" + r.total + '</span><span class="ts ts-' + st + '" aria-hidden="true"></span>' +
+        '<span class="t-meter"><span class="ts-' + st + '" style="width:' + (r.progress * 100).toFixed(0) + '%"></span></span>',
         s.title + " — " + r.status + " · " + tested + " of " + r.total + " evaluated · score " + pct(r.score) + " (threshold " + pct(r.threshold, 0) + ")", "lvl");
     }).join("");
+    var onRef = head === "ref";
     $("#tabs").innerHTML =
+      '<div class="sd-prog"><div><b>' + esc(result.highest) + '</b><span>highest level achieved</span></div><div class="bar"><span style="width:' + (all ? done / all * 100 : 0).toFixed(0) + '%"></span></div>' +
+        '<span class="sd-small">' + done + " of " + all + " criteria evaluated</span></div>" +
       '<div class="tg"><span class="tg-l">Overview</span>' + link("summary", "Summary") + link("profile", "System profile") + "</div>" +
       '<div class="tg tg-levels"><span class="tg-l">Levels</span>' + levels + "</div>" +
-      '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + (Ref.ready() ? link("ref", "Reference") : "") + "</div>";
+      '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + "</div>" +
+      (Ref.ready() ? '<div class="tg"><span class="tg-l">Reference</span><details class="sd-ref"' + (onRef ? " open" : "") + "><summary>" +
+        (onRef ? "Glossary, registers, documents" : '<span>Glossary, registers, documents</span>') + "</summary>" + Ref.navTree(onRef ? current.slice(4) : null) + "</details></div>" : "");
     var cur = head === "summary" ? "Summary" : head === "profile" ? "System profile" : head === "report" ? "Printed report" : head === "ref" ? "Reference" :
       (sheetByKey(head) ? sheetByKey(head).tab : "");
     $("#nav-cur").textContent = cur;
@@ -123,7 +133,7 @@
     var main = $("#main"), focus = null;
     if (head === "summary") main.innerHTML = viewSummary();
     else if (head === "profile") main.innerHTML = viewProfile();
-    else if (head === "report") main.innerHTML = viewReport();
+    else if (head === "report") { Ref.closeDrawer(); main.innerHTML = viewReport(); }
     else if (head === "ref" && Ref.ready()) { main.innerHTML = Ref.viewReference(rest); if (moved) window.scrollTo(0, 0); Ref.afterReference(); measureHeader(); return; }
     else if (sheetByKey(head)) {
       if (rest && moved) { filter.text = ""; filter.show = "all"; }
@@ -203,7 +213,7 @@
     var st = cardState(c, x), t;
     if (st === "met") t = "✓ Met";
     else if (st === "fail") t = x.S ? "✗ Critical failure" : "✗ Not met";
-    else if (st === "partial") t = "Partial " + pct(x.N, 0);
+    else if (st === "partial") t = "Met – for compliance " + pct(x.N, 0);
     else if (st === "na") t = "— N/A";
     else if (st === "prog") {
       var done = x.subs.filter(function (sb) { return sb.value !== Scoring.NOT_TESTED; }).length;
@@ -249,7 +259,7 @@
     var g = function (tab, label, cnt) {
       return '<button type="button" class="gbtn" data-guide="' + esc(c.id) + '" data-tab="' + tab + '">' + label + (cnt != null ? ' <span class="cnt">' + cnt + "</span>" : "") + "</button>";
     };
-    return '<article class="crit ' + cardClass(c, x) + '" id="card-' + esc(c.id) + '">' +
+    return '<article class="crit ' + cardClass(c, x) + (Ref.guideId && Ref.guideId() === c.id ? " in-guide" : "") + '" id="card-' + esc(c.id) + '">' +
       '<div class="crit-head"><a class="cid" href="#' + esc(current.split("/")[0]) + "/" + esc(c.id) + '" title="Link to this criterion">' + esc(c.id) + '</a><span class="section">' + esc(c.section) + "</span>" + crit +
       '<span class="tag">' + esc(c.scoring) + " " + Ref.help("scoring." + c.scoring, c.scoring) + " · weight " + esc(c.weight) + (c.weight === 0 ? " (info only)" : "") + " " + Ref.help("weight", "Weight") +
       '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span>" + '<span class="badge-slot" id="bdg-' + esc(c.id) + '">' + badge(c, x) + "</span>" + Ref.src(Ref.critSrc(c), "card") + "</div>" +
@@ -279,7 +289,7 @@
       var st = cardState(c, r.rows[i]); counts[st]++;
       return '<a href="#" class="sq st-' + st + (c.critical !== "no" ? " crit-sq" : "") + '" data-jump="' + esc(c.id) + '" title="' + esc(c.id + " — " + c.title.slice(0, 90)) + '"><span class="sr">' + esc(c.id) + "</span></a>";
     }).join("");
-    var NAMES = { met: "Met", fail: "Not met", partial: "Partial", prog: "In progress", na: "N/A", nt: "Not tested" };
+    var NAMES = { met: "Met", fail: "Not met", partial: "For compliance", prog: "In progress", na: "N/A", nt: "Not tested" };
     var chip = function (k) { return counts[k] ? '<span class="tchip" title="' + NAMES[k] + '"><i class="sq st-' + k + '"></i>' + counts[k] + '<span class="tc-l"> ' + NAMES[k].toLowerCase() + "</span></span>" : ""; };
     return '<div class="tracker noprint" id="tracker"><div class="tr-row"><b class="tr-name">' + esc(tabParts(s.tab)[0]) + "</b>" + statusPill(r.status) +
       '<span class="tr-score">Score <b>' + pct(r.score, 0) + "</b> / " + pct(r.threshold, 0) + "</span>" +
@@ -294,7 +304,7 @@
     return '<div class="xp-kind">Guide</div><div class="xp-title">' + esc(h && h.label || "How to evaluate this sheet") + "</div>" +
       (h ? "<p>" + esc(h.text) + "</p>" : "") + (s.note ? "<p>" + esc(s.note) + "</p>" : "") +
       '<dl class="xp-dl"><dt>Pass threshold</dt><dd>' + pct(r.threshold, 0) + ' (scoring.yaml)</dd><dt>Criteria</dt><dd>' + s.criteria.length + " · " + crit + " critical (★)</dd></dl>" +
-      '<div class="legend"><span class="badge b-met">✓ Met</span><span class="badge b-partial">Partial</span><span class="badge b-fail">✗ Not met</span>' +
+      '<div class="legend"><span class="badge b-met">✓ Met</span><span class="badge b-partial">Met – for compliance</span><span class="badge b-fail">✗ Not met</span>' +
       '<span class="badge b-prog">In progress</span><span class="badge b-na">— N/A</span><span class="badge b-nt">Not tested</span></div>';
   }
 
@@ -338,7 +348,7 @@
       var res = document.getElementById("res-" + c.id);
       if (res) res.innerHTML = resultLine(c, r.rows[i]);
       var card = document.getElementById("card-" + c.id);
-      if (card) card.className = "crit " + cardClass(c, r.rows[i]) + (card.classList.contains("target") ? " target" : "");
+      if (card) card.className = "crit " + cardClass(c, r.rows[i]) + (card.classList.contains("target") ? " target" : "") + (card.classList.contains("in-guide") ? " in-guide" : "");
       var bd = document.getElementById("bdg-" + c.id);
       if (bd) bd.innerHTML = badge(c, r.rows[i]);
     });
@@ -363,7 +373,7 @@
     if (c.scoring === "tier") return (y.N >= 1 ? "✓ " : y.N > 0 ? "◐ " : "✗ ") + String(y.M).toUpperCase();
     if (c.sub_items.length) {
       var of = " (" + y.L + " of " + y.K + ")";
-      return y.N >= 1 ? "✓ MET" + of : y.N === 0 ? "✗ NOT MET" + of : "◐ PARTIAL" + of;
+      return y.N >= 1 ? "✓ MET" + of : y.N === 0 ? "✗ NOT MET" + of : "◐ MET – FOR COMPLIANCE" + of;
     }
     return y.M === "Met" ? "✓ MET" : "✗ NOT MET";
   }
@@ -450,7 +460,7 @@
         (rows || '<tr><td colspan="6" class="muted">No items to show with the current filter.</td></tr>') + "</tbody>";
     }).join("");
 
-    var legend = '<div class="rp-legend"><span class="chip st-met">✓ Met / passed</span><span class="chip st-partial">◐ Partial / in progress</span><span class="chip st-fail">✗ Not met / critical</span>' +
+    var legend = '<div class="rp-legend"><span class="chip st-met">✓ Met / passed</span><span class="chip st-partial">◐ Met – for compliance</span><span class="chip st-incomplete">INCOMPLETE</span><span class="chip st-fail">✗ Not met / critical</span>' +
       '<span class="chip st-nt">○ Not tested</span><span class="chip st-na">— N/A</span><span class="chip st-locked">LOCKED</span><span class="rp-critb">★ Critical</span></div>';
     var office = p.office ? "<br><b>" + esc(p.office.toUpperCase()) + "</b>" : "";
 
@@ -508,6 +518,7 @@
       if (t.value === Scoring.NOT_TESTED) delete state.answers[id]; else state.answers[id] = t.value;
       save();
       t.className = valClass(t.value);
+      var cardEl = t.closest(".crit"); if (cardEl) Ref.guideFollow(cardEl.id.slice(5));
       var li = t.closest("li"); if (li) li.className = valClass(t.value);
       var s = sheetByKey(current.split("/")[0]);
       if (s) refreshSheet(s, id); else { recompute(); route(); }
@@ -529,6 +540,11 @@
       reader.readAsText(t.files[0]);
       t.value = "";
     }
+  });
+
+  document.addEventListener("focusin", function (e) {
+    var cardEl = e.target.closest && e.target.closest(".crit");
+    if (cardEl && /SELECT|TEXTAREA/.test(e.target.tagName)) Ref.guideFollow(cardEl.id.slice(5));
   });
 
   document.addEventListener("input", function (e) {
@@ -586,7 +602,7 @@
   });
 
   window.addEventListener("hashchange", route);
-  window.addEventListener("resize", function () { measureHeader(); if (window.innerWidth > 900) setNav(false); });
+  window.addEventListener("resize", function () { measureHeader(); if (window.innerWidth > PHONE) setNav(false); });
   // phones: tuck the search row and banner away while scrolling down; bring them back on the way up
   var lastY = 0, quietUntil = 0;
   function setMin(on) {
@@ -597,7 +613,7 @@
   }
   window.addEventListener("scroll", function () {
     var y = window.scrollY, min = document.body.classList.contains("hdr-min");
-    if (window.innerWidth > 900) { if (min) setMin(false); lastY = y; return; }
+    if (window.innerWidth > PHONE) { if (min) setMin(false); lastY = y; return; }
     if (Date.now() < quietUntil) { lastY = y; return; }
     if (y < 60) { if (min) setMin(false); }
     else if (y > lastY + 24 && y > 140 && !min && !(document.activeElement && document.activeElement.id === "q")) setMin(true);

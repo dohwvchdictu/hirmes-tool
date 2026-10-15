@@ -217,7 +217,8 @@
   window.addEventListener("scroll", function () { if (pop && !pop.hidden && !pinned) hidePop(); }, { passive: true });
 
   // ------------------------------------------------------------------ guide drawer
-  var drawer = null, drawerFor = null;
+  var drawer = null, drawerFor = null, drawerTab = "dev", follow = true;
+  try { follow = localStorage.getItem("guide-follow") !== "0"; } catch (x) { /* ignore */ }
   var TABS = [["dev", "Developer"], ["val", "Validator"], ["evd", "Evidence"], ["trc", "Traces"], ["trm", "Terms"]];
 
   // ------------------------------------------------------------------ source links (✎)
@@ -374,19 +375,34 @@
       document.body.appendChild(drawer);
       drawer.addEventListener("click", function (e) {
         var b = e.target.closest("[data-dtab]");
-        if (b) { renderDrawer(drawerFor.c, drawerFor.sheet, b.getAttribute("data-dtab")); }
+        if (b) { drawerTab = b.getAttribute("data-dtab"); renderDrawer(drawerFor.c, drawerFor.sheet, drawerTab); }
         if (e.target.closest(".d-close")) closeDrawer();
       });
+      drawer.addEventListener("change", function (e) {
+        if (e.target.id === "d-follow") { follow = e.target.checked; try { localStorage.setItem("guide-follow", follow ? "1" : "0"); } catch (x) { /* ignore */ } }
+      });
     }
-    renderDrawer(c, sheet, tab || "dev");
+    drawerTab = tab || drawerTab || "dev";
+    renderDrawer(c, sheet, drawerTab);
     drawer.classList.add("open");
     document.body.classList.add("drawer-open");
-    var h = drawer.querySelector("h2"); if (h) h.focus();
+    markCard(c.id);
+  }
+  /** Guide panel follows the criterion being answered (when "Follow" is ticked). */
+  function guideFollow(cid) {
+    if (!drawer || !drawer.classList.contains("open") || !follow || (drawerFor && drawerFor.c.id === cid)) return;
+    var x = idx.crit[cid] || (idx.c[cid] && idx.crit[idx.c[cid].criterion]);
+    if (x) { renderDrawer(x.c, x.sheet, drawerTab); markCard(x.c.id); }
+  }
+  function markCard(cid) {
+    document.querySelectorAll(".crit.in-guide").forEach(function (el) { el.classList.remove("in-guide"); });
+    var el = document.getElementById("card-" + cid); if (el) el.classList.add("in-guide");
   }
   function renderDrawer(c, sheet, tab) {
     drawerFor = { c: c, sheet: sheet };
     var n = counts(c);
-    drawer.innerHTML = '<div class="d-head"><div><div class="xp-kind">' + esc(sheet.tab) + " · " + esc(c.section) + '</div><h2 tabindex="-1">' + esc(c.id) + "</h2></div>" +
+    drawer.innerHTML = '<div class="d-head"><div><div class="xp-kind">Guide · ' + esc(sheet.tab) + " · " + esc(c.section) + '</div><h2 tabindex="-1"><a href="#' + esc(sheet.key) + "/" + esc(c.id) + '" title="Go to this criterion">' + esc(c.id) + "</a></h2></div>" +
+      '<label class="d-follow" title="Show the guide of the criterion you are answering"><input type="checkbox" id="d-follow"' + (follow ? " checked" : "") + "> Follow</label>" +
       '<button type="button" class="d-close" aria-label="Close guide">×</button></div><p class="d-title">' + link(c.title, new Set()) + "</p>" +
       '<div class="d-tabs" role="tablist">' + TABS.map(function (t) {
         var badge = t[0] === "trc" ? n.trc : t[0] === "trm" ? n.trm : null;
@@ -402,7 +418,7 @@
       '<div class="d-all">Whole criterion ' + srcBtn(all) + "</div>";
   }
   function closeDrawer() {
-    if (drawer) { drawer.classList.remove("open"); document.body.classList.remove("drawer-open"); }
+    if (drawer) { drawer.classList.remove("open"); document.body.classList.remove("drawer-open"); markCard(""); }
   }
 
   // ------------------------------------------------------------------ reference pages
@@ -410,19 +426,28 @@
     ["TR", "FHIR Traceability (TR-)"], ["IND", "Indicators (IND-)"], ["prefixes", "ID prefixes"]];
   var refFilter = "";
 
-  function navHtml(page) {
+  /** Reference contents for the sidebar: terms, registers, and each document's chapters. */
+  function navTree(page) {
+    if (!R) return "";
+    if (page == null) page = "\u0001";   // nothing is the current page
+    var a = function (p, label) { return '<a href="#ref/' + p + '"' + (page === p ? ' aria-current="page"' : "") + ">" + label + "</a>"; };
     var docs = R.docs.map(function (d) {
-      return '<div class="rn-group">' + esc(d.title) + "</div>" + d.chapters.map(function (ch) {
-        var p = "doc:" + d.id + ":" + ch.id;
-        return '<a href="#ref/' + p + '"' + (page === p ? ' aria-current="page"' : "") + ">" + esc(ch.title) + "</a>";
-      }).join("");
+      var open = page.indexOf("doc:" + d.id + ":") === 0;
+      return '<details class="sd-doc"' + (open ? " open" : "") + "><summary>" + esc(d.title) + ' <span class="cnt">' + d.chapters.length + "</span></summary>" +
+        d.chapters.map(function (ch) { return a("doc:" + d.id + ":" + ch.id, esc(ch.title)); }).join("") + "</details>";
     }).join("");
-    return '<nav class="rnav" aria-label="Reference"><div class="rn-group">Terms</div>' +
-      NAV.slice(0, 2).map(function (n) { return '<a href="#ref/' + n[0] + '"' + (page === n[0] ? ' aria-current="page"' : "") + ">" + n[1] + "</a>"; }).join("") +
-      '<div class="rn-group">Registers</div>' +
-      NAV.slice(2).map(function (n) { return '<a href="#ref/' + n[0] + '"' + (page === n[0] ? ' aria-current="page"' : "") + ">" + n[1] + "</a>"; }).join("") +
-      docs + "</nav>";
+    return '<div class="sd-sub">' + a("", "Reference home") + '<div class="sd-h">Terms</div>' + NAV.slice(0, 2).map(function (n) { return a(n[0], n[1]); }).join("") +
+      '<div class="sd-h">Registers</div>' + NAV.slice(2).map(function (n) { return a(n[0], n[1]); }).join("") +
+      '<div class="sd-h">Documents</div>' + docs + "</div>";
   }
+  function picker(page) {
+    var opt = function (p, label) { return '<option value="' + esc(p) + '"' + (p === page ? " selected" : "") + ">" + esc(label) + "</option>"; };
+    return '<label class="ref-picker"><span>Contents</span><select id="ref-pick">' + opt("", "Reference home") +
+      '<optgroup label="Terms and registers">' + NAV.map(function (n) { return opt(n[0], n[1]); }).join("") + "</optgroup>" +
+      R.docs.map(function (d) { return '<optgroup label="' + esc(d.title) + '">' + d.chapters.map(function (ch) { return opt("doc:" + d.id + ":" + ch.id, ch.title); }).join("") + "</optgroup>"; }).join("") +
+      "</select></label>";
+  }
+  document.addEventListener("change", function (e) { if (e.target.id === "ref-pick") location.hash = "#ref/" + e.target.value; });
 
   function match(text) { return !refFilter || String(text).toLowerCase().indexOf(refFilter.toLowerCase()) >= 0; }
 
@@ -480,7 +505,7 @@
 
   function viewReference(path) {
     var parts = path.split("/"), page = parts[0] || "", target = parts[1] || "";
-    return '<div class="refview">' + navHtml(page) + '<section class="panel rbody" data-page="' + esc(page) + '" data-target="' + esc(target) + '">' + pageHtml(page) + "</section></div>";
+    return '<div class="refview">' + picker(page) + '<section class="panel rbody" data-page="' + esc(page) + '" data-target="' + esc(target) + '">' + pageHtml(page) + "</section></div>";
   }
 
   function afterReference() {
@@ -585,6 +610,6 @@
   root.Ref = {
     base: function (data) { D = data; }, src: srcBtn, tip: tip, getHelp: function (p) { return R ? getHelp(p) : null; }, critSrc: critSrc, sheetSrc: sheetSrc,
     init: init, link: link, help: help, openDrawer: openDrawer, closeDrawer: closeDrawer, counts: counts,
-    viewReference: viewReference, afterReference: afterReference, initSearch: initSearch, ready: function () { return !!R; }
+    viewReference: viewReference, afterReference: afterReference, navTree: navTree, guideFollow: guideFollow, guideId: function () { return drawer && drawer.classList.contains("open") && drawerFor ? drawerFor.c.id : null; }, initSearch: initSearch, ready: function () { return !!R; }
   };
 })(this);

@@ -11,7 +11,7 @@
 <body>
   <header class="top" id="top">
     <div class="top-inner">
-      <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="tabs" aria-label="Open navigation">
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="side" aria-label="Open navigation">
         <span class="burger" aria-hidden="true"></span><span id="nav-cur" class="nav-cur">Summary</span>
       </button>
       <a class="brand" href="#summary" title="Summary">
@@ -19,7 +19,9 @@
         <span class="sub">HIE System Validation — Testing Criteria Scorecard</span>
       </a>
       <div class="search" role="search">
-        <input id="q" type="search" placeholder="Search criteria, terms, registers…  ( / )" aria-label="Search criteria, terms, registers and documents" autocomplete="off">
+        <svg class="s-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/></svg>
+        <input id="q" type="search" placeholder="Search criteria, terms, registers, documents" aria-label="Search criteria, terms, registers and documents" autocomplete="off">
+        <kbd class="s-key" title="Press / to search">/</kbd>
         <div id="q-list" class="q-list" role="listbox" hidden></div>
       </div>
       <div class="menu">
@@ -34,8 +36,8 @@
       </div>
     </div>
     <div id="banner" class="banner" role="status"></div>
-    <nav id="tabs" class="tabs" aria-label="Sections"></nav>
   </header>
+  <aside id="side" class="side" aria-label="Navigation"><nav id="tabs" class="tabs" aria-label="Sections"></nav></aside>
   <div id="scrim" class="scrim" hidden></div>
   <main id="main" tabindex="-1"><p class="loading">Loading criteria…</p></main>
   <footer class="foot" id="foot"></footer>
