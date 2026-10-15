@@ -44,7 +44,7 @@ critical:
 
 weight:
   label: Weight
-  help: How much the criterion counts toward the sheet score. Weight 0 means information only — recorded but not scored.
+  help: How much the criterion counts toward the sheet score in %percent. [Criteria Score]x[Weight]=Weighted Score
 
 validation_role:
   label: Validation role
