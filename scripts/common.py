@@ -22,10 +22,11 @@ SCORING_FILE = ROOT / "scoring.yaml"
 REGISTERS_DIR = ROOT / "registers"
 TEMPLATE_XLSX = ROOT / "templates" / "scorecard-template.xlsx"
 
+TITLE = "Healthcare Interoperability Readiness Matrix for EMR Systems"
 OWNER = "Department of Health – Western Visayas Center for Health Development"
 CONTENT_LICENSE = "CC BY 4.0"
 CODE_LICENSE = "GPL-3.0-or-later"
-CREDIT = f"HIE System Validation Testing Criteria, {OWNER}, licensed under {CONTENT_LICENSE}"
+CREDIT = f"Healthcare Interoperability Readiness Matrix for EMR Systems, {OWNER}, licensed under {CONTENT_LICENSE}"
 
 # Values as they appear in the workbook <-> values stored in YAML
 CRITICAL_TO_XLSX = {"yes": "Yes", "no": "No", "subs": "★ subs"}
