@@ -16,7 +16,10 @@
     ["version", "Version / build under test"], ["category", "Applicant category"], ["deployment", "Deployment model"],
     ["test_dates", "Date(s) of testing"], ["technical_lead", "Technical Lead"], ["validators", "Validators"],
     ["observers", "Observers"], ["administrator", "Administrator"], ["office", "Conducting office"],
-    ["ph_core", "PH Core IG version"], ["pheref", "PHeReF IG version"]
+    ["ph_core", "PH Core IG version"], ["pheref", "PHeReF IG version"], ["terminology", "Terminology release"],
+    ["evaluation_type", "Evaluation type"], ["date_received", "Date application received"],
+    ["certificate_no", "Certificate no. (assigned on approval)"], ["certificate_date", "Certificate date"],
+    ["valid_until", "Valid until"], ["conditions", "Conditions"]
   ];
 
   // ------------------------------------------------------------------ utilities
@@ -231,50 +234,158 @@
   }
 
   // ------------------------------------------------------------------ printed report
+  var reportOpts = { guides: false, subs: true, attention: false };
+
+  function rowClass(c, y) {
+    if (c.weight === 0) return "st-info";
+    if (y.M === Scoring.NOT_TESTED) return "st-nt";
+    if (y.N === "") return "st-na";
+    if (y.S === 1 || y.N === 0) return "st-fail";
+    if (y.N >= 1) return "st-met";
+    return "st-partial";
+  }
+  function resultText(c, y) {
+    if (c.weight === 0) return "— Not scored";
+    if (y.M === Scoring.NOT_TESTED) return "○ NOT TESTED";
+    if (y.M === "N/A") return "— N/A";
+    if (c.scoring === "tier") return (y.N >= 1 ? "✓ " : y.N > 0 ? "◐ " : "✗ ") + String(y.M).toUpperCase();
+    if (c.sub_items.length) {
+      var of = " (" + y.L + " of " + y.K + ")";
+      return y.N >= 1 ? "✓ MET" + of : y.N === 0 ? "✗ NOT MET" + of : "◐ PARTIAL" + of;
+    }
+    return y.M === "Met" ? "✓ MET" : "✗ NOT MET";
+  }
+  function subMark(v) { return v === "Met" ? "✓" : v === "Not Met" ? "✗" : v === "N/A" ? "—" : "○"; }
+  function subClass(v) { return v === "Met" ? "st-met" : v === "Not Met" ? "st-fail" : v === "N/A" ? "st-na" : "st-nt"; }
+  function stClass(s) { return "st-" + String(s).toLowerCase().replace(/ /g, "-"); }
+  function bar(x, cls, marker) {
+    var w = Math.max(0, Math.min(1, x || 0)) * 100;
+    return '<span class="rp-bar ' + (cls || "") + '"><span style="width:' + w.toFixed(1) + '%"></span>' +
+      (marker != null ? '<i style="left:' + (marker * 100).toFixed(1) + '%"></i>' : "") + "</span>";
+  }
+  function kv(pairs) {
+    var cells = pairs.map(function (p) { return "<th>" + esc(p[0]) + "</th><td>" + (p[2] ? p[1] : esc(p[1] || "—")) + "</td>"; });
+    var rows = [];
+    for (var i = 0; i < cells.length; i += 2) rows.push("<tr>" + cells[i] + (cells[i + 1] || "<th></th><td></td>") + "</tr>");
+    return '<table class="rp-kv">' + rows.join("") + "</table>";
+  }
+
   function viewReport() {
-    var p = state.profile, r = result, m = data.meta;
-    var prof = PROFILE_FIELDS.map(function (f) { return "<tr><th>" + esc(f[1]) + "</th><td>" + esc(p[f[0]] || "—") + "</td></tr>"; }).join("");
-    var levels = r.levels.map(function (l) {
-      return "<tr><td>" + esc(l.name) + '</td><td class="num">' + (l.threshold == null ? "all parts" : pct(l.threshold, 0)) + "</td><td>" + esc(l.gated) +
-        '</td><td class="num">' + pct(l.score) + '</td><td class="num">' + pct(l.progress, 0) + " evaluated</td></tr>";
-    }).join("");
-    var needs = data.sheets.map(function (s) {
+    var p = state.profile, r = result, m = data.meta, rt = data.report || {};
+    var title = m.title || "Healthcare Interoperability Readiness Matrix for EMR Systems";
+    var draft = m.is_release ? "" : '<span class="rp-draft">' + esc(m.kind === "candidate" ? "Release candidate" : "Draft") + " — not for official evaluation</span>";
+    var conf = r.conformant ? '<span class="chip st-met">✓ CONFORMANT (Levels 0–3 passed)' + (data.scoring.policy.status !== "Approved" ? " — PROVISIONAL" : "") + "</span>"
+      : '<span class="chip st-fail">NOT YET CONFORMANT</span>';
+
+    // B. summary rows
+    var sumRows = [];
+    var totalItems = 0, totalTested = 0, totalCrit = 0;
+    r.levels.forEach(function (l) {
+      var parts = l.parts.map(function (k) { return r.sheets[k]; });
+      var crit = 0, critTotal = 0, needs = 0, tested = 0, items = 0;
+      parts.forEach(function (s) { needs += s.needs.length; tested += s.total - s.notTested; items += s.total; crit += s.criticalNotMet; });
+      totalItems += items; totalTested += tested; totalCrit += crit;
+      var code = l.key;
+      sumRows.push('<tr class="rp-lvl"><td class="c">' + esc(code) + "</td><td><b>" + esc(l.name) + "</b>" + bar(l.progress, "thin") +
+        '<span class="muted">' + pct(l.progress, 0) + " evaluated</span></td><td class=\"c\">" + (l.threshold == null ? "all parts" : pct(l.threshold, 0)) +
+        '</td><td class="c"><span class="chip ' + stClass(l.gated) + '">' + esc(l.gated) + '</span></td><td class="c"><b>' + pct(l.score) + "</b>" +
+        bar(l.score, "score", l.threshold) + "</td><td>" + tested + " of " + items + " tested · critical not met " + crit + (needs ? ' · <span class="t-fail">' + needs + " need compliance</span>" : "") + "</td></tr>");
+      if (l.parts.length > 1) l.parts.forEach(function (k) {
+        var s = r.sheets[k], sh = sheetByKey(k);
+        sumRows.push('<tr class="rp-part"><td class="c">' + esc(k.replace("L2", "2")) + "</td><td>" + esc(sh.title.replace(/^Level 2[A-D] — /, "")) + bar(s.progress, "thin") +
+          '<span class="muted">' + pct(s.progress, 0) + ' evaluated</span></td><td class="c">' + pct(s.threshold, 0) + '</td><td class="c"><span class="chip ' + stClass(s.status) + '">' + esc(s.status) +
+          '</span></td><td class="c">' + pct(s.score) + bar(s.score, "score", s.threshold) + "</td><td>" + (s.total - s.notTested) + " of " + s.total + " tested · critical not met " + s.criticalNotMet +
+          (s.needs.length ? ' · <span class="t-fail">' + s.needs.length + " need compliance</span>" : "") + "</td></tr>");
+      });
+    });
+
+    // D. needs compliance
+    var needRows = data.sheets.map(function (s) {
       var x = r.sheets[s.key];
-      return "<tr><td>" + esc(s.title) + '</td><td class="num">' + x.criticalNotMet + "</td><td>" + esc(x.needs.join(", ") || "—") + "</td></tr>";
+      var chips = x.rows.filter(function (y) { return y.needs; }).map(function (y) {
+        return '<span class="idchip ' + (y.S ? "st-fail" : "st-partial") + '">' + esc(y.id) + "</span>";
+      }).join(" ");
+      return '<tr><td>' + esc(s.title) + '</td><td class="c ' + (x.criticalNotMet ? "t-fail" : "") + '">' + x.criticalNotMet + "</td><td>" + (chips || "—") + "</td></tr>";
     }).join("");
+
+    // G. breakdown
     var breakdown = data.sheets.map(function (s) {
       var x = r.sheets[s.key];
       var rows = s.criteria.map(function (c, i) {
-        var y = x.rows[i];
-        var res = c.weight === 0 ? "— Not scored" : y.M === "Met" ? "✓ MET" : y.M === "Not Met" ? "✗ NOT MET" : y.M === Scoring.NOT_TESTED ? "○ NOT TESTED" :
-          y.M === "N/A" ? "— N/A" : (y.N >= 1 ? "✓ " : "◐ ") + String(y.M).toUpperCase();
-        var row = '<tr><td class="ref">' + esc(c.id) + "</td><td>" + esc(c.title) + "</td><td>" + (c.critical === "yes" ? "★ CRITICAL " : "") + esc(c.scoring) + " · W" + esc(c.weight) +
-          "</td><td>" + esc(res) + '</td><td class="num">' + (y.N === "" ? "—" : pct(y.N, 0)) + "</td><td>" + esc(y.outstanding) + (state.notes[c.id] ? "<br>Notes: " + esc(state.notes[c.id]) : "") + "</td></tr>";
-        row += c.sub_items.map(function (sbi) {
-          var v = state.answers[sbi.id] || Scoring.NOT_TESTED;
-          return '<tr class="subrow"><td class="ref">' + esc(sbi.id) + '</td><td colspan="2">↳ ' + (sbi.critical ? "★ " : "") + esc(sbi.text) + "</td><td>" +
-            esc(v === "Met" ? "✓ Met" : v === "Not Met" ? "✗ Not met" : v === "N/A" ? "— N/A" : "○ Not tested") + '</td><td></td><td></td></tr>';
-        }).join("");
+        var y = x.rows[i], cls = rowClass(c, y);
+        if (reportOpts.attention && (cls === "st-met" || cls === "st-na" || cls === "st-info")) return "";
+        var badge = c.critical === "yes" ? '<span class="rp-critb">★ CRITICAL</span>' : c.critical === "subs" ? '<span class="rp-critb">★ critical sub-items</span>' : "";
+        var subs = "";
+        if (reportOpts.subs && c.sub_items.length) {
+          subs = '<div class="rp-subs">' + c.sub_items.map(function (sb, k) {
+            var v = state.answers[sb.id] || Scoring.NOT_TESTED;
+            return '<span class="sub ' + subClass(v) + '" title="' + esc(sb.id + " — " + v) + '"><b>' + subMark(v) + " " + (k + 1) + "</b> " + (sb.critical ? "★ " : "") + esc(sb.text) + "</span>";
+          }).join("") + "</div>";
+        }
+        var note = state.notes[c.id] ? '<div class="note">Notes: ' + esc(state.notes[c.id]) + "</div>" : "";
+        var row = '<tr class="rp-crit ' + cls + '"><td class="ref">' + esc(c.id) + '</td><td><div class="ttl">' + esc(c.title) + '</div><div class="muted">' +
+          esc(c.section) + " · " + esc(c.validation_role) + "</div>" + subs + '</td><td class="c">' + badge + '<div class="muted">' + esc(c.scoring) + " · W" + esc(c.weight) +
+          '</div></td><td class="c"><span class="res">' + esc(resultText(c, y)) + '</span></td><td class="c">' + (y.N === "" ? "—" : pct(y.N, 0)) +
+          (y.N === "" ? "" : bar(y.N, "thin")) + '</td><td class="out">' + esc(y.outstanding) + note + "</td></tr>";
+        if (reportOpts.guides) {
+          row += '<tr class="rp-guide"><td></td><td colspan="2"><b>Developer\'s guide:</b> ' + esc(c.developer_guide.split("\n\nPurpose:")[0]) +
+            '</td><td colspan="3"><b>Validator\'s guide:</b> ' + esc(c.validator_guide) + "<br><b>Evidence:</b> " + esc(c.evidence) + "</td></tr>";
+        }
         return row;
       }).join("");
-      return "<h2>" + esc(s.title) + '</h2><p class="rep-sub">Score ' + pct(x.score) + " · Threshold " + pct(x.threshold, 0) + " · Critical not met " + x.criticalNotMet +
-        " · Not tested " + x.notTested + " of " + x.total + " · Status " + esc(x.status) + "</p>" +
-        '<table class="grid"><thead><tr><th>Ref</th><th>Criterion</th><th>Type · W</th><th>Result</th><th class="num">Score</th><th>Outstanding / notes</th></tr></thead><tbody>' + rows + "</tbody></table>";
+      return '<tbody class="rp-sheet"><tr class="rp-band"><td colspan="6"><b>' + esc(s.title) + '</b><span class="band-stats">Score <b>' + pct(x.score) + "</b> · Threshold " + pct(x.threshold, 0) +
+        " · Critical not met " + x.criticalNotMet + " · Not tested " + x.notTested + " of " + x.total + ' <span class="chip ' + stClass(x.status) + '">' + esc(x.status) + "</span></span></td></tr>" +
+        (rows || '<tr><td colspan="6" class="muted">No items to show with the current filter.</td></tr>') + "</tbody>";
     }).join("");
-    return '<section class="panel" id="report"><div class="rep-head"><p>Republic of the Philippines<br>Department of Health<br>' + esc((p.office || "[DOH OFFICE / REGION]").toUpperCase()) +
-      '</p><h2>HIE SYSTEM VALIDATION TESTING CRITERIA — EVALUATION REPORT</h2><p class="rep-sub">Criteria version ' + esc(m.label) +
-      (m.is_release ? "" : " — DRAFT, not for official evaluation") + "</p></div>" +
-      '<h2>A. System profile</h2><table class="grid kv">' + prof + "</table>" +
-      '<h2>B. Summary scorecard</h2><table class="grid"><thead><tr><th>Level</th><th class="num">Threshold</th><th>Status</th><th class="num">Score</th><th class="num">Progress</th></tr></thead><tbody>' + levels + "</tbody></table>" +
-      '<p class="big">Highest level achieved: ' + esc(r.highest) + " · HIE use: " + (r.conformant ? "✓ CONFORMANT (Levels 0–3 passed)" : "NOT YET CONFORMANT") + "</p>" +
-      '<h2>C. Items needing compliance</h2><table class="grid"><thead><tr><th>Level / part</th><th class="num">Critical not met</th><th>Criteria needing compliance</th></tr></thead><tbody>' + needs +
-      "</tbody></table><p><b>Certificate condition (no critical item Not Met): " + (r.criticalOpen === 0 ? "✓ MET" : "✗ NOT MET — certificate cannot be issued") + "</b></p>" +
-      '<h2>D. Sign-off</h2><table class="grid sign"><thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>' +
-      ["Validated by", "Witnessed by", "Processed by (Administrator)", "Approved by (Technical Lead)", "Conforme (Vendor / Developer)"].map(function (x) {
-        return "<tr><td>" + x + "</td><td></td><td></td><td></td></tr>";
+
+    var legend = '<div class="rp-legend"><span class="chip st-met">✓ Met / passed</span><span class="chip st-partial">◐ Partial / in progress</span><span class="chip st-fail">✗ Not met / critical</span>' +
+      '<span class="chip st-nt">○ Not tested</span><span class="chip st-na">— N/A</span><span class="chip st-locked">LOCKED</span><span class="rp-critb">★ Critical</span></div>';
+    var office = p.office ? "<br><b>" + esc(p.office.toUpperCase()) + "</b>" : "";
+
+    var controls = '<div class="rp-controls noprint"><label><input type="checkbox" data-ropt="guides"' + (reportOpts.guides ? " checked" : "") + "> Developer's and validator's guides</label>" +
+      '<label><input type="checkbox" data-ropt="subs"' + (reportOpts.subs ? " checked" : "") + "> Sub-item results</label>" +
+      '<label><input type="checkbox" data-ropt="attention"' + (reportOpts.attention ? " checked" : "") + "> Only items not met, partial or not tested</label>" +
+      '<button type="button" id="btn-print-report">Print / save as PDF</button></div>';
+
+    return controls + '<article id="report" class="paper">' +
+      '<header class="rp-letter">Republic of the Philippines<br>Department of Health' + office + "</header>" +
+      '<h1 class="rp-title">' + esc(title) + "<small>Evaluation Report</small></h1>" +
+      '<p class="rp-ver">Criteria version ' + esc(m.label) + " · built " + esc(m.built) + " " + draft + "</p>" +
+      (rt.background ? '<section class="rp-text"><h3>Background</h3><p>' + esc(rt.background).replace(/\n\n/g, "</p><p>") + "</p>" +
+        (rt.scope ? "<h3>Scope and coverage</h3><p>" + esc(rt.scope).replace(/\n\n/g, "</p><p>") + "</p>" : "") + "</section>" : "") +
+      '<h2 class="rp-h">A. System profile</h2>' + kv([["System name", p.system_name], ["Version / build", p.version], ["Vendor / developer", p.vendor], ["Applicant category", p.category],
+        ["Deployment model", p.deployment], ["Evaluation type", p.evaluation_type], ["Application no.", p.application_no], ["Date application received", p.date_received],
+        ["Technical Lead", p.technical_lead], ["Administrator", p.administrator], ["Validators", p.validators], ["Observers", p.observers],
+        ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Conducting office", p.office]]) +
+      '<h2 class="rp-h">B. Summary scorecard</h2>' + legend +
+      '<table class="rp-table rp-sum"><thead><tr><th>Level</th><th>Level name · evaluation progress</th><th>Threshold</th><th>Status</th><th>Score</th><th>Items &amp; findings</th></tr></thead><tbody>' +
+      sumRows.join("") + '<tr class="rp-total"><td colspan="2"><b>Highest level achieved:</b> ' + esc(r.highest) + '</td><td colspan="4"><b>HIE use:</b> ' + conf + "</td></tr>" +
+      '<tr><td colspan="2"><b>Overall progress (all levels):</b>' + bar(totalItems ? totalTested / totalItems : 0, "thin") + '</td><td colspan="4">' + totalTested + " of " + totalItems +
+      " criteria evaluated · critical not met " + totalCrit + "</td></tr></tbody></table>" +
+      '<h2 class="rp-h">C. Level 3 reconciliation</h2><p class="muted rp-note">The Level 3 reconciliation (Test Data sections B and C) is recorded in the scorecard workbook; it is not captured in the web scorecard.</p>' +
+      '<h2 class="rp-h">D. Items needing compliance</h2><table class="rp-table"><thead><tr><th>Level / part</th><th>Critical not met</th><th>Criteria needing compliance (red = critical failure)</th></tr></thead><tbody>' +
+      needRows + '<tr class="rp-total"><td><b>Certificate condition: no critical item Not Met</b></td><td class="c">' + r.criticalOpen + "</td><td>" +
+      (r.criticalOpen === 0 ? '<span class="chip st-met">✓ MET — no critical item open</span>' : '<span class="chip st-fail">✗ NOT MET — certificate cannot be issued</span>') + "</td></tr></tbody></table>" +
+      '<h2 class="rp-h">E. Certificate details</h2>' + kv([["Certificate no.", p.certificate_no], ["Certificate date", p.certificate_date], ["Product · version", (p.system_name || "—") + " · " + (p.version || "—")],
+        ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest + (data.scoring.policy.status !== "Approved" ? " (thresholds PROPOSED — provisional)" : "")],
+        ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || "2 years from approval or until a major change / IG major version (PROPOSED)"], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"]]) +
+      '<h2 class="rp-h">F. Sign-off</h2><table class="rp-table rp-sign"><thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>' +
+      [["Validated by", p.validators], ["Witnessed by", p.observers], ["Processed by — Administrator", p.administrator], ["Approved by — Technical Lead", p.technical_lead], ["Conforme — Vendor / Developer", p.vendor ? "Authorized signatory of " + p.vendor : ""]].map(function (x) {
+        return "<tr><td>" + esc(x[0]) + "</td><td>" + esc(x[1] || "") + "</td><td></td><td></td></tr>";
       }).join("") + "</tbody></table>" +
-      "<h2>E. Testing criteria breakdown</h2>" + breakdown +
-      '<p class="rep-sub">' + esc(m.credit || "") + "</p></section>";
+      '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
+      '<table class="rp-table rp-crits"><colgroup><col class="w-ref"><col><col class="w-type"><col class="w-res"><col class="w-score"><col class="w-out"></colgroup>' +
+      "<thead><tr><th>Ref</th><th>Criterion</th><th>Type · W</th><th>Result</th><th>Score</th><th>Outstanding / notes</th></tr></thead>" + breakdown + "</table>" +
+      '<p class="rp-credit">' + esc(m.credit || "") + "</p></article>";
+  }
+
+  function pageStyle() {
+    var m = data.meta, el = document.getElementById("page-style");
+    if (!el) { el = document.createElement("style"); el.id = "page-style"; document.head.appendChild(el); }
+    var q = function (s) { return '"' + String(s).replace(/["\\]/g, "") + '"'; };
+    el.textContent = "@page { size: A4; margin: 11mm 9mm 13mm; " +
+      "@bottom-left { content: " + q((m.title || "") + " — Evaluation Report · " + m.label) + "; font: 7pt Arial, sans-serif; color: #555; } " +
+      "@bottom-right { content: \"Page \" counter(page) \" of \" counter(pages); font: 7pt Arial, sans-serif; color: #555; } }";
   }
 
   // ------------------------------------------------------------------ events
@@ -286,6 +397,8 @@
       save();
       var s = sheetByKey(current);
       if (s) refreshSheet(s, id); else { recompute(); route(); }
+    } else if (t.dataset.ropt) {
+      reportOpts[t.dataset.ropt] = t.checked; route();
     } else if (t.id === "flt-show") {
       filter.show = t.value; route(); $("#flt-show").value = filter.show;
     } else if (t.id === "file-load" && t.files && t.files[0]) {
@@ -325,8 +438,10 @@
       var name = (state.profile.system_name || "evaluation").replace(/[^A-Za-z0-9_-]+/g, "-");
       a.href = URL.createObjectURL(blob); a.download = name + "-" + new Date().toISOString().slice(0, 10) + ".json";
       document.body.appendChild(a); a.click(); a.remove();
-    } else if (t.id === "btn-print") {
-      location.hash = "#report"; setTimeout(function () { window.print(); }, 300);
+    } else if (t.id === "btn-print" || t.id === "btn-print-report") {
+      pageStyle();
+      if (location.hash !== "#report") { location.hash = "#report"; setTimeout(function () { window.print(); }, 400); }
+      else window.print();
     } else if (t.id === "btn-reset") {
       if (confirm("Clear all answers, notes and the system profile in this browser?")) { state = { answers: {}, notes: {}, profile: {} }; save(); recompute(); route(); }
     } else if (t.dataset.bulk) {
