@@ -67,40 +67,81 @@
       '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>';
   }
 
+  function tabState(key) {
+    var r = result.sheets[key]; if (!r) return "";
+    if (r.status === "PASSED") return "pass";
+    if (r.status === "NOT PASSED") return "fail";
+    return r.progress > 0 ? "prog" : "todo";
+  }
+  function tabParts(tab) { var m = /^(\S+)\s+(.*)$/.exec(tab); return m ? [m[1], m[2]] : [tab, ""]; }
+
   function renderTabs() {
-    var items = [["summary", "Summary"], ["profile", "System Profile"]];
-    data.sheets.forEach(function (s) { items.push([s.key, s.tab]); });
-    items.push(["report", "Printed Report"]);
-    if (Ref.ready()) items.push(["ref", "Reference"]);
-    $("#tabs").innerHTML = items.map(function (it) {
-      var dot = "";
-      if (result.sheets[it[0]]) {
-        var st = result.sheets[it[0]].status;
-        var col = st === "PASSED" ? "var(--good)" : st === "NOT PASSED" ? "var(--bad)" : "var(--warn)";
-        dot = '<span class="dot" style="background:' + col + '" title="' + st + '"></span>';
-      }
-      return '<a href="#' + it[0] + '"' + (current.split("/")[0] === it[0] ? ' aria-current="page"' : "") + ">" + esc(it[1]) + dot + "</a>";
+    var head = current.split("/")[0];
+    var link = function (key, inner, title, cls) {
+      return '<a href="#' + key + '" class="' + (cls || "") + '"' + (head === key ? ' aria-current="page"' : "") + (title ? ' title="' + esc(title) + '"' : "") + ">" + inner + "</a>";
+    };
+    var levels = data.sheets.map(function (s) {
+      var r = result.sheets[s.key], st = tabState(s.key), tp = tabParts(s.tab);
+      var tested = r.total - r.notTested;
+      return link(s.key, '<span class="t-code">' + esc(tp[0]) + '</span><span class="t-name">' + esc(tp[1]) + "</span>" +
+        '<span class="t-state t-' + st + '" aria-hidden="true"></span><span class="t-meter"><span class="t-' + st + '" style="width:' + (r.progress * 100).toFixed(0) + '%"></span></span>',
+        s.title + " — " + r.status + " · " + tested + " of " + r.total + " evaluated · score " + pct(r.score) + " (threshold " + pct(r.threshold, 0) + ")", "lvl");
     }).join("");
+    $("#tabs").innerHTML =
+      '<div class="tg"><span class="tg-l">Overview</span>' + link("summary", "Summary") + link("profile", "System profile") + "</div>" +
+      '<div class="tg tg-levels"><span class="tg-l">Levels</span>' + levels + "</div>" +
+      '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + (Ref.ready() ? link("ref", "Reference") : "") + "</div>";
+    var cur = head === "summary" ? "Summary" : head === "profile" ? "System profile" : head === "report" ? "Printed report" : head === "ref" ? "Reference" :
+      (sheetByKey(head) ? sheetByKey(head).tab : "");
+    $("#nav-cur").textContent = cur;
   }
 
+  function setNav(open) {
+    document.body.classList.toggle("nav-open", open);
+    $("#nav-toggle").setAttribute("aria-expanded", String(open));
+    $("#scrim").hidden = !open;
+  }
+  function setMenu(open) {
+    $("#menu-list").hidden = !open;
+    $("#menu-btn").setAttribute("aria-expanded", String(open));
+  }
+  function measureHeader() {
+    document.documentElement.style.setProperty("--hdr", $("#top").offsetHeight + "px");
+  }
+
+  var lastHash = null;
+  /** Render the page for the address. The page scrolls only when the address changes (a link or
+   *  tab was followed); re-rendering after an answer, a filter or a load keeps the position. */
   function route() {
     var h = decodeURIComponent((location.hash || "#summary").slice(1));
     var head = h.split("/")[0], rest = h.slice(head.length + 1);
+    var moved = h !== lastHash, y = window.scrollY;
+    lastHash = h;
     current = h;
+    setNav(false);
     renderTabs();
     var main = $("#main"), focus = null;
     if (head === "summary") main.innerHTML = viewSummary();
     else if (head === "profile") main.innerHTML = viewProfile();
     else if (head === "report") main.innerHTML = viewReport();
-    else if (head === "ref" && Ref.ready()) { main.innerHTML = Ref.viewReference(rest); Ref.afterReference(); return; }
+    else if (head === "ref" && Ref.ready()) { main.innerHTML = Ref.viewReference(rest); if (moved) window.scrollTo(0, 0); Ref.afterReference(); measureHeader(); return; }
     else if (sheetByKey(head)) {
-      if (rest) { filter.text = ""; filter.show = "all"; focus = rest; }
+      if (rest && moved) { filter.text = ""; filter.show = "all"; }
+      focus = rest;
       main.innerHTML = viewSheet(sheetByKey(head));
     }
     else { location.hash = "#summary"; return; }
+    measureHeader();
     var card = focus && document.getElementById("card-" + focus);
-    if (card) { card.classList.add("target"); card.scrollIntoView({ block: "start" }); window.scrollBy(0, -150); }
+    if (card) card.classList.add("target");
+    if (!moved) window.scrollTo(0, y);
+    else if (card) scrollToCard(card);
     else window.scrollTo(0, 0);
+  }
+
+  function scrollToCard(card) {
+    var off = $("#top").offsetHeight + (($(".tracker") || {}).offsetHeight || 0) + 12;
+    window.scrollTo({ top: card.getBoundingClientRect().top + window.scrollY - off, behavior: "auto" });
   }
 
   // ------------------------------------------------------------------ summary
@@ -145,12 +186,32 @@
   }
 
   // ------------------------------------------------------------------ criteria sheet
-  function cardClass(x) {
-    if (x.M === Scoring.NOT_TESTED) return "";
-    if (x.S === 1 || x.N === 0) return "st-fail";
-    if (x.N === "" || x.N >= 1) return "st-met";
-    return "st-partial";
+  /** Visual state of a criterion: met, fail, partial, na, prog (some sub-items answered), nt. */
+  function cardState(c, x) {
+    if (x.S === 1) return "fail";   // a critical item or ★ sub-item already failed, even if others are untested
+    if (x.M === Scoring.NOT_TESTED) {
+      var answered = (x.subs || []).filter(function (sb) { return sb.value !== Scoring.NOT_TESTED; }).length;
+      return answered ? "prog" : "nt";
+    }
+    if (x.N === "") return "na";
+    if (x.S === 1 || x.N === 0) return "fail";
+    if (x.N >= 1) return "met";
+    return "partial";
   }
+  function cardClass(c, x) { return "st-" + cardState(c, x) + (c.weight === 0 ? " info" : ""); }
+  function badge(c, x) {
+    var st = cardState(c, x), t;
+    if (st === "met") t = "✓ Met";
+    else if (st === "fail") t = x.S ? "✗ Critical failure" : "✗ Not met";
+    else if (st === "partial") t = "Partial " + pct(x.N, 0);
+    else if (st === "na") t = "— N/A";
+    else if (st === "prog") {
+      var done = x.subs.filter(function (sb) { return sb.value !== Scoring.NOT_TESTED; }).length;
+      t = "In progress " + done + "/" + x.subs.length;
+    } else t = "Not tested";
+    return '<span class="badge b-' + st + '">' + t + "</span>";
+  }
+  function valClass(v) { return v === "Met" || v === "Fully integrated" ? "v-met" : v === "Not Met" ? "v-fail" : v === "N/A" ? "v-na" : v === Scoring.NOT_TESTED ? "v-nt" : "v-partial"; }
 
   function options(list, value) {
     return list.map(function (o) { return "<option" + (o === value ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("");
@@ -176,20 +237,22 @@
       var list = c.scoring === "tier" ? tier : std;
       answer = '<div class="answer"><label for="a-' + esc(c.id) + '">Result</label> ' + Ref.help("result", "Result") + '<select id="a-' + esc(c.id) + '" data-answer="' + esc(c.id) + '">' +
         options(list, state.answers[c.id] || Scoring.NOT_TESTED) + "</select></div>";
+      answer = answer.replace("<select ", '<select class="' + valClass(state.answers[c.id] || Scoring.NOT_TESTED) + '" ');
     } else {
       answer = '<ul class="subs">' + c.sub_items.map(function (s) {
-        return '<li><span class="sid">' + esc(s.id) + "</span><span>" + (s.critical ? '<span class="tag critical">★</span> ' : "") + Ref.link(s.text, seen) +
-          '</span><select aria-label="Result for ' + esc(s.id) + '" data-answer="' + esc(s.id) + '">' + options(std, state.answers[s.id] || Scoring.NOT_TESTED) + "</select></li>";
+        var v = state.answers[s.id] || Scoring.NOT_TESTED;
+        return '<li class="' + valClass(v) + '"><span class="sid">' + esc(s.id) + "</span><span>" + (s.critical ? '<span class="tag critical">★</span> ' : "") + Ref.link(s.text, seen) +
+          '</span><select class="' + valClass(v) + '" aria-label="Result for ' + esc(s.id) + '" data-answer="' + esc(s.id) + '">' + options(std, state.answers[s.id] || Scoring.NOT_TESTED) + "</select></li>";
       }).join("") + "</ul>";
     }
     var n = Ref.ready() ? Ref.counts(c) : { trc: 0, trm: 0 };
     var g = function (tab, label, cnt) {
       return '<button type="button" class="gbtn" data-guide="' + esc(c.id) + '" data-tab="' + tab + '">' + label + (cnt != null ? ' <span class="cnt">' + cnt + "</span>" : "") + "</button>";
     };
-    return '<article class="crit ' + cardClass(x) + '" id="card-' + esc(c.id) + '">' +
+    return '<article class="crit ' + cardClass(c, x) + '" id="card-' + esc(c.id) + '">' +
       '<div class="crit-head"><a class="cid" href="#' + esc(current.split("/")[0]) + "/" + esc(c.id) + '" title="Link to this criterion">' + esc(c.id) + '</a><span class="section">' + esc(c.section) + "</span>" + crit +
       '<span class="tag">' + esc(c.scoring) + " " + Ref.help("scoring." + c.scoring, c.scoring) + " · weight " + esc(c.weight) + (c.weight === 0 ? " (info only)" : "") + " " + Ref.help("weight", "Weight") +
-      '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span>" + Ref.src(Ref.critSrc(c), "card") + "</div>" +
+      '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span>" + '<span class="badge-slot" id="bdg-' + esc(c.id) + '">' + badge(c, x) + "</span>" + Ref.src(Ref.critSrc(c), "card") + "</div>" +
       '<p class="title">' + Ref.link(c.title, seen) + "</p>" + answer +
       '<div class="result" id="res-' + esc(c.id) + '">' + resultLine(c, x) + "</div>" +
       '<textarea class="notes" placeholder="Evidence reference / notes" data-note="' + esc(c.id) + '" aria-label="Notes for ' + esc(c.id) + '">' + esc(state.notes[c.id] || "") + "</textarea>" +
@@ -199,13 +262,46 @@
 
   function sheetStats(s) {
     var r = result.sheets[s.key];
+    var scoreCls = r.score >= r.threshold ? "good" : r.progress > 0 ? "bad" : "";
     return '<div class="stats" id="stats">' +
-      '<div class="stat"><div class="k">Score</div><div class="v">' + pct(r.score) + '</div><div class="bar"><span style="width:' + Math.min(r.score, 1) * 100 + '%"></span></div></div>' +
-      '<div class="stat"><div class="k">Pass threshold</div><div class="v">' + pct(r.threshold, 0) + "</div></div>" +
-      '<div class="stat"><div class="k">Critical not met</div><div class="v">' + r.criticalNotMet + "</div></div>" +
-      '<div class="stat"><div class="k">Not yet tested</div><div class="v">' + r.notTested + " / " + r.total + "</div></div>" +
-      '<div class="stat"><div class="k">Progress</div><div class="v">' + pct(r.progress, 0) + '</div><div class="bar"><span style="width:' + r.progress * 100 + '%"></span></div></div>' +
-      '<div class="stat"><div class="k">Sheet status</div><div class="v">' + statusPill(r.status) + "</div></div></div>";
+      '<div class="stat ' + scoreCls + '"><div class="k">Score</div><div class="v">' + pct(r.score) + '</div><div class="bar thr"><span style="width:' + Math.min(r.score, 1) * 100 + '%"></span><i style="left:' + r.threshold * 100 + '%"></i></div></div>' +
+      '<div class="stat"><div class="k">Pass threshold ' + Ref.help("summary.threshold", "Pass threshold") + '</div><div class="v">' + pct(r.threshold, 0) + "</div></div>" +
+      '<div class="stat ' + (r.criticalNotMet ? "bad" : "") + '"><div class="k">Critical not met</div><div class="v">' + r.criticalNotMet + "</div></div>" +
+      '<div class="stat ' + (r.notTested ? "warn" : "good") + '"><div class="k">Not yet tested</div><div class="v">' + r.notTested + " / " + r.total + "</div></div>" +
+      '<div class="stat"><div class="k">Progress ' + Ref.help("summary.progress", "Progress") + '</div><div class="v">' + pct(r.progress, 0) + '</div><div class="bar"><span style="width:' + r.progress * 100 + '%"></span></div></div>' +
+      '<div class="stat"><div class="k">Sheet status ' + Ref.help("status." + r.status, r.status) + '</div><div class="v">' + statusPill(r.status) + "</div></div></div>";
+  }
+
+  /** Sticky strip: where the sheet stands, and one square per criterion to jump to it. */
+  function tracker(s) {
+    var r = result.sheets[s.key], counts = { met: 0, fail: 0, partial: 0, na: 0, prog: 0, nt: 0 };
+    var squares = s.criteria.map(function (c, i) {
+      var st = cardState(c, r.rows[i]); counts[st]++;
+      return '<a href="#" class="sq st-' + st + (c.critical !== "no" ? " crit-sq" : "") + '" data-jump="' + esc(c.id) + '" title="' + esc(c.id + " — " + c.title.slice(0, 90)) + '"><span class="sr">' + esc(c.id) + "</span></a>";
+    }).join("");
+    var NAMES = { met: "Met", fail: "Not met", partial: "Partial", prog: "In progress", na: "N/A", nt: "Not tested" };
+    var chip = function (k) { return counts[k] ? '<span class="tchip" title="' + NAMES[k] + '"><i class="sq st-' + k + '"></i>' + counts[k] + '<span class="tc-l"> ' + NAMES[k].toLowerCase() + "</span></span>" : ""; };
+    return '<div class="tracker noprint" id="tracker"><div class="tr-row"><b class="tr-name">' + esc(tabParts(s.tab)[0]) + "</b>" + statusPill(r.status) +
+      '<span class="tr-score">Score <b>' + pct(r.score, 0) + "</b> / " + pct(r.threshold, 0) + "</span>" +
+      chip("fail") + chip("partial") + chip("prog") + chip("nt") + chip("na") + chip("met") +
+      '<span class="tr-prog">' + (r.total - r.notTested) + " of " + r.total + " evaluated</span></div>" +
+      '<div class="minimap" aria-label="Criteria in this sheet">' + squares + "</div></div>";
+  }
+
+  function sheetGuide(s) {
+    var h = Ref.getHelp("sheet"), r = result.sheets[s.key];
+    var crit = s.criteria.filter(function (c) { return c.critical !== "no"; }).length;
+    return '<div class="xp-kind">Guide</div><div class="xp-title">' + esc(h && h.label || "How to evaluate this sheet") + "</div>" +
+      (h ? "<p>" + esc(h.text) + "</p>" : "") + (s.note ? "<p>" + esc(s.note) + "</p>" : "") +
+      '<dl class="xp-dl"><dt>Pass threshold</dt><dd>' + pct(r.threshold, 0) + ' (scoring.yaml)</dd><dt>Criteria</dt><dd>' + s.criteria.length + " · " + crit + " critical (★)</dd></dl>" +
+      '<div class="legend"><span class="badge b-met">✓ Met</span><span class="badge b-partial">Partial</span><span class="badge b-fail">✗ Not met</span>' +
+      '<span class="badge b-prog">In progress</span><span class="badge b-na">— N/A</span><span class="badge b-nt">Not tested</span></div>';
+  }
+
+  function pager(s) {
+    var i = data.sheets.indexOf(s), prev = data.sheets[i - 1], next = data.sheets[i + 1];
+    return '<nav class="pager noprint" aria-label="Sheets">' + (prev ? '<a href="#' + prev.key + '">‹ ' + esc(prev.tab) + "</a>" : '<a href="#profile">‹ System profile</a>') +
+      (next ? '<a href="#' + next.key + '">' + esc(next.tab) + " ›</a>" : '<a href="#summary">Summary ›</a>') + "</nav>";
   }
 
   function visible(c, x) {
@@ -220,12 +316,13 @@
   function viewSheet(s) {
     var r = result.sheets[s.key];
     var cards = s.criteria.map(function (c, i) { return visible(c, r.rows[i]) ? renderCard(c, r.rows[i]) : ""; }).join("");
-    return '<section class="panel"><h2>' + esc(s.title) + Ref.src(Ref.sheetSrc(s)) + '</h2><p class="intro">' + esc(s.intro) + "</p>" + sheetStats(s) + "</section>" +
+    return '<section class="panel sheet-head"><h2>' + esc(s.title) + Ref.src(Ref.sheetSrc(s)) + '</h2><p class="intro">' + Ref.link(s.intro, new Set()) + " " +
+      Ref.tip("sheet-" + s.key, sheetGuide(s), "How to evaluate this sheet") + "</p>" + sheetStats(s) + "</section>" + tracker(s) +
       '<div class="toolbar noprint"><input type="search" id="flt-text" placeholder="Search this sheet" value="' + esc(filter.text) + '">' +
       '<select id="flt-show"><option value="all">All criteria</option><option value="untested">Not yet tested</option>' +
       '<option value="needs">Needing compliance</option><option value="critical">Critical only</option></select>' +
       '<button type="button" data-bulk="' + s.key + '">Mark untested items in this sheet as…</button></div>' +
-      (cards || '<p class="sub">No criteria match the filter.</p>');
+      (cards || '<p class="sub">No criteria match the filter.</p>') + pager(s);
   }
 
   function refreshSheet(s, changedId) {
@@ -233,13 +330,17 @@
     var r = result.sheets[s.key];
     var stats = $("#stats");
     if (stats) stats.outerHTML = sheetStats(s);
+    var tr = $("#tracker");
+    if (tr) tr.outerHTML = tracker(s);
     s.criteria.forEach(function (c, i) {
       var hit = c.id === changedId || c.sub_items.some(function (x) { return x.id === changedId; });
       if (!hit) return;
       var res = document.getElementById("res-" + c.id);
       if (res) res.innerHTML = resultLine(c, r.rows[i]);
       var card = document.getElementById("card-" + c.id);
-      if (card) card.className = "crit " + cardClass(r.rows[i]);
+      if (card) card.className = "crit " + cardClass(c, r.rows[i]) + (card.classList.contains("target") ? " target" : "");
+      var bd = document.getElementById("bdg-" + c.id);
+      if (bd) bd.innerHTML = badge(c, r.rows[i]);
     });
     renderTabs();
   }
@@ -406,7 +507,9 @@
       var id = t.dataset.answer;
       if (t.value === Scoring.NOT_TESTED) delete state.answers[id]; else state.answers[id] = t.value;
       save();
-      var s = sheetByKey(current);
+      t.className = valClass(t.value);
+      var li = t.closest("li"); if (li) li.className = valClass(t.value);
+      var s = sheetByKey(current.split("/")[0]);
       if (s) refreshSheet(s, id); else { recompute(); route(); }
     } else if (t.dataset.ropt) {
       reportOpts[t.dataset.ropt] = t.checked; route();
@@ -441,7 +544,23 @@
   });
 
   document.addEventListener("click", function (e) {
-    var t = e.target;
+    var t = e.target.closest ? (e.target.closest("button, a, label") || e.target) : e.target;
+    if (t.id === "menu-btn") { setMenu($("#menu-list").hidden); return; }
+    if (!t.closest || !t.closest(".menu")) setMenu(false); else if (t.getAttribute("role") === "menuitem") setMenu(false);
+    if (t.id === "nav-toggle") { setNav(!document.body.classList.contains("nav-open")); return; }
+    if (e.target.id === "scrim") { setNav(false); return; }
+    if (t.dataset && t.dataset.jump) {
+      e.preventDefault();
+      var card = document.getElementById("card-" + t.dataset.jump);
+      if (!card) { filter.text = ""; filter.show = "all"; route(); card = document.getElementById("card-" + t.dataset.jump); }
+      if (card) {
+        document.querySelectorAll(".crit.target").forEach(function (x) { x.classList.remove("target"); });
+        card.classList.add("target"); scrollToCard(card);
+        history.replaceState(null, "", "#" + current.split("/")[0] + "/" + t.dataset.jump);
+        current = lastHash = current.split("/")[0] + "/" + t.dataset.jump;
+      }
+      return;
+    }
     if (t.id === "btn-save") {
       var blob = new Blob([JSON.stringify({ criteria_version: data.meta.version, commit: data.meta.commit, saved: new Date().toISOString(),
         answers: state.answers, notes: state.notes, profile: state.profile }, null, 1)], { type: "application/json" });
@@ -467,6 +586,26 @@
   });
 
   window.addEventListener("hashchange", route);
+  window.addEventListener("resize", function () { measureHeader(); if (window.innerWidth > 900) setNav(false); });
+  // phones: tuck the search row and banner away while scrolling down; bring them back on the way up
+  var lastY = 0, quietUntil = 0;
+  function setMin(on) {
+    document.body.classList.toggle("hdr-min", on); measureHeader();
+    // the header changes height, which shifts the page; ignore the scroll events that shift causes
+    quietUntil = Date.now() + 350;
+    requestAnimationFrame(function () { lastY = window.scrollY; });
+  }
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY, min = document.body.classList.contains("hdr-min");
+    if (window.innerWidth > 900) { if (min) setMin(false); lastY = y; return; }
+    if (Date.now() < quietUntil) { lastY = y; return; }
+    if (y < 60) { if (min) setMin(false); }
+    else if (y > lastY + 24 && y > 140 && !min && !(document.activeElement && document.activeElement.id === "q")) setMin(true);
+    else if (y < lastY - 24 && min) setMin(false);
+    else if (Math.abs(y - lastY) < 24) return;
+    lastY = y;
+  }, { passive: true });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") { setMenu(false); setNav(false); } });
 
   // ------------------------------------------------------------------ start
   var getJSON = function (u) { return fetch(u, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };

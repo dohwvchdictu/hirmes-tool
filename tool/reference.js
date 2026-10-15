@@ -84,6 +84,12 @@
     if (!v) return "";
     return '<span class="help" tabindex="0" role="button" aria-label="Help: ' + esc(labelText || path) + '" data-ref="h:' + esc(path) + '">i</span>';
   }
+  /** ⓘ button with HTML supplied by the page (e.g. the per-sheet guide built from live scores). */
+  var custom = {};
+  function tip(id, html, labelText) {
+    custom[id] = html;
+    return '<span class="help" tabindex="0" role="button" aria-label="Help: ' + esc(labelText || id) + '" data-ref="x:' + esc(id) + '">i</span>';
+  }
   function getHelp(path) {
     var v = R.help;
     path.split(".").forEach(function (k) { v = v && v[k]; });
@@ -144,6 +150,8 @@
       }).join(", ");
       h = '<div class="xp-kind">Help</div>' + (v.label ? '<div class="xp-title">' + esc(v.label) + "</div>" : "") + "<p>" + esc(v.text) + "</p>" +
         (see ? '<div class="xp-used">See also: ' + see + "</div>" : "") + srcLine(helpSrc(id, v));
+    } else if (kind === "x") {
+      h = custom[id] || "";
     } else if (kind === "s") {
       h = srcPop(id);
     }
@@ -575,7 +583,7 @@
   }
 
   root.Ref = {
-    base: function (data) { D = data; }, src: srcBtn, critSrc: critSrc, sheetSrc: sheetSrc,
+    base: function (data) { D = data; }, src: srcBtn, tip: tip, getHelp: function (p) { return R ? getHelp(p) : null; }, critSrc: critSrc, sheetSrc: sheetSrc,
     init: init, link: link, help: help, openDrawer: openDrawer, closeDrawer: closeDrawer, counts: counts,
     viewReference: viewReference, afterReference: afterReference, initSearch: initSearch, ready: function () { return !!R; }
   };

@@ -61,6 +61,11 @@ status:
   INCOMPLETE: At least one item is still Not Tested.
   LOCKED: The level before this one has not passed yet. Each level is a gate.
 
+sheet:
+  label: How to evaluate this sheet
+  help: Choose a result for every criterion, or for every ↳ sub-item of count and all-or-nothing criteria. The sheet passes when nothing is left Not Tested, every critical item and ★ sub-item is Met, and the score reaches the pass threshold. Write the evidence reference in the notes of each criterion.
+  see: [Criterion / Ref ID]
+
 summary:
   threshold:
     label: Pass threshold

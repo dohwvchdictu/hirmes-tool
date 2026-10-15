@@ -64,7 +64,7 @@ def export(out: Path) -> Path:
         "scoring": scoring,
         "sheets": [
             {
-                "key": s["key"], "tab": s["tab"], "title": s["title"], "intro": s["intro"],
+                "key": s["key"], "tab": s["tab"], "title": s["title"], "intro": s["intro"], "note": s.get("note") or "",
                 "threshold": scoring["thresholds"][s["key"]],
                 "src": {"p": "criteria/sheets.yaml", "l": sheet_lines.get(("sheets", i)),
                         "f": {f: sheet_lines[("sheets", i, f)] for f in ("title", "intro") if ("sheets", i, f) in sheet_lines},
