@@ -249,7 +249,7 @@
     var id = srcReg[key] ? srcReg[key].n : "s" + (++srcSeq);
     entry.n = id; srcReg[key] = entry; srcReg[id] = entry;
     return '<button type="button" class="srcbtn' + (cls ? " " + cls : "") + '" data-ref="s:' + id + '" aria-label="Source of ' + esc(entry.title) +
-      '" title="Edit or suggest a change (' + esc(entry.p) + (entry.l ? ", " + lines(entry.l) : "") + ')">✎</button>';
+      '" title="Edit or suggest a change (' + esc(entry.p) + (entry.l ? ", " + lines(entry.l) : "") + ')">✎' + (cls === "hov" ? "" : '<span class="lbl">Edit</span>') + "</button>";
   }
   /** One-line footer with the same three actions, for popovers and the guide drawer. */
   function srcLine(entry, row) {
