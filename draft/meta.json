@@ -3,10 +3,10 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "0d164db",
- "commit_date": "2026-10-15T11:19:14+08:00",
- "subject": "Merge pull request #2 from dohwvchdictu/dev-2610151000",
- "built": "2026-10-15 03:19 UTC",
+ "commit": "8686fca",
+ "commit_date": "2026-10-15T11:39:26+08:00",
+ "subject": "feat(tool): edit, show-lines and suggest-a-change links on every criterion, term, register entry, help text and chapter",
+ "built": "2026-10-15 03:39 UTC",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx",
@@ -14,7 +14,7 @@
   "scorecard": "index.html"
  },
  "version": "v1.0.0-rc1+dev",
- "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 0d164db",
+ "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 8686fca",
  "counts": {
   "criteria": 103,
   "sub_items": 272

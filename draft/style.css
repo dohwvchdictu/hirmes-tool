@@ -312,3 +312,29 @@ dl.gl dd { margin: 0; padding: 2px 0; border-bottom: 1px dashed var(--line); }
   .panel { border: none; padding: 0; }
   @page { size: A4; margin: 14mm 12mm; }
 }
+
+/* ---- source links (✎): edit on GitHub, show the lines, suggest a change */
+.srcbtn { font: inherit; font-size: 12px; line-height: 1; padding: 3px 6px; margin-left: 6px; border: 1px solid transparent; border-radius: 6px;
+  background: none; color: var(--muted); cursor: pointer; opacity: .55; vertical-align: middle; }
+.srcbtn:hover, .srcbtn:focus-visible { opacity: 1; border-color: var(--line, #d0d7de); color: var(--accent, #0b5cad); }
+.srcbtn.card { margin-left: auto; }
+@media (hover: hover) {
+  .srcbtn.hov { opacity: 0; }
+  dt:hover .srcbtn.hov, tr:hover .srcbtn.hov, .srcbtn.hov:focus-visible { opacity: .7; }
+}
+.xp-path { margin: 2px 0 8px; font-size: 12px; color: var(--muted); word-break: break-all; }
+.src-acts { display: grid; gap: 6px; }
+.src-acts a { display: block; padding: 7px 9px; border: 1px solid var(--line, #d0d7de); border-radius: 8px; text-decoration: none; color: inherit; }
+.src-acts a:hover { border-color: var(--accent, #0b5cad); background: rgba(11, 92, 173, .05); }
+.src-acts b { display: block; font-size: 13px; color: var(--accent, #0b5cad); }
+.src-acts span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+.src-rows { margin-top: 10px; max-height: 210px; overflow: auto; font-size: 12.5px; }
+.src-rows > div:not(.xp-kind) { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-top: 1px dashed var(--line, #e3e7eb); }
+.src-rows a { text-decoration: none; }
+.src-rows .sg { flex: none; }
+.xp-src { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--line, #e3e7eb); display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; }
+.xp-src a { text-decoration: none; }
+.d-foot .xp-src { border-top: 0; margin-top: 2px; padding-top: 0; }
+.d-all { margin-top: 6px; font-size: 12px; color: var(--muted); }
+.d-all .srcbtn { opacity: .9; }
+@media print { .srcbtn, .xp-src, .edit-src { display: none !important; } }
