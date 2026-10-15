@@ -16,11 +16,11 @@ TOTAL       103       27      62   272     4     99
 
 0 error(s), 0 warning(s).
 
-$ scripts/build_web.py --out /tmp/tmpgeubc8zc/out
-Wrote web scorecard to /tmp/tmpgeubc8zc/out
+$ scripts/build_web.py --out /tmp/tmpto_r5xrr/out
+Wrote web scorecard to /tmp/tmpto_r5xrr/out
 
-$ scripts/build_xlsx.py --out /tmp/tmpgeubc8zc/out
-Wrote /tmp/tmpgeubc8zc/out/testing-criteria-scorecard-unreleased-draft.xlsx
+$ scripts/build_xlsx.py --out /tmp/tmpto_r5xrr/out
+Wrote /tmp/tmpto_r5xrr/out/testing-criteria-scorecard-unreleased-draft.xlsx
 
-$ scripts/change_summary.py --to 4e28dd24574815d32f639977f2dcaacb8c1ef0d7 --out /tmp/tmpgeubc8zc/out/CHANGE-SUMMARY.md --label branch ui-qol
-Wrote /tmp/tmpgeubc8zc/out/CHANGE-SUMMARY.md
+$ scripts/change_summary.py --to 0dcc109181a20cbd29d70bacd4b663a420d0aa55 --out /tmp/tmpto_r5xrr/out/CHANGE-SUMMARY.md --label branch ui-qol
+Wrote /tmp/tmpto_r5xrr/out/CHANGE-SUMMARY.md

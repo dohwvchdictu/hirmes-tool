@@ -628,7 +628,39 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") { setMenu(false); setNav(false); } });
 
   // ------------------------------------------------------------------ start
-  var getJSON = function (u) { return fetch(u, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
+  var BUILD = (document.querySelector('meta[name="build"]') || {}).content || "";
+  var getJSON = function (u) {
+    return fetch(u + (BUILD ? "?v=" + BUILD : ""), { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); });
+  };
+
+  // ------------------------------------------------------------------ newer build published?
+  // The page may come from the browser cache (GitHub Pages allows 10 minutes). version.json is
+  // always fetched fresh: on opening, a stale page reloads itself once; a page left open shows a
+  // bar instead, so nobody loses their place. Answers are kept in this browser either way.
+  function checkVersion(onOpen) {
+    if (!BUILD) return;
+    fetch("version.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
+      if (!v || !v.build || v.build === BUILD) return;
+      var key = "reloaded-for-" + v.build, already = false;
+      try { already = sessionStorage.getItem(key); sessionStorage.setItem(key, "1"); } catch (e) { already = true; }
+      if (onOpen && !already) { location.reload(); return; }
+      if ($("#update-bar")) return;
+      var bar = document.createElement("div");
+      bar.id = "update-bar"; bar.className = "update-bar noprint"; bar.setAttribute("role", "status");
+      bar.innerHTML = "A newer version of this scorecard was published" + (v.commit ? " (commit " + esc(v.commit) + ")" : "") +
+        '. <button type="button" id="btn-update">Reload now</button> <span class="muted">Your answers are kept.</span>' +
+        '<button type="button" class="ub-close" aria-label="Dismiss">×</button>';
+      document.body.appendChild(bar);
+    }).catch(function () { /* offline: keep working */ });
+  }
+  document.addEventListener("click", function (e) {
+    if (e.target.id === "btn-update") location.reload();
+    else if (e.target.classList && e.target.classList.contains("ub-close")) e.target.parentNode.remove();
+  });
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") checkVersion(false); });
+  setInterval(function () { checkVersion(false); }, 10 * 60 * 1000);
+  checkVersion(true);
+
   Promise.all([getJSON("data.json"), getJSON("reference.json").catch(function () { return null; })]).then(function (res) {
     data = res[0];
     Ref.base(data);
