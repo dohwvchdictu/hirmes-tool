@@ -19,7 +19,7 @@ from pathlib import Path
 from build_reference import build_reference
 from build_xlsx import retired_list
 from common import (SHOW_LICENSE_NOTICE, CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
-                    active_subs, load_criteria, load_scoring, load_sheets, version_info, workbook_name, yaml_lines)
+                    active_subs, load_criteria, load_scoring, load_sheets, load_yaml, version_info, workbook_name, yaml_lines)
 
 
 def report_text() -> dict:
@@ -46,6 +46,34 @@ def criterion_src(c: dict) -> dict:
     subs = {sb["id"]: lines.get(("sub_items", i)) for i, sb in enumerate(c.get("sub_items") or [])}
     return {"p": c["_file"].replace("\\", "/"), "l": lines.get(()),
             "f": {f: lines[(f,)] for f in CRITERION_FIELDS if (f,) in lines}, "s": {k: v for k, v in subs.items() if v}}
+
+
+PROFILE_FILE = "criteria/profile.yaml"
+
+
+def profile_form() -> dict:
+    """The System Profile form, with the lines of the page, each section and each field, for the edit links."""
+    doc, lines = load_yaml(ROOT / PROFILE_FILE), yaml_lines(ROOT / PROFILE_FILE)
+
+    def parts(key: tuple, names: tuple) -> dict:
+        return {n: lines[key + (n,)] for n in names if key + (n,) in lines}
+
+    sections = []
+    for i, s in enumerate(doc["sections"]):
+        key = ("sections", i)
+        fields = [f | {"src": {"l": lines.get(key + ("fields", j)), "f": parts(key + ("fields", j), ("label", "help", "options", "placeholder"))}}
+                  for j, f in enumerate(s["fields"])]
+        team = None
+        if s.get("team"):
+            t, tk = s["team"], key + ("team",)
+            team = {"help": t.get("help") or "", "agencies": t["agencies"], "sign_off": t["sign_off"],
+                    "roles": [r | {"src": {"l": lines.get(tk + ("roles", j)), "f": parts(tk + ("roles", j), ("label", "help", "sign_as"))}}
+                              for j, r in enumerate(t["roles"])],
+                    "src": {"l": lines.get(tk), "f": parts(tk, ("help", "agencies", "sign_off"))}}
+        sections.append({"title": s["title"], "note": s.get("note") or "", "team": team,
+                         "fields": fields, "src": {"l": lines.get(key), "f": parts(key, ("title", "note"))}})
+    return {"title": doc["title"], "intro": doc.get("intro") or "", "sections": sections,
+            "src": {"p": PROFILE_FILE, "l": lines.get(()), "f": parts((), ("title", "intro"))}}
 
 
 def stamp_assets(out: Path, meta: dict) -> None:
@@ -80,6 +108,7 @@ def export(out: Path) -> Path:
                  "workbook": workbook_name(info), "show_license": SHOW_LICENSE_NOTICE},
         "report": report_text(),
         "scoring": scoring,
+        "profile": profile_form(),
         "sheets": [
             {
                 "key": s["key"], "tab": s["tab"], "title": s["title"], "intro": s["intro"], "note": s.get("note") or "",

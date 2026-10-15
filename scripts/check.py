@@ -107,6 +107,12 @@ def check_reference(err, warn):
                     err(f"criteria/{c['id']}: terms '{x}' is not a glossary term, abbreviation or register ID")
 
 
+# System Profile keys that tool/app.js reads by name (Summary, Printed Report, file name)
+PROFILE_KEYS_USED = ("application_no", "date_received", "vendor", "system_name", "version", "category", "deployment",
+                     "evaluation_type", "technical_lead", "administrator", "office", "test_dates",
+                     "ph_core", "pheref", "terminology", "certificate_no", "certificate_date", "valid_until", "conditions")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--counts", action="store_true", help="print the Count Register")
@@ -119,6 +125,25 @@ def main():
     validate(validator("scoring.schema.json"), scoring, "scoring.yaml")
     legacy_doc = load_yaml(ROOT / "criteria" / "retired-legacy.yaml") or {"retired": []}
     validate(validator("retired-legacy.schema.json"), legacy_doc, "criteria/retired-legacy.yaml")
+    profile_doc = load_yaml(ROOT / "criteria" / "profile.yaml")
+    validate(validator("profile.schema.json"), profile_doc, "criteria/profile.yaml")
+    profile_keys = []
+    for s in profile_doc.get("sections") or []:
+        profile_keys += [f.get("key") for f in s.get("fields") or []]
+        team = s.get("team") or {}
+        roles = [r.get("key") for r in team.get("roles") or []]
+        profile_keys += [k + x for k in roles for x in ("", "_agency", "_designation")]
+        for k in team.get("sign_off") or []:
+            if k not in roles:
+                err(f"criteria/profile.yaml: sign_off '{k}' is not a role of the team")
+        for k in roles:
+            if k not in (team.get("sign_off") or []):
+                err(f"criteria/profile.yaml: role '{k}' is missing from sign_off, so it would have no row to sign")
+    for k in sorted({k for k in profile_keys if profile_keys.count(k) > 1}):
+        err(f"criteria/profile.yaml: key '{k}' is used more than once (a role key also uses <key>_agency and <key>_designation)")
+    for k in PROFILE_KEYS_USED:
+        if k not in profile_keys:
+            err(f"criteria/profile.yaml: field key '{k}' is missing; the Summary, Printed Report or team check reads it")
     reg_v = validator("register.schema.json")
     for p in sorted((ROOT / "registers").glob("*.yaml")):
         validate(reg_v, load_yaml(p), str(p.relative_to(ROOT)))

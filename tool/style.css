@@ -203,28 +203,49 @@ table.grid { width: 100%; border-collapse: collapse; font-size: 13px; }
 table.grid th, table.grid td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
 table.grid th { color: var(--muted); font-weight: 600; font-size: 12px; }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-/* system profile: one panel per workbook group (A–D), hint text always visible under each field */
-.pf-group { position: relative; margin: 0 0 14px; min-width: 0; }
-.pf-legend { float: left; width: 100%; padding: 0; margin: 0 0 2px; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.pf-legend + * { clear: both; }
-.pf-letter { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; background: var(--accent-soft); color: var(--accent); font-size: 12.5px; }
-.pf-count { position: absolute; top: 18px; right: 16px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.pf-note { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
-.profile { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px 18px; margin-top: 10px; }
+/* system profile: one panel per workbook group (numbered 1–4), hint text always visible under each field */
+.pf-group { min-width: 0; }
+.pf-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.pf-title { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.pf-num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; background: var(--accent-soft); color: var(--accent); font-size: 12.5px; }
+.pf-count { margin-left: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pf-note { color: var(--muted); font-size: 13px; margin: 4px 0 0; }
+.profile { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 14px 18px; margin-top: 12px; }
 .pf-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .pf-field.wide { grid-column: 1 / -1; }
+.pf-lab { display: flex; align-items: center; gap: 4px; }
 .profile label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.pf-head .srcbtn { margin-left: 0; }
 .pf-req { font-weight: 400; font-size: 12px; color: var(--muted); }
 .profile input, .profile select, .profile textarea { width: 100%; min-height: 36px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
 .profile textarea { resize: vertical; line-height: 1.4; }
 .profile input:focus, .profile select:focus, .profile textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .profile input::placeholder, .profile textarea::placeholder { color: var(--muted); opacity: .8; }
 .pf-hint { font-size: 12px; color: var(--muted); line-height: 1.35; }
-.pf-team { margin: 14px 0 0; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+/* team table: role · name · agency · designation; on phones each person becomes a stacked block */
+.pf-team-help { margin: 8px 0 0; }
+.pf-team-tbl { margin-top: 10px; border-top: 1px solid var(--line); }
+.pf-trow { display: grid; grid-template-columns: minmax(140px, .9fr) minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px 12px; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--line); }
+.pf-thead { padding: 6px 0; font-size: 12px; font-weight: 600; color: var(--muted); }
+.pf-role { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 13.5px; }
+.pf-role .pf-req { flex-basis: 100%; }
+.pf-trow.opt .pf-role b { font-weight: 600; color: var(--muted); }
+.pf-tc { min-width: 0; }
+.pf-tc input, .pf-tc select { width: 100%; min-height: 36px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.pf-tc input:focus, .pf-tc select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.pf-tl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pf-team { margin: 12px 0 0; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
 .pf-team:has(.pf-warn) { background: var(--warn-soft); color: var(--warn); }
 .pf-team:has(.pf-ok) { background: var(--good-soft); color: var(--good); }
-@media (prefers-color-scheme: dark) { .profile input, .profile select { color-scheme: dark; } }
-@media (max-width: 767px) { .pf-count { position: static; display: block; margin-bottom: 4px; } .profile input, .profile select { min-height: 40px; } }
+@media (prefers-color-scheme: dark) { .profile input, .profile select, .pf-tc select { color-scheme: dark; } }
+@media (max-width: 767px) {
+  .profile input, .profile select, .pf-tc input, .pf-tc select { min-height: 44px; }
+  .pf-thead { display: none; }
+  .pf-trow { grid-template-columns: 1fr; gap: 6px; padding: 12px 0; }
+  .pf-role .pf-req { flex-basis: auto; }
+  .pf-tl { position: static; width: auto; height: auto; overflow: visible; clip: auto; display: block; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+}
 .big { font-size: 16px; font-weight: 600; }
 .foot { color: var(--muted); font-size: 12px; text-align: center; padding: 16px; }
 
@@ -394,8 +415,14 @@ dl.gl dd { margin: 0; padding: 2px 0; border-bottom: 1px dashed var(--line); }
 .rp-subs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 3px; margin-top: 3px; }
 .rp-subs .sub { font-size: 7.3pt; padding: 0 4px; border-radius: 3px; line-height: 1.35; }
 .rp-guide td { background: #f7f7f7; font-size: 7.5pt; color: #404040; border-top: 0; }
-.rp-sign td { height: 30px; }
-.rp-sign td:first-child { width: 24%; font-weight: 600; }
+/* sign-off: one row per person, tall enough for a handwritten signature */
+.rp-sign td { height: 38px; vertical-align: middle; }
+.rp-sign td:first-child { font-weight: 600; }
+.rp-sign col.w-role { width: 20%; } .rp-sign col.w-sig { width: 24%; } .rp-sign col.w-date { width: 13%; }
+.rp-sign .rp-desig { color: var(--r-muted); font-size: .92em; }
+.rp-sign .rp-unset { color: var(--r-muted); font-style: italic; }
+.rp-sign tr.rp-off td { height: 26px; color: var(--r-muted); }
+.rp-sign tr.rp-off td:last-child { text-align: center; }
 .rp-credit { font-size: 7.5pt; color: var(--r-muted); text-align: center; margin-top: 8px; }
 
 @media print {

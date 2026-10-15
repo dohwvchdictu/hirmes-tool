@@ -1,0 +1,142 @@
+# System Profile form of the web scorecard: sections, field labels, help, choices.
+# Follows the System Profile sheet of the scorecard workbook (sections A–D there, numbered 1–4 on
+# the web). The workbook sheet itself comes from templates/scorecard-template.xlsx; keep the
+# choice lists in step with its data validations.
+#
+# key:         where the answer is stored in a saved evaluation. Do not rename: saved files and
+#              the Printed Report use it (scripts/check.py lists the keys the report needs).
+# type:        text (default) · date · long (multi-line, full width)
+# options:     shows a choice list instead of a text box.
+# required:    short note shown next to the label.
+# team:        one row per person (name, agency, designation), as in System Profile section C of
+#              the workbook. A role's key stores the name; <key>_agency and <key>_designation store
+#              the rest. Roles marked required are checked under the table. The Printed Report
+#              lists validator_* keys as Validators and observer_* keys as Observers, and prints
+#              one sign-off row per role in the sign_off order.
+title: System Profile
+intro: These details appear on the Summary and the Printed Report.
+sections:
+- title: Application and system
+  note: From the application submitted by the service provider.
+  fields:
+  - key: application_no
+    label: Application no.
+    help: Assigned by the Administrator when the application is received.
+  - key: date_received
+    label: Date application received
+    type: date
+    help: Date the application was received by the DOH.
+  - key: vendor
+    label: Service provider / vendor
+    help: Name of the service provider or vendor (or the facility, for an in-house system).
+  - key: system_name
+    label: System name
+    help: Product name as it will be offered to HIE facilities.
+  - key: version
+    label: Version / build under test
+    help: Exact version or build submitted for testing. Results apply to this version only.
+  - key: category
+    label: Applicant category
+    help: Third-party EMR provider, or in-house developed system.
+    options:
+    - Third-party EMR provider
+    - In-house developed system
+  - key: deployment
+    label: Deployment model
+    help: Cloud, on-premise or hybrid.
+    options:
+    - Cloud
+    - On-premise
+    - Hybrid
+  - key: evaluation_type
+    label: Evaluation type
+    help: Initial; re-evaluation after an update; revalidation after a major change; or partial regression after a minor change.
+    options:
+    - Initial
+    - Re-evaluation after update
+    - Revalidation (major change)
+    - Partial regression (minor change)
+- title: Evaluation team and schedule
+  note: Each person signs their own row in the sign-off of the Printed Report.
+  team:
+    help: Name, agency and designation of each member of the Regional Validation Team, as printed on the sign-off.
+    agencies:
+    - DOH-CHD
+    - DOH Central Office
+    - PhilHealth
+    - DICT
+    - LGU
+    - Hospital
+    - Academic / Research Institution
+    - Other
+    roles:
+    - key: technical_lead
+      label: Technical Lead
+      required: true
+      sign_as: Approved by
+      help: Leads the Regional Validation Team for this evaluation.
+    - key: validator_1
+      label: Validator 1
+      required: true
+      sign_as: Validated by
+      help: At least two validators are required.
+    - key: validator_2
+      label: Validator 2
+      required: true
+      sign_as: Validated by
+      help: At least two validators are required.
+    - key: validator_3
+      label: Validator 3
+      sign_as: Validated by
+      help: Optional third validator.
+    - key: administrator
+      label: Administrator
+      sign_as: Processed by
+      help: Receives applications, assigns numbers and keeps the records.
+    - key: observer_1
+      label: Observer 1
+      required: true
+      sign_as: Witnessed by
+      help: At least one observer is required.
+    - key: observer_2
+      label: Observer 2
+      sign_as: Witnessed by
+      help: Optional second observer.
+    # order of the rows in the sign-off, as in the workbook's Printed Evaluation Report
+    sign_off: [validator_1, validator_2, validator_3, observer_1, observer_2, administrator, technical_lead]
+  fields:
+  - key: office
+    label: Conducting office
+    help: Conducting DOH office; printed on the report letterhead when filled in.
+  - key: test_dates
+    label: Date(s) of testing
+    placeholder: e.g. 2026-10-12 to 2026-10-14
+    help: Date(s) of evaluation for each level tested.
+- title: Versions tested
+  fields:
+  - key: ph_core
+    label: PH Core IG version
+    help: PH Core IG version tested, e.g. 0.2.0.
+  - key: pheref
+    label: PHeReF IG version
+    help: PHeReF IG version tested, e.g. 0.1.0.
+  - key: terminology
+    label: Terminology release
+    help: Terminology / PSGC release used on the sandbox.
+- title: Certificate
+  note: Filled in by the Regional Validation Team on approval.
+  fields:
+  - key: certificate_no
+    label: Certificate no.
+    help: Assigned on approval.
+  - key: certificate_date
+    label: Certificate date
+    type: date
+    help: Date of approval.
+  - key: valid_until
+    label: Valid until
+    help: 2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the certificate date.
+  - key: conditions
+    label: Conditions
+    type: long
+    help: Conditions attached to the result, if any.

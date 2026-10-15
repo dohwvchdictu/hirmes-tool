@@ -101,7 +101,8 @@ hand in the tool: it is generated from the files below, so editing one file upda
 | A term's meaning | `registers/glossary.yaml` | Underlined term in criteria text → popover; Reference › Glossary |
 | An abbreviation | `registers/abbreviations.yaml` | Dotted acronym → popover; Reference › Abbreviations |
 | A TB-, SRC-, TR- or IND- entry | the matching file in `registers/` | ID → popover with "Used by"; register page |
-| Help next to a control (ⓘ) | `registers/form-help.yaml` | ⓘ popover on Result, Scoring, Critical, Weight, Validation role, profile fields, summary |
+| Help next to a control (ⓘ) | `registers/form-help.yaml` | ⓘ popover on Result, Scoring, Critical, Weight, Validation role, summary |
+| System Profile sections, field labels, help and choices; team roles, agencies and sign-off order | `criteria/profile.yaml` | System Profile page: hint under each field, ⓘ popover, ✎ Edit on each section; one row per person on the Printed Report sign-off (keep `key` unchanged; saved evaluations use it) |
 | Developer's / Validator's guide, Evidence | the criterion's YAML (`developer_guide`, `validator_guide`, `evidence`) | Guide drawer (buttons under each criterion) |
 | Traces | the criterion's `traces` | Guide drawer › Traces, and "Used by" on the register entry |
 | Technical Reference Guide prose | `docs/reference-guide/reference-guide.md` | Reference (one page per chapter; the register tables appear where the guide has a `<!-- register: KEY -->` marker, see `docs/README.md`) |

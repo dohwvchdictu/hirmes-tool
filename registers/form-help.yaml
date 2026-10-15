@@ -77,25 +77,4 @@ summary:
     label: Evaluation progress
     help: Share of items already evaluated (not Not Tested).
 
-profile:
-  application_no: Assigned by the Administrator when the application is received.
-  vendor: Name of the service provider or vendor (or the facility, for an in-house system).
-  system_name: Product name as it will be offered to HIE facilities.
-  version: Exact version or build submitted for testing. Results apply to this version only.
-  category: Third-party EMR provider, or in-house developed system.
-  deployment: Cloud, on-premise or hybrid.
-  test_dates: Date(s) of evaluation for each level tested.
-  technical_lead: Leads the Regional Validation Team for this evaluation (required).
-  validators: At least two validators are required.
-  observers: At least one observer is required.
-  administrator: Receives applications, assigns numbers and keeps the records.
-  office: Conducting DOH office; printed on the report letterhead when filled in.
-  ph_core: PH Core IG version tested, e.g. 0.2.0.
-  pheref: PHeReF IG version tested, e.g. 0.1.0.
-  terminology: Terminology / PSGC release used on the sandbox.
-  evaluation_type: Initial; re-evaluation after an update; revalidation after a major change; or partial regression after a minor change.
-  date_received: Date the application was received by the DOH.
-  certificate_no: Assigned on approval.
-  certificate_date: Date of approval.
-  valid_until: 2 years from approval or until a major change or IG major version (PROPOSED).
-  conditions: Conditions attached to the result, if any.
+# The System Profile fields' labels, help and choices are in criteria/profile.yaml.
