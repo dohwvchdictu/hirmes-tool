@@ -1,3 +1,5 @@
+$ -m pip install --quiet --disable-pip-version-check -r requirements.txt
+
 $ scripts/check.py
 
 Count Register
@@ -14,11 +16,11 @@ TOTAL       103       27      62   272     4     99
 
 0 error(s), 0 warning(s).
 
-$ scripts/build_web.py --out /tmp/tmph28otolu/out
-Wrote web scorecard to /tmp/tmph28otolu/out
+$ scripts/build_web.py --out /tmp/tmp037v4nkr/out
+Wrote web scorecard to /tmp/tmp037v4nkr/out
 
-$ scripts/build_xlsx.py --out /tmp/tmph28otolu/out
-Wrote /tmp/tmph28otolu/out/testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx
+$ scripts/build_xlsx.py --out /tmp/tmp037v4nkr/out
+Wrote /tmp/tmp037v4nkr/out/testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx
 
-$ scripts/change_summary.py --to 073e1326fa60729452941b5837346ff00a064d9e --out /tmp/tmph28otolu/out/CHANGE-SUMMARY.md --label branch main
-Wrote /tmp/tmph28otolu/out/CHANGE-SUMMARY.md
+$ scripts/change_summary.py --to 0d164db83fabb5c1c814221e7eca40550b87f042 --out /tmp/tmp037v4nkr/out/CHANGE-SUMMARY.md --label branch main
+Wrote /tmp/tmp037v4nkr/out/CHANGE-SUMMARY.md
