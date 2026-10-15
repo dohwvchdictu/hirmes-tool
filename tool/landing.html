@@ -3,6 +3,7 @@
      SPDX-License-Identifier: GPL-3.0-or-later -->
 <html lang="en">
 <head>
+  <meta name="generated" content="{{GENERATED_ISO}}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria — Published Versions</title>
@@ -74,5 +75,18 @@
     <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> ·
     Code <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>
   </footer>
+<script>
+  /* The landing page may come from the browser cache (GitHub Pages allows 10 minutes). versions.json is
+     fetched fresh: if the list was regenerated since, reload once to show the new versions. */
+  (function () {
+    var mine = document.querySelector('meta[name="generated"]').content;
+    fetch("versions.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
+      if (!v || !v.generated || v.generated === mine) return;
+      var key = "landing-reloaded-" + v.generated;
+      try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, "1"); } catch (e) { return; }
+      location.reload();
+    }).catch(function () {});
+  })();
+</script>
 </body>
 </html>

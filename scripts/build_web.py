@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 
@@ -45,6 +46,22 @@ def criterion_src(c: dict) -> dict:
     subs = {sb["id"]: lines.get(("sub_items", i)) for i, sb in enumerate(c.get("sub_items") or [])}
     return {"p": c["_file"].replace("\\", "/"), "l": lines.get(()),
             "f": {f: lines[(f,)] for f in CRITERION_FIELDS if (f,) in lines}, "s": {k: v for k, v in subs.items() if v}}
+
+
+def stamp_assets(out: Path, meta: dict) -> None:
+    """Make every build fetch its own scripts and styles.
+
+    GitHub Pages lets browsers reuse files for up to 10 minutes and the header cannot be changed,
+    so a fresh page could otherwise run with yesterday's app.js. Each script and stylesheet link
+    gets "?v=<commit>", the page records its build, and version.json (always fetched without
+    cache) lets an open page notice that a newer build was published.
+    """
+    build = (meta.get("sha") or meta.get("commit") or "")[:12] or meta["built"].replace(" ", "T")
+    page = (out / "index.html").read_text(encoding="utf-8")
+    page = re.sub(r'(<(?:script|link)[^>]+(?:src|href)=")([\w./-]+\.(?:js|css))(")', lambda m: f"{m.group(1)}{m.group(2)}?v={build}{m.group(3)}", page)
+    page = page.replace('<meta charset="utf-8">', f'<meta charset="utf-8">\n  <meta name="build" content="{build}">', 1)
+    (out / "index.html").write_text(page, encoding="utf-8")
+    (out / "version.json").write_text(json.dumps({"build": build, "commit": meta.get("commit"), "built": meta["built"]}), encoding="utf-8")
 
 
 def export(out: Path) -> Path:
@@ -82,6 +99,7 @@ def export(out: Path) -> Path:
     if out.exists():
         shutil.rmtree(out)
     shutil.copytree(ROOT / "tool", out, ignore=shutil.ignore_patterns("landing.html"))
+    stamp_assets(out, data["meta"])
     (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     (out / "reference.json").write_text(json.dumps(build_reference(), ensure_ascii=False), encoding="utf-8")
     return out

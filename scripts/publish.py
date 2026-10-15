@@ -183,8 +183,9 @@ def build_landing(pages: Path):
     drafts = [m for m in metas if m["kind"] == "draft"]
     branches = sorted([m for m in metas if m["kind"] == "branch"], key=lambda m: m["commit_date"], reverse=True)
     latest = releases[0] if releases else (candidates[0] if candidates else None)
+    generated = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     (pages / "versions.json").write_text(json.dumps(
-        {"generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "repository": REPO_URL,
+        {"generated": generated, "repository": REPO_URL,
          "latest": latest["ref"] if latest else None,
          "releases": releases, "candidates": candidates, "draft": drafts, "branches": branches}, indent=1), encoding="utf-8")
     template = (ROOT / "tool" / "landing.html").read_text(encoding="utf-8")
@@ -246,7 +247,8 @@ def build_landing(pages: Path):
             + table("Branch previews", branches, "No other branches. Every pushed branch gets a preview here."))
     actions = (f'{e(REPO_URL)}/actions/workflows/publish.yml' if REPO_URL else "#")
     page = (template.replace("{{BODY}}", body).replace("{{REPO_URL}}", e(REPO_URL)).replace("{{ACTIONS_URL}}", actions)
-            .replace("{{GENERATED}}", dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")))
+            .replace("{{GENERATED}}", dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+            .replace("{{GENERATED_ISO}}", generated))
     (pages / "index.html").write_text(page, encoding="utf-8")
     (pages / ".nojekyll").write_text("", encoding="utf-8")
     print(f"landing page: {len(releases)} releases, {len(candidates)} candidates, {len(drafts)} draft, {len(branches)} branches")
