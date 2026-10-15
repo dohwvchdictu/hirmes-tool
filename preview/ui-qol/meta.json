@@ -3,10 +3,10 @@
  "ref_type": "branch",
  "kind": "branch",
  "path": "preview/ui-qol",
- "commit": "79288c9",
- "commit_date": "2026-10-15T14:24:11+08:00",
- "subject": "Update help text for weight criterion",
- "built": "2026-10-15 06:24 UTC",
+ "commit": "4e28dd2",
+ "commit_date": "2026-10-15T14:27:38+08:00",
+ "subject": "Clarify help text for validation role in YAML",
+ "built": "2026-10-15 06:27 UTC",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -14,7 +14,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 79288c9",
+ "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 4e28dd2",
  "counts": {
   "criteria": 103,
   "sub_items": 272
