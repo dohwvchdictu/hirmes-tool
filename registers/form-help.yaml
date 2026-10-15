@@ -48,7 +48,7 @@ weight:
 
 validation_role:
   label: Validation role
-  help: Who verifies the item. Level 2 and Level 4 items must be confirmed with server-side evidence, not the EMR screen alone.
+  help: Who verifies the item criteria. Level 2 and Level 4 items must be confirmed with server-side evidence, not the EMR screen alone.
   see: [Regional Validation Team, Validator, Observer]
 
 notes:
