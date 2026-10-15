@@ -11,27 +11,6 @@
   var current = "summary";
   var filter = { text: "", show: "all" };
 
-  // Grouped and ordered as on the workbook's System Profile sheet; the choice lists are the
-  // workbook's data validations. t: date | names (one per line) | long; opt: choice list.
-  var PROFILE_GROUPS = [
-    { id: "A", title: "Application and system", note: "From the application submitted by the service provider.", fields: [
-      { k: "application_no", l: "Application no." }, { k: "date_received", l: "Date application received", t: "date" },
-      { k: "vendor", l: "Service provider / vendor" }, { k: "system_name", l: "System name" },
-      { k: "version", l: "Version / build under test" },
-      { k: "category", l: "Applicant category", opt: ["Third-party EMR provider", "In-house developed system"] },
-      { k: "deployment", l: "Deployment model", opt: ["Cloud", "On-premise", "Hybrid"] },
-      { k: "evaluation_type", l: "Evaluation type", opt: ["Initial", "Re-evaluation after update", "Revalidation (major change)", "Partial regression (minor change)"] }] },
-    { id: "B", title: "Evaluation team and schedule", note: "These names are printed on the sign-off of the Printed Report.", team: true, fields: [
-      { k: "technical_lead", l: "Technical Lead", req: "required" }, { k: "administrator", l: "Administrator" },
-      { k: "validators", l: "Validators", t: "names", req: "at least 2" }, { k: "observers", l: "Observers", t: "names", req: "at least 1" },
-      { k: "office", l: "Conducting office" }, { k: "test_dates", l: "Date(s) of testing", ph: "e.g. 2026-10-12 to 2026-10-14" }] },
-    { id: "C", title: "Versions tested", fields: [
-      { k: "ph_core", l: "PH Core IG version" }, { k: "pheref", l: "PHeReF IG version" }, { k: "terminology", l: "Terminology release" }] },
-    { id: "D", title: "Certificate", note: "Filled in by the Regional Validation Team on approval.", fields: [
-      { k: "certificate_no", l: "Certificate no." }, { k: "certificate_date", l: "Certificate date", t: "date" },
-      { k: "valid_until", l: "Valid until" }, { k: "conditions", l: "Conditions", t: "long" }] }
-  ];
-
   // ------------------------------------------------------------------ utilities
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -61,7 +40,7 @@
       var raw = localStorage.getItem(STORE_KEY);
       if (raw) {
         var s = JSON.parse(raw);
-        state.answers = s.answers || {}; state.notes = s.notes || {}; state.profile = s.profile || {};
+        state.answers = s.answers || {}; state.notes = s.notes || {}; state.profile = migrateProfile(s.profile || {});
       }
     } catch (e) { /* ignore */ }
   }
@@ -208,8 +187,32 @@
   }
 
   // ------------------------------------------------------------------ profile
-  /** Validators and observers: one name per line. */
-  function nameList(s) { return String(s || "").split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean); }
+  // The team (profile section with `team` in criteria/profile.yaml): one row per person. A role's key
+  // stores the name, <key>_agency and <key>_designation the rest, as in System Profile section C of the workbook.
+  function teamSection() { return data.profile.sections.filter(function (g) { return g.team; })[0] || null; }
+  function teamRoles() { var g = teamSection(); return g ? g.team.roles : []; }
+  function person(key) {
+    var p = state.profile;
+    return { name: String(p[key] || "").trim(), agency: String(p[key + "_agency"] || "").trim(), designation: String(p[key + "_designation"] || "").trim() };
+  }
+  /** Names of the roles whose key starts with prefix, e.g. every validator_*. */
+  function namesOf(prefix) {
+    return teamRoles().filter(function (r) { return r.key.indexOf(prefix) === 0; }).map(function (r) { return person(r.key).name; }).filter(Boolean);
+  }
+  /** Older saves kept validators and observers in one box, one name per line: move them to the numbered roles. */
+  function migrateProfile(p) {
+    [["validators", "validator_"], ["observers", "observer_"]].forEach(function (m) {
+      if (p[m[0]] == null) return;
+      var names = String(p[m[0]]).split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean);
+      var slots = teamRoles().filter(function (r) { return r.key.indexOf(m[1]) === 0 && !p[r.key]; }).map(function (r) { return r.key; });
+      slots.forEach(function (k, i) {
+        var take = i === slots.length - 1 ? names.slice(i) : names.slice(i, i + 1);   // extra names go to the last free row
+        if (take.length) p[k] = take.join("; ");
+      });
+      delete p[m[0]];
+    });
+    return p;
+  }
   /** Default validity, as in the workbook: 2 years from the certificate date (PROPOSED). */
   function validDefault() {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(state.profile.certificate_date || "");
@@ -219,55 +222,116 @@
     var d = validDefault();
     return d ? "Leave blank for " + d + " (2 years, PROPOSED)" : "Leave blank for 2 years from the certificate date";
   }
+  /** The roles marked required in profile.yaml must have a name: the same rule as the workbook's team composition check. */
   function teamCheck() {
-    var p = state.profile, v = nameList(p.validators).length, o = nameList(p.observers).length, miss = [];
-    if (!String(p.technical_lead || "").trim()) miss.push("a Technical Lead");
-    if (v < 2) miss.push(v ? "1 more validator" : "2 validators");
-    if (o < 1) miss.push("an observer");
-    return miss.length ? '<span class="pf-warn">Team incomplete: add ' + miss.join(", ") + ".</span>"
-      : '<span class="pf-ok">✓ Team complete: ' + v + " validators, " + o + " observer" + (o > 1 ? "s" : "") + ".</span>";
+    var miss = teamRoles().filter(function (r) { return r.required && !person(r.key).name; }).map(function (r) { return r.label; });
+    var v = namesOf("validator_").length, o = namesOf("observer_").length;
+    return miss.length ? '<span class="pf-warn">Team incomplete: enter the name of ' + esc(miss.join(", ")) + ".</span>"
+      : '<span class="pf-ok">✓ Team complete: ' + v + " validator" + (v === 1 ? "" : "s") + ", " + o + " observer" + (o === 1 ? "" : "s") + ".</span>";
   }
   function groupCount(g) {
-    var n = g.fields.filter(function (f) { return String(state.profile[f.k] || "").trim(); }).length;
-    return n + " of " + g.fields.length + " filled";
+    var keys = g.fields.map(function (f) { return f.key; }).concat(g.team ? g.team.roles.map(function (r) { return r.key; }) : []);
+    var n = keys.filter(function (k) { return String(state.profile[k] || "").trim(); }).length;
+    return n + " of " + keys.length + " filled";
+  }
+
+  // Source entries for the ✎ buttons and popover footers: the page, each section and each field
+  // point to their lines in criteria/profile.yaml, as criteria point to their own files.
+  var PF_PARTS = [["label", "Label"], ["help", "Help"], ["options", "Choices"], ["placeholder", "Placeholder"]];
+  function profilePageSrc() {
+    var P = data.profile, s = P.src;
+    return { title: "System Profile", id: "profile", p: s.p, l: s.l, text: P.intro,
+      rows: [{ label: "Page title", l: s.f.title, text: P.title }, { label: "Introduction", l: s.f.intro, text: P.intro }].filter(function (r) { return r.l; }) };
+  }
+  function sectionSrc(g, n) {
+    var rows = [{ label: "Section title", l: g.src.f.title, text: g.title }, { label: "Section note", l: g.src.f.note, text: g.note }];
+    if (g.team) {
+      rows = rows.concat(g.team.roles.map(function (r) { return { label: "Role: " + r.label, l: r.src.l, text: r.help || "" }; }))
+        .concat([{ label: "Agency choices", l: g.team.src.f.agencies, text: g.team.agencies.join("\n") },
+          { label: "Sign-off order", l: g.team.src.f.sign_off, text: g.team.sign_off.join(", ") }]);
+    }
+    rows = rows.concat(g.fields.map(function (f) { return { label: f.label, l: f.src.l, text: f.help || "" }; }));
+    return { title: "System Profile — " + n + ". " + g.title, id: "profile-" + n, p: data.profile.src.p, l: g.src.l, text: g.title, rows: rows.filter(function (r) { return r.l; }) };
+  }
+  function fieldSrc(f) {
+    return { title: "System Profile field: " + f.label, id: f.key, p: data.profile.src.p, l: f.src.l, text: f.help || "",
+      rows: PF_PARTS.filter(function (x) { return f.src.f[x[0]]; }).map(function (x) {
+        return { label: x[1], l: f.src.f[x[0]], text: Array.isArray(f[x[0]]) ? f[x[0]].join("\n") : f[x[0]] };
+      }) };
+  }
+  /** ⓘ next to a field label: the help, the choices and the stored key(s), with Edit / Show the lines / Suggest a change. */
+  function fieldTip(f, extra) {
+    var html = '<div class="xp-kind">System Profile</div><div class="xp-title">' + esc(f.label) + "</div>" + (f.help ? "<p>" + esc(f.help) + "</p>" : "") +
+      '<dl class="xp-dl">' + (f.options ? "<dt>Choices</dt><dd>" + esc(f.options.join("\n")) + "</dd>" : "") + (extra || "") +
+      "<dt>Saved as</dt><dd><code>" + esc(f.saved || f.key) + "</code></dd></dl>" + Ref.srcLine(fieldSrc(f));
+    return Ref.tip("pf-" + f.key, html, f.label);
+  }
+  function roleTip(r) {
+    return fieldTip({ key: r.key, label: r.label, help: r.help, src: r.src, saved: r.key + ", " + r.key + "_agency, " + r.key + "_designation" },
+      "<dt>Signs as</dt><dd>" + esc(r.sign_as) + "</dd><dt>Needed</dt><dd>" + (r.required ? "Required" : "Optional") + "</dd>");
+  }
+
+  /** Section 2: one row per person with name, agency and designation, as in System Profile section C of the workbook. */
+  function teamTable(t) {
+    var cell = function (r, part, label, ctl) {
+      return '<div class="pf-tc"><label class="pf-tl" for="pf-' + r.key + part + '">' + label + "</label>" + ctl + "</div>";
+    };
+    var rows = t.roles.map(function (r) {
+      var x = person(r.key), agency = state.profile[r.key + "_agency"] || "";
+      var opts = agency && t.agencies.indexOf(agency) < 0 ? t.agencies.concat([agency]) : t.agencies;
+      var input = function (part, v, what) {
+        return '<input type="text" id="pf-' + r.key + part + '" data-profile="' + r.key + part + '" value="' + esc(v) + '" aria-label="' + esc(r.label + " " + what) + '"' +
+          (part === "" && r.required ? ' aria-required="true"' : "") + ' autocomplete="off">';
+      };
+      return '<div class="pf-trow' + (r.required ? "" : " opt") + '"><div class="pf-role"><b>' + esc(r.label) + "</b> " + roleTip(r) +
+        '<span class="pf-req">' + (r.required ? "required" : "optional") + "</span></div>" +
+        cell(r, "", "Name", input("", state.profile[r.key] || "", "name")) +
+        cell(r, "_agency", "Agency", '<select id="pf-' + r.key + '_agency" data-profile="' + r.key + '_agency" aria-label="' + esc(r.label + " agency") + '"><option value="">Choose…</option>' +
+          opts.map(function (o) { return "<option" + (o === agency ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select>") +
+        cell(r, "_designation", "Designation", input("_designation", state.profile[r.key + "_designation"] || "", "designation")) + "</div>";
+    }).join("");
+    return (t.help ? '<p class="pf-hint pf-team-help">' + esc(t.help) + "</p>" : "") +
+      '<div class="pf-team-tbl"><div class="pf-trow pf-thead" aria-hidden="true"><span>Role</span><span>Name</span><span>Agency</span><span>Designation</span></div>' + rows + "</div>" +
+      '<p class="pf-team" id="pf-team" role="status">' + teamCheck() + "</p>";
   }
 
   function profileField(f) {
-    var v = state.profile[f.k] || "", id = "pf-" + f.k, h = Ref.getHelp("profile." + f.k);
-    var attrs = ' id="' + id + '" data-profile="' + f.k + '"' + (h ? ' aria-describedby="' + id + '-h"' : "") + (f.req ? ' aria-required="true"' : "");
+    var v = state.profile[f.key] || "", id = "pf-" + f.key;
+    var attrs = ' id="' + id + '" data-profile="' + f.key + '"' + (f.help ? ' aria-describedby="' + id + '-h"' : "") + (f.required ? ' aria-required="true"' : "");
     var ctl;
-    if (f.opt) {
-      var opts = v && f.opt.indexOf(v) < 0 ? f.opt.concat([v]) : f.opt;   // keep a value typed before the list existed
+    if (f.options) {
+      var opts = v && f.options.indexOf(v) < 0 ? f.options.concat([v]) : f.options;   // keep a value typed before the list existed
       ctl = "<select" + attrs + '><option value="">Choose…</option>' +
         opts.map(function (o) { return "<option" + (o === v ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select>";
-    } else if (f.t === "names" || f.t === "long") {
-      ctl = "<textarea" + attrs + ' rows="3"' + (f.t === "names" ? ' placeholder="One name per line"' : "") + ">" + esc(v) + "</textarea>";
+    } else if (f.type === "long") {
+      ctl = "<textarea" + attrs + ' rows="3"' + (f.placeholder ? ' placeholder="' + esc(f.placeholder) + '"' : "") + ">" + esc(v) + "</textarea>";
     } else {
-      var date = f.t === "date" && (!v || /^\d{4}-\d{2}-\d{2}$/.test(v));   // older free-text dates stay editable as text
-      var ph = f.k === "valid_until" ? validPlaceholder() : f.ph;
+      var date = f.type === "date" && (!v || /^\d{4}-\d{2}-\d{2}$/.test(v));   // older free-text dates stay editable as text
+      var ph = f.key === "valid_until" ? validPlaceholder() : f.placeholder;
       ctl = '<input type="' + (date ? "date" : "text") + '"' + attrs + ' value="' + esc(v) + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : "") + ">";
     }
-    return '<div class="pf-field' + (f.t === "long" ? " wide" : "") + '"><label for="' + id + '">' + esc(f.l) +
-      (f.req ? ' <span class="pf-req">' + esc(f.req) + "</span>" : "") + "</label>" + ctl +
-      (h ? '<span class="pf-hint" id="' + id + '-h">' + esc(h.text) + "</span>" : "") + "</div>";
+    return '<div class="pf-field' + (f.type === "long" ? " wide" : "") + '"><div class="pf-lab"><label for="' + id + '">' + esc(f.label) +
+      (f.required ? ' <span class="pf-req">' + esc(f.required) + "</span>" : "") + "</label>" + fieldTip(f) + "</div>" + ctl +
+      (f.help ? '<span class="pf-hint" id="' + id + '-h">' + esc(f.help) + "</span>" : "") + "</div>";
   }
 
   function viewProfile() {
-    var first = data.sheets[0];
-    return '<section class="panel"><h2>System Profile</h2><p class="intro">These details appear on the Summary and the Printed Report. ' +
-      "Each change is saved in this browser as you type; use <b>Evaluation › Save evaluation</b> to keep a copy as a file.</p></section>" +
-      PROFILE_GROUPS.map(function (g) {
-        return '<fieldset class="panel pf-group"><legend class="pf-legend"><span class="pf-letter">' + g.id + "</span>" + esc(g.title) + "</legend>" +
-          '<span class="pf-count" id="pf-cnt-' + g.id + '">' + groupCount(g) + "</span>" +
-          (g.note ? '<p class="pf-note">' + esc(g.note) + "</p>" : "") +
-          '<div class="profile">' + g.fields.map(profileField).join("") + "</div>" +
-          (g.team ? '<p class="pf-team" id="pf-team" role="status">' + teamCheck() + "</p>" : "") + "</fieldset>";
+    var P = data.profile, first = data.sheets[0];
+    return '<section class="panel"><h2>' + esc(P.title) + Ref.src(profilePageSrc()) + '</h2><p class="intro">' + esc(P.intro) +
+      " Each change is saved in this browser as you type; use <b>Evaluation › Save evaluation</b> to keep a copy as a file.</p></section>" +
+      P.sections.map(function (g, i) {
+        var n = i + 1;
+        return '<section class="panel pf-group" role="group" aria-labelledby="pf-h-' + n + '"><div class="pf-head">' +
+          '<h3 class="pf-title" id="pf-h-' + n + '"><span class="pf-num">' + n + "</span>" + esc(g.title) + "</h3>" +
+          '<span class="pf-count" id="pf-cnt-' + n + '">' + groupCount(g) + "</span>" + Ref.src(sectionSrc(g, n)) + "</div>" +
+          (g.note ? '<p class="pf-note">' + esc(g.note) + "</p>" : "") + (g.team ? teamTable(g.team) : "") +
+          '<div class="profile">' + g.fields.map(profileField).join("") + "</div></section>";
       }).join("") +
       '<nav class="pager noprint" aria-label="Pages"><a href="#summary">‹ Summary</a><a href="#' + first.key + '">' + esc(first.tab) + " ›</a></nav>";
   }
   /** Refresh the counts, the team check and the default validity while typing, without re-rendering the form. */
   function refreshProfile() {
-    PROFILE_GROUPS.forEach(function (g) { var el = document.getElementById("pf-cnt-" + g.id); if (el) el.textContent = groupCount(g); });
+    data.profile.sections.forEach(function (g, i) { var el = document.getElementById("pf-cnt-" + (i + 1)); if (el) el.textContent = groupCount(g); });
     var team = $("#pf-team"); if (team) team.innerHTML = teamCheck();
     var vu = $("#pf-valid_until"); if (vu) vu.placeholder = validPlaceholder();
   }
@@ -554,7 +618,7 @@
         (rt.scope ? "<h3>Scope and coverage</h3><p>" + esc(rt.scope).replace(/\n\n/g, "</p><p>") + "</p>" : "") + "</section>" : "") +
       '<h2 class="rp-h">A. System profile</h2>' + kv([["System name", p.system_name], ["Version / build", p.version], ["Vendor / developer", p.vendor], ["Applicant category", p.category],
         ["Deployment model", p.deployment], ["Evaluation type", p.evaluation_type], ["Application no.", p.application_no], ["Date application received", p.date_received],
-        ["Technical Lead", p.technical_lead], ["Administrator", p.administrator], ["Validators", nameList(p.validators).join("; ")], ["Observers", nameList(p.observers).join("; ")],
+        ["Technical Lead", p.technical_lead], ["Administrator", p.administrator], ["Validators", namesOf("validator_").join("; ")], ["Observers", namesOf("observer_").join("; ")],
         ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Conducting office", p.office]]) +
       '<h2 class="rp-h">B. Summary scorecard</h2>' + legend +
       '<table class="rp-table rp-sum"><thead><tr><th>Level</th><th>Level name · evaluation progress</th><th>Threshold</th><th>Status</th><th>Score</th><th>Items &amp; findings</th></tr></thead><tbody>' +
@@ -568,14 +632,30 @@
       '<h2 class="rp-h">E. Certificate details</h2>' + kv([["Certificate no.", p.certificate_no], ["Certificate date", p.certificate_date], ["Product · version", (p.system_name || "—") + " · " + (p.version || "—")],
         ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest + (data.scoring.policy.status !== "Approved" ? " (thresholds PROPOSED — provisional)" : "")],
         ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || (validDefault() ? validDefault() + " — 2 years from approval or until a major change / IG major version (PROPOSED)" : "2 years from approval or until a major change / IG major version (PROPOSED)")], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"]]) +
-      '<h2 class="rp-h">F. Sign-off</h2><table class="rp-table rp-sign"><thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>' +
-      [["Validated by", nameList(p.validators).join("; ")], ["Witnessed by", nameList(p.observers).join("; ")], ["Processed by — Administrator", p.administrator], ["Approved by — Technical Lead", p.technical_lead], ["Conforme — Vendor / Developer", p.vendor ? "Authorized signatory of " + p.vendor : ""]].map(function (x) {
-        return "<tr><td>" + esc(x[0]) + "</td><td>" + esc(x[1] || "") + "</td><td></td><td></td></tr>";
-      }).join("") + "</tbody></table>" +
+      '<h2 class="rp-h">F. Sign-off</h2>' + signOff(p) +
       '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
       '<table class="rp-table rp-crits"><colgroup><col class="w-ref"><col><col class="w-type"><col class="w-res"><col class="w-score"><col class="w-out"></colgroup>' +
       "<thead><tr><th>Ref</th><th>Criterion</th><th>Type · W</th><th>Result</th><th>Score</th><th>Outstanding / notes</th></tr></thead>" + breakdown + "</table>" +
       (m.show_license ? '<p class="rp-credit">' + esc(m.credit || "") + "</p>" : "") + "</article>";
+  }
+
+  /** F. Sign-off, as in the workbook: one row per person in the sign_off order of profile.yaml, the name
+   *  over "designation · agency"; a required role without a name asks for it, an optional one is "not assigned". */
+  function signOff(p) {
+    var g = teamSection(), sec = data.profile.sections.indexOf(g) + 1, byKey = {};
+    g.team.roles.forEach(function (r) { byKey[r.key] = r; });
+    var rows = g.team.sign_off.map(function (k) {
+      var r = byKey[k], x = person(k), detail = [x.designation, x.agency].filter(Boolean).join(" · "), who;
+      if (x.name) who = "<b>" + esc(x.name) + "</b>" + (detail ? '<br><span class="rp-desig">' + esc(detail) + "</span>" : "");
+      else who = '<span class="rp-unset">' + (r.required ? "(name to be entered in System Profile " + sec + ")" : "— not assigned —") + "</span>";
+      var off = !x.name && !r.required;
+      return '<tr' + (off ? ' class="rp-off"' : "") + "><td>" + esc(r.sign_as) + "<br>" + esc(r.label) + "</td><td>" + who + "</td><td></td><td>" + (off ? "—" : "") + "</td></tr>";
+    });
+    rows.push("<tr><td>Conforme<br>Vendor / Developer</td><td>Authorized signatory" + (p.vendor ? " of " + esc(p.vendor) : "") +
+      ':<br><span class="rp-desig">Name · Designation</span></td><td></td><td></td></tr>');
+    return '<p class="muted rp-note">Names, agencies and designations are taken from System Profile section ' + sec + '. Optional roles that are not assigned are marked "— not assigned —".</p>' +
+      '<table class="rp-table rp-sign"><colgroup><col class="w-role"><col><col class="w-sig"><col class="w-date"></colgroup>' +
+      "<thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>" + rows.join("") + "</tbody></table>";
   }
 
   function pageStyle() {
@@ -610,7 +690,7 @@
           var loaded = JSON.parse(reader.result);
           if (loaded.criteria_version && loaded.criteria_version !== data.meta.version &&
               !confirm("This evaluation was made with criteria version " + loaded.criteria_version + "; this page shows " + data.meta.version + ". Load anyway?")) return;
-          state = { answers: loaded.answers || {}, notes: loaded.notes || {}, profile: loaded.profile || {} };
+          state = { answers: loaded.answers || {}, notes: loaded.notes || {}, profile: migrateProfile(loaded.profile || {}) };
           save(); recompute(); route();
         } catch (err) { alert("This file is not a saved evaluation."); }
       };

@@ -2,18 +2,18 @@
  "meta": {
   "version": "unreleased draft",
   "branch": "main",
-  "commit": "9000ab0",
-  "built": "2026-10-15 16:06 PHT",
-  "built_iso": "2026-10-15T08:06:09+00:00",
+  "commit": "232c17d",
+  "built": "2026-10-15 16:51 PHT",
+  "built_iso": "2026-10-15T08:51:40+00:00",
   "is_release": false,
-  "label": "unreleased draft · branch main · commit 9000ab0",
+  "label": "unreleased draft · branch main · commit 232c17d",
   "repository": "https://github.com/dohwvchdictu/hirmes-tool",
   "owner": "Department of Health – Western Visayas Center for Health Development",
   "content_license": "CC BY 4.0",
   "code_license": "GPL-3.0-or-later",
   "credit": "Healthcare Interoperability Readiness Matrix for EMR Systems, Department of Health – Western Visayas Center for Health Development, licensed under CC BY 4.0",
   "title": "Healthcare Interoperability Readiness Matrix for EMR Systems",
-  "sha": "9000ab0630238abf41bad5508e26d3e3cfad477b",
+  "sha": "232c17df63b3f9358c301d998c37902f94f5b0b3",
   "default_branch": "main",
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
   "show_license": false,
@@ -101,6 +101,738 @@
    "Standalone - manual encoding": 0.5,
    "Not Met": 0,
    "Not Tested": 0
+  }
+ },
+ "profile": {
+  "title": "System Profile",
+  "intro": "These details appear on the Summary and the Printed Report.",
+  "sections": [
+   {
+    "title": "Application and system",
+    "note": "From the application submitted by the service provider.",
+    "team": null,
+    "fields": [
+     {
+      "key": "application_no",
+      "label": "Application no.",
+      "help": "Assigned by the Administrator when the application is received.",
+      "src": {
+       "l": [
+        22,
+        24
+       ],
+       "f": {
+        "label": [
+         23,
+         23
+        ],
+        "help": [
+         24,
+         24
+        ]
+       }
+      }
+     },
+     {
+      "key": "date_received",
+      "label": "Date application received",
+      "type": "date",
+      "help": "Date the application was received by the DOH.",
+      "src": {
+       "l": [
+        25,
+        28
+       ],
+       "f": {
+        "label": [
+         26,
+         26
+        ],
+        "help": [
+         28,
+         28
+        ]
+       }
+      }
+     },
+     {
+      "key": "vendor",
+      "label": "Service provider / vendor",
+      "help": "Name of the service provider or vendor (or the facility, for an in-house system).",
+      "src": {
+       "l": [
+        29,
+        31
+       ],
+       "f": {
+        "label": [
+         30,
+         30
+        ],
+        "help": [
+         31,
+         31
+        ]
+       }
+      }
+     },
+     {
+      "key": "system_name",
+      "label": "System name",
+      "help": "Product name as it will be offered to HIE facilities.",
+      "src": {
+       "l": [
+        32,
+        34
+       ],
+       "f": {
+        "label": [
+         33,
+         33
+        ],
+        "help": [
+         34,
+         34
+        ]
+       }
+      }
+     },
+     {
+      "key": "version",
+      "label": "Version / build under test",
+      "help": "Exact version or build submitted for testing. Results apply to this version only.",
+      "src": {
+       "l": [
+        35,
+        37
+       ],
+       "f": {
+        "label": [
+         36,
+         36
+        ],
+        "help": [
+         37,
+         37
+        ]
+       }
+      }
+     },
+     {
+      "key": "category",
+      "label": "Applicant category",
+      "help": "Third-party EMR provider, or in-house developed system.",
+      "options": [
+       "Third-party EMR provider",
+       "In-house developed system"
+      ],
+      "src": {
+       "l": [
+        38,
+        43
+       ],
+       "f": {
+        "label": [
+         39,
+         39
+        ],
+        "help": [
+         40,
+         40
+        ],
+        "options": [
+         41,
+         43
+        ]
+       }
+      }
+     },
+     {
+      "key": "deployment",
+      "label": "Deployment model",
+      "help": "Cloud, on-premise or hybrid.",
+      "options": [
+       "Cloud",
+       "On-premise",
+       "Hybrid"
+      ],
+      "src": {
+       "l": [
+        44,
+        50
+       ],
+       "f": {
+        "label": [
+         45,
+         45
+        ],
+        "help": [
+         46,
+         46
+        ],
+        "options": [
+         47,
+         50
+        ]
+       }
+      }
+     },
+     {
+      "key": "evaluation_type",
+      "label": "Evaluation type",
+      "help": "Initial; re-evaluation after an update; revalidation after a major change; or partial regression after a minor change.",
+      "options": [
+       "Initial",
+       "Re-evaluation after update",
+       "Revalidation (major change)",
+       "Partial regression (minor change)"
+      ],
+      "src": {
+       "l": [
+        51,
+        58
+       ],
+       "f": {
+        "label": [
+         52,
+         52
+        ],
+        "help": [
+         53,
+         53
+        ],
+        "options": [
+         54,
+         58
+        ]
+       }
+      }
+     }
+    ],
+    "src": {
+     "l": [
+      19,
+      58
+     ],
+     "f": {
+      "title": [
+       19,
+       19
+      ],
+      "note": [
+       20,
+       20
+      ]
+     }
+    }
+   },
+   {
+    "title": "Evaluation team and schedule",
+    "note": "Each person signs their own row in the sign-off of the Printed Report.",
+    "team": {
+     "help": "Name, agency and designation of each member of the Regional Validation Team, as printed on the sign-off.",
+     "agencies": [
+      "DOH-CHD",
+      "DOH Central Office",
+      "PhilHealth",
+      "DICT",
+      "LGU",
+      "Hospital",
+      "Academic / Research Institution",
+      "Other"
+     ],
+     "sign_off": [
+      "validator_1",
+      "validator_2",
+      "validator_3",
+      "observer_1",
+      "observer_2",
+      "administrator",
+      "technical_lead"
+     ],
+     "roles": [
+      {
+       "key": "technical_lead",
+       "label": "Technical Lead",
+       "required": true,
+       "sign_as": "Approved by",
+       "help": "Leads the Regional Validation Team for this evaluation.",
+       "src": {
+        "l": [
+         73,
+         77
+        ],
+        "f": {
+         "label": [
+          74,
+          74
+         ],
+         "help": [
+          77,
+          77
+         ],
+         "sign_as": [
+          76,
+          76
+         ]
+        }
+       }
+      },
+      {
+       "key": "validator_1",
+       "label": "Validator 1",
+       "required": true,
+       "sign_as": "Validated by",
+       "help": "At least two validators are required.",
+       "src": {
+        "l": [
+         78,
+         82
+        ],
+        "f": {
+         "label": [
+          79,
+          79
+         ],
+         "help": [
+          82,
+          82
+         ],
+         "sign_as": [
+          81,
+          81
+         ]
+        }
+       }
+      },
+      {
+       "key": "validator_2",
+       "label": "Validator 2",
+       "required": true,
+       "sign_as": "Validated by",
+       "help": "At least two validators are required.",
+       "src": {
+        "l": [
+         83,
+         87
+        ],
+        "f": {
+         "label": [
+          84,
+          84
+         ],
+         "help": [
+          87,
+          87
+         ],
+         "sign_as": [
+          86,
+          86
+         ]
+        }
+       }
+      },
+      {
+       "key": "validator_3",
+       "label": "Validator 3",
+       "sign_as": "Validated by",
+       "help": "Optional third validator.",
+       "src": {
+        "l": [
+         88,
+         91
+        ],
+        "f": {
+         "label": [
+          89,
+          89
+         ],
+         "help": [
+          91,
+          91
+         ],
+         "sign_as": [
+          90,
+          90
+         ]
+        }
+       }
+      },
+      {
+       "key": "administrator",
+       "label": "Administrator",
+       "sign_as": "Processed by",
+       "help": "Receives applications, assigns numbers and keeps the records.",
+       "src": {
+        "l": [
+         92,
+         95
+        ],
+        "f": {
+         "label": [
+          93,
+          93
+         ],
+         "help": [
+          95,
+          95
+         ],
+         "sign_as": [
+          94,
+          94
+         ]
+        }
+       }
+      },
+      {
+       "key": "observer_1",
+       "label": "Observer 1",
+       "required": true,
+       "sign_as": "Witnessed by",
+       "help": "At least one observer is required.",
+       "src": {
+        "l": [
+         96,
+         100
+        ],
+        "f": {
+         "label": [
+          97,
+          97
+         ],
+         "help": [
+          100,
+          100
+         ],
+         "sign_as": [
+          99,
+          99
+         ]
+        }
+       }
+      },
+      {
+       "key": "observer_2",
+       "label": "Observer 2",
+       "sign_as": "Witnessed by",
+       "help": "Optional second observer.",
+       "src": {
+        "l": [
+         101,
+         104
+        ],
+        "f": {
+         "label": [
+          102,
+          102
+         ],
+         "help": [
+          104,
+          104
+         ],
+         "sign_as": [
+          103,
+          103
+         ]
+        }
+       }
+      }
+     ],
+     "src": {
+      "l": [
+       61,
+       106
+      ],
+      "f": {
+       "help": [
+        62,
+        62
+       ],
+       "agencies": [
+        63,
+        71
+       ],
+       "sign_off": [
+        106,
+        106
+       ]
+      }
+     }
+    },
+    "fields": [
+     {
+      "key": "office",
+      "label": "Conducting office",
+      "help": "Conducting DOH office; printed on the report letterhead when filled in.",
+      "src": {
+       "l": [
+        108,
+        110
+       ],
+       "f": {
+        "label": [
+         109,
+         109
+        ],
+        "help": [
+         110,
+         110
+        ]
+       }
+      }
+     },
+     {
+      "key": "test_dates",
+      "label": "Date(s) of testing",
+      "placeholder": "e.g. 2026-10-12 to 2026-10-14",
+      "help": "Date(s) of evaluation for each level tested.",
+      "src": {
+       "l": [
+        111,
+        114
+       ],
+       "f": {
+        "label": [
+         112,
+         112
+        ],
+        "help": [
+         114,
+         114
+        ],
+        "placeholder": [
+         113,
+         113
+        ]
+       }
+      }
+     }
+    ],
+    "src": {
+     "l": [
+      59,
+      114
+     ],
+     "f": {
+      "title": [
+       59,
+       59
+      ],
+      "note": [
+       60,
+       60
+      ]
+     }
+    }
+   },
+   {
+    "title": "Versions tested",
+    "note": "",
+    "team": null,
+    "fields": [
+     {
+      "key": "ph_core",
+      "label": "PH Core IG version",
+      "help": "PH Core IG version tested, e.g. 0.2.0.",
+      "src": {
+       "l": [
+        117,
+        119
+       ],
+       "f": {
+        "label": [
+         118,
+         118
+        ],
+        "help": [
+         119,
+         119
+        ]
+       }
+      }
+     },
+     {
+      "key": "pheref",
+      "label": "PHeReF IG version",
+      "help": "PHeReF IG version tested, e.g. 0.1.0.",
+      "src": {
+       "l": [
+        120,
+        122
+       ],
+       "f": {
+        "label": [
+         121,
+         121
+        ],
+        "help": [
+         122,
+         122
+        ]
+       }
+      }
+     },
+     {
+      "key": "terminology",
+      "label": "Terminology release",
+      "help": "Terminology / PSGC release used on the sandbox.",
+      "src": {
+       "l": [
+        123,
+        125
+       ],
+       "f": {
+        "label": [
+         124,
+         124
+        ],
+        "help": [
+         125,
+         125
+        ]
+       }
+      }
+     }
+    ],
+    "src": {
+     "l": [
+      115,
+      125
+     ],
+     "f": {
+      "title": [
+       115,
+       115
+      ]
+     }
+    }
+   },
+   {
+    "title": "Certificate",
+    "note": "Filled in by the Regional Validation Team on approval.",
+    "team": null,
+    "fields": [
+     {
+      "key": "certificate_no",
+      "label": "Certificate no.",
+      "help": "Assigned on approval.",
+      "src": {
+       "l": [
+        129,
+        131
+       ],
+       "f": {
+        "label": [
+         130,
+         130
+        ],
+        "help": [
+         131,
+         131
+        ]
+       }
+      }
+     },
+     {
+      "key": "certificate_date",
+      "label": "Certificate date",
+      "type": "date",
+      "help": "Date of approval.",
+      "src": {
+       "l": [
+        132,
+        135
+       ],
+       "f": {
+        "label": [
+         133,
+         133
+        ],
+        "help": [
+         135,
+         135
+        ]
+       }
+      }
+     },
+     {
+      "key": "valid_until",
+      "label": "Valid until",
+      "help": "2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the certificate date.",
+      "src": {
+       "l": [
+        136,
+        138
+       ],
+       "f": {
+        "label": [
+         137,
+         137
+        ],
+        "help": [
+         138,
+         138
+        ]
+       }
+      }
+     },
+     {
+      "key": "conditions",
+      "label": "Conditions",
+      "type": "long",
+      "help": "Conditions attached to the result, if any.",
+      "src": {
+       "l": [
+        139,
+        142
+       ],
+       "f": {
+        "label": [
+         140,
+         140
+        ],
+        "help": [
+         142,
+         142
+        ]
+       }
+      }
+     }
+    ],
+    "src": {
+     "l": [
+      126,
+      142
+     ],
+     "f": {
+      "title": [
+       126,
+       126
+      ],
+      "note": [
+       127,
+       127
+      ]
+     }
+    }
+   }
+  ],
+  "src": {
+   "p": "criteria/profile.yaml",
+   "l": [
+    1,
+    142
+   ],
+   "f": {
+    "title": [
+     16,
+     16
+    ],
+    "intro": [
+     17,
+     17
+    ]
+   }
   }
  },
  "sheets": [

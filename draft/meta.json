@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "9000ab0",
- "commit_date": "2026-10-15T16:05:46+08:00",
- "subject": "feat(profile): enhance system profile layout and improve input styles",
- "built": "2026-10-15 16:06 PHT",
- "built_iso": "2026-10-15T08:06:07+00:00",
+ "commit": "232c17d",
+ "commit_date": "2026-10-15T16:51:10+08:00",
+ "subject": "Refactor System Profile management: - Removed hardcoded profile groups in app.js, replaced with dynamic loading from profile.yaml. - Implemented profile migration for legacy data formats. - Enhanced team management functions to support new structure. - Updated UI components for better responsiveness and accessibility. - Introduced JSON schema validation for profile data. - Added comprehensive styles for improved layout and usability. - Created a new profile.yaml file to define system profile structure and fields.",
+ "built": "2026-10-15 16:51 PHT",
+ "built_iso": "2026-10-15T08:51:37+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit 9000ab0",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 232c17d",
  "counts": {
   "criteria": 103,
   "sub_items": 272
