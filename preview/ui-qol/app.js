@@ -100,7 +100,7 @@
       '<div class="tg tg-levels"><span class="tg-l">Levels</span>' + levels + "</div>" +
       '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + "</div>" +
       (Ref.ready() ? '<div class="tg"><span class="tg-l">Reference</span><details class="sd-ref"' + (onRef ? " open" : "") + "><summary>" +
-        (onRef ? "Glossary, registers, documents" : '<span>Glossary, registers, documents</span>') + "</summary>" + Ref.navTree(onRef ? current.slice(4) : null) + "</details></div>" : "");
+        "Technical Reference Guide</summary>" + Ref.navTree(onRef ? current.slice(4) : null) + "</details></div>" : "");
     var cur = head === "summary" ? "Summary" : head === "profile" ? "System profile" : head === "report" ? "Printed report" : head === "ref" ? "Reference" :
       (sheetByKey(head) ? sheetByKey(head).tab : "");
     $("#nav-cur").textContent = cur;
@@ -518,7 +518,7 @@
       if (t.value === Scoring.NOT_TESTED) delete state.answers[id]; else state.answers[id] = t.value;
       save();
       t.className = valClass(t.value);
-      var cardEl = t.closest(".crit"); if (cardEl) Ref.guideFollow(cardEl.id.slice(5));
+      followFrom(t);
       var li = t.closest("li"); if (li) li.className = valClass(t.value);
       var s = sheetByKey(current.split("/")[0]);
       if (s) refreshSheet(s, id); else { recompute(); route(); }
@@ -542,10 +542,14 @@
     }
   });
 
-  document.addEventListener("focusin", function (e) {
-    var cardEl = e.target.closest && e.target.closest(".crit");
-    if (cardEl && /SELECT|TEXTAREA/.test(e.target.tagName)) Ref.guideFollow(cardEl.id.slice(5));
-  });
+  // The guide panel follows the criterion being worked on: any click, tap or keyboard focus inside a
+  // card (text, sub-items, answers, notes, buttons) switches it to that criterion.
+  function followFrom(el) {
+    var cardEl = el && el.closest && el.closest(".crit");
+    if (cardEl && cardEl.id) Ref.guideFollow(cardEl.id.slice(5));
+  }
+  document.addEventListener("pointerdown", function (e) { if (!e.target.closest(".gbtn")) followFrom(e.target); }, true);
+  document.addEventListener("focusin", function (e) { followFrom(e.target); });
 
   document.addEventListener("input", function (e) {
     var t = e.target;

@@ -422,109 +422,174 @@
   }
 
   // ------------------------------------------------------------------ reference pages
-  var NAV = [["glossary", "Glossary"], ["abbreviations", "Abbreviations"], ["TB", "Technical Baseline (TB-)"], ["SRC", "Sources (SRC-)"],
-    ["TR", "FHIR Traceability (TR-)"], ["IND", "Indicators (IND-)"], ["prefixes", "ID prefixes"]];
+  // The Reference is the Technical Reference Guide: one page per chapter. Where the guide's
+  // source has a "register:" marker, the structured table from registers/ is shown in place,
+  // linked to the criteria. Old addresses (#ref/TB/TB-03, #ref/glossary/…) open the chapter
+  // that holds that register, at the entry.
   var refFilter = "";
+  var REG_LABEL = { glossary: "Glossary", abbreviations: "Abbreviations", prefixes: "ID prefixes", retired: "Retired and moved IDs",
+    TB: "Technical Baseline", SRC: "Terminology & Registry Sources", TR: "FHIR Traceability", IND: "Indicator Definitions" };
 
-  /** Reference contents for the sidebar: terms, registers, and each document's chapters. */
-  function navTree(page) {
-    if (!R) return "";
-    if (page == null) page = "\u0001";   // nothing is the current page
-    var a = function (p, label) { return '<a href="#ref/' + p + '"' + (page === p ? ' aria-current="page"' : "") + ">" + label + "</a>"; };
-    var docs = R.docs.map(function (d) {
-      var open = page.indexOf("doc:" + d.id + ":") === 0;
-      return '<details class="sd-doc"' + (open ? " open" : "") + "><summary>" + esc(d.title) + ' <span class="cnt">' + d.chapters.length + "</span></summary>" +
-        d.chapters.map(function (ch) { return a("doc:" + d.id + ":" + ch.id, esc(ch.title)); }).join("") + "</details>";
-    }).join("");
-    return '<div class="sd-sub">' + a("", "Reference home") + '<div class="sd-h">Terms</div>' + NAV.slice(0, 2).map(function (n) { return a(n[0], n[1]); }).join("") +
-      '<div class="sd-h">Registers</div>' + NAV.slice(2).map(function (n) { return a(n[0], n[1]); }).join("") +
-      '<div class="sd-h">Documents</div>' + docs + "</div>";
+  function guide() { return R.docs[0] || { chapters: [], title: "", source: "" }; }
+  function chapters() { return guide().chapters.filter(function (c) { return c.num; }); }
+  function chapterOf(regKey) { return chapters().filter(function (c) { return c.registers.indexOf(regKey) >= 0; })[0]; }
+  /** "#ref/<path>" → {ch, target} (ch null = overview). */
+  function resolve(path) {
+    var parts = String(path || "").split("/"), page = parts[0] || "", target = parts[1] || "";
+    var m = /^doc:[^:]+:(.+)$/.exec(page); if (m) page = m[1];
+    var ch = chapters().filter(function (c) { return c.id === page; })[0];
+    if (!ch && REG_LABEL[page]) { ch = chapterOf(page); if (!target) target = "reg-" + page; }
+    return { ch: ch || null, target: target };
   }
-  function picker(page) {
-    var opt = function (p, label) { return '<option value="' + esc(p) + '"' + (p === page ? " selected" : "") + ">" + esc(label) + "</option>"; };
-    return '<label class="ref-picker"><span>Contents</span><select id="ref-pick">' + opt("", "Reference home") +
-      '<optgroup label="Terms and registers">' + NAV.map(function (n) { return opt(n[0], n[1]); }).join("") + "</optgroup>" +
-      R.docs.map(function (d) { return '<optgroup label="' + esc(d.title) + '">' + d.chapters.map(function (ch) { return opt("doc:" + d.id + ":" + ch.id, ch.title); }).join("") + "</optgroup>"; }).join("") +
-      "</select></label>";
+  function chHref(ch, target) { return "#ref/" + ch.id + (target ? "/" + target : ""); }
+  function glossSections() {
+    var seen = [], out = [];
+    R.glossary.forEach(function (g) { if (seen.indexOf(g.section) < 0) { seen.push(g.section); out.push({ id: "gs-" + slugify(g.section), title: g.section }); } });
+    return out;
+  }
+  function slugify(t) { return String(t).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+  /** Sections listed under a chapter: its headings, with the glossary expanded into its topics. */
+  function sectionsOf(ch) {
+    var out = [];
+    ch.sections.forEach(function (sc) {
+      if (/glossary/i.test(sc.title) && ch.registers.indexOf("glossary") >= 0) out = out.concat(glossSections());
+      else out.push(sc);
+    });
+    return out;
+  }
+
+  /** Reference contents for the sidebar: overview, then the guide's chapters; the open chapter lists its sections. */
+  function navTree(path) {
+    if (!R) return "";
+    var cur = path == null ? { ch: undefined } : resolve(path);
+    var a = function (href, label, on, cls) { return '<a href="' + href + '"' + (on ? ' aria-current="page"' : "") + (cls ? ' class="' + cls + '"' : "") + ">" + label + "</a>"; };
+    return '<div class="sd-sub">' + a("#ref/", "Overview", path != null && cur.ch === null) +
+      '<div class="sd-h">' + esc(guide().title) + "</div>" +
+      chapters().map(function (ch) {
+        var on = cur.ch === ch;
+        return a(chHref(ch), '<span class="sd-num">' + esc(ch.num) + "</span><span>" + esc(ch.short) + "</span>", on, "sd-ch") +
+          (on ? '<div class="sd-secs">' + sectionsOf(ch).map(function (sc) { return '<a href="' + chHref(ch, sc.id) + '">' + esc(sc.title) + "</a>"; }).join("") + "</div>" : "");
+      }).join("") + "</div>";
+  }
+  function picker(path) {
+    var cur = resolve(path);
+    var opt = function (v, label, sel) { return '<option value="' + esc(v) + '"' + (sel ? " selected" : "") + ">" + esc(label) + "</option>"; };
+    return '<label class="ref-picker"><span>Contents</span><select id="ref-pick">' + opt("", "Overview", !cur.ch) +
+      chapters().map(function (ch) {
+        var o = opt(ch.id, ch.num + " · " + ch.short, cur.ch === ch && !/^(sec|gs)-/.test(cur.target));
+        if (cur.ch === ch) o += sectionsOf(ch).map(function (sc) { return opt(ch.id + "/" + sc.id, "    " + sc.title, cur.target === sc.id); }).join("");
+        return o;
+      }).join("") + "</select></label>";
   }
   document.addEventListener("change", function (e) { if (e.target.id === "ref-pick") location.hash = "#ref/" + e.target.value; });
 
   function match(text) { return !refFilter || String(text).toLowerCase().indexOf(refFilter.toLowerCase()) >= 0; }
 
-  function pageHtml(page) {
-    var src = { glossary: "registers/glossary.yaml", abbreviations: "registers/abbreviations.yaml", prefixes: "registers/id-prefixes.yaml" };
-    R.registers.forEach(function (r) { src[r.key] = r.src; });
-    var filterBox = '<input type="search" id="ref-filter" placeholder="Filter this page" value="' + esc(refFilter) + '">';
-    if (page === "glossary") {
+  /** The structured table of one register, as shown inside its chapter. */
+  function registerBlock(key) {
+    var file = (R.register_files || {})[key] || "", body = "", n = 0;
+    if (key === "glossary") {
       var bySec = {};
-      R.glossary.forEach(function (g) { if (match(g.term + " " + g.meaning)) (bySec[g.section] = bySec[g.section] || []).push(g); });
-      return "<h2>Glossary</h2>" + filterBox + editLink(src.glossary) + Object.keys(bySec).map(function (s) {
-        return "<h3>" + esc(s) + '</h3><dl class="gl">' + bySec[s].map(function (g) {
+      R.glossary.forEach(function (g) { if (match(g.term + " " + g.meaning)) { n++; (bySec[g.section] = bySec[g.section] || []).push(g); } });
+      body = glossSections().filter(function (sc) { return bySec[sc.title]; }).map(function (sc) {
+        return '<h3 id="' + sc.id + '">' + esc(sc.title) + '</h3><dl class="gl">' + bySec[sc.title].map(function (g) {
           return '<dt id="' + esc(g.id) + '">' + esc(g.term) + srcBtn(glossSrc(g), "hov") + "</dt><dd>" + link(g.meaning, null, { idsOnly: true }) + "</dd>";
         }).join("") + "</dl>";
-      }).join("") || '<p class="muted">No terms match.</p>';
-    }
-    if (page === "abbreviations") {
-      return "<h2>Abbreviations</h2>" + filterBox + editLink(src.abbreviations) + '<table class="grid"><tbody>' + R.abbreviations.filter(function (a) { return match(a.abbreviation + " " + a.stands_for); })
-        .map(function (a) { return '<tr id="' + esc(a.id) + '"><th>' + esc(a.abbreviation) + "</th><td>" + esc(a.stands_for) + srcBtn(abbrSrc(a), "hov") + "</td></tr>"; }).join("") + "</tbody></table>";
-    }
-    if (page === "prefixes") {
-      return "<h2>ID prefixes</h2>" + editLink(src.prefixes) + '<table class="grid"><thead><tr><th>Prefix</th><th>Meaning</th><th>Where</th></tr></thead><tbody>' +
-        R.prefixes.map(function (p) { return "<tr><th>" + esc(p.prefix) + "</th><td>" + esc(p.meaning) + "</td><td>" + esc(p.where) +
-          (p.src ? srcBtn({ title: "ID prefix " + p.prefix, id: p.prefix, p: p.src.p, l: p.src.l, text: p.meaning }, "hov") : "") + "</td></tr>"; }).join("") + "</tbody></table>";
-    }
-    var reg = R.registers.filter(function (r) { return r.key === page; })[0];
-    if (reg) {
-      return "<h2>" + esc(reg.title) + "</h2>" + filterBox + editLink(src[reg.key]) + reg.entries.filter(function (e) {
-        return match(e.id + " " + e.title + " " + e.fields.map(function (f) { return f[1]; }).join(" "));
-      }).map(function (e) {
-        var main = e.fields.slice(0, 2), rest = e.fields.slice(2);
-        var dl = function (fs) { return '<dl class="xp-dl">' + fs.map(function (f) { return "<dt>" + esc(f[0]) + "</dt><dd>" + link(f[1], null, { idsOnly: true }) + "</dd>"; }).join("") + "</dl>"; };
-        return '<article class="rcard" id="' + esc(e.id) + '"><h3><span class="rid">' + esc(e.id) + "</span> " + esc(e.title) + srcBtn(regSrc(e)) + "</h3>" + dl(main) +
-          (rest.length ? "<details><summary>All fields (" + e.fields.length + ")</summary>" + dl(rest) + "</details>" : "") +
-          (e.criteria.length ? '<div class="xp-used">Used by ' + chipsFor(e.criteria) + "</div>" : "") + "</article>";
-      }).join("") || '<p class="muted">No entries match.</p>';
-    }
-    var m = /^doc:([^:]+):(.+)$/.exec(page);
-    if (m) {
-      var doc = R.docs.filter(function (d) { return d.id === m[1]; })[0];
-      var ch = doc && doc.chapters.filter(function (c) { return c.id === m[2]; })[0];
-      if (ch) {
-        var i = doc.chapters.indexOf(ch), prev = doc.chapters[i - 1], next = doc.chapters[i + 1];
-        return '<div class="xp-kind">' + esc(doc.title) + "</div><h2>" + esc(ch.title) +
-          srcBtn({ title: doc.title + ": " + ch.title, id: ch.title, p: doc.source, l: ch.l, text: "" }) + "</h2>" + srcLine({ title: doc.title + ": " + ch.title, id: ch.title, p: doc.source, l: ch.l }) +
-          '<div class="doc">' + ch.html + '</div><div class="docnav">' +
-          (prev ? '<a href="#ref/doc:' + doc.id + ":" + prev.id + '">‹ ' + esc(prev.title) + "</a>" : "<span></span>") +
-          (next ? '<a href="#ref/doc:' + doc.id + ":" + next.id + '">' + esc(next.title) + " ›</a>" : "") + "</div>";
+      }).join("");
+    } else if (key === "abbreviations") {
+      var rows = R.abbreviations.filter(function (a) { return match(a.abbreviation + " " + a.stands_for); }); n = rows.length;
+      body = rows.length ? '<table class="grid abbr"><tbody>' + rows.map(function (a) {
+        return '<tr id="' + esc(a.id) + '"><th>' + esc(a.abbreviation) + "</th><td>" + esc(a.stands_for) + srcBtn(abbrSrc(a), "hov") + "</td></tr>";
+      }).join("") + "</tbody></table>" : "";
+    } else if (key === "prefixes") {
+      var ps = R.prefixes.filter(function (p) { return match(p.prefix + " " + p.meaning + " " + p.where); }); n = ps.length;
+      body = ps.length ? '<table class="grid"><thead><tr><th>Prefix</th><th>Meaning</th><th>Where</th></tr></thead><tbody>' + ps.map(function (p) {
+        return "<tr><th>" + esc(p.prefix) + "</th><td>" + esc(p.meaning) + "</td><td>" + esc(p.where) +
+          (p.src ? srcBtn({ title: "ID prefix " + p.prefix, id: p.prefix, p: p.src.p, l: p.src.l, text: p.meaning }, "hov") : "") + "</td></tr>";
+      }).join("") + "</tbody></table>" : "";
+    } else if (key === "retired") {
+      var rs = (R.retired || []).filter(function (r) { return match(r.id + " " + r.action + " " + r.now + " " + r.reason); }); n = rs.length;
+      body = rs.length ? '<table class="grid"><thead><tr><th>ID</th><th>Revision</th><th>Action</th><th>Now tested in</th><th>Reason</th></tr></thead><tbody>' + rs.map(function (r) {
+        return '<tr id="' + esc(r.id) + '"><th>' + esc(r.id) + "</th><td>" + esc(r.revision) + "</td><td>" + esc(r.action) + "</td><td>" + link(r.now, null, { idsOnly: true }) +
+          "</td><td>" + esc(r.reason) + (r.src ? srcBtn({ title: "Retired ID " + r.id, id: r.id, p: r.src.p, l: r.src.l, text: r.reason }, "hov") : "") + "</td></tr>";
+      }).join("") + "</tbody></table>" : "";
+    } else {
+      var reg = R.registers.filter(function (r) { return r.key === key; })[0];
+      if (reg) {
+        var es = reg.entries.filter(function (e) { return match(e.id + " " + e.title + " " + e.fields.map(function (f) { return f[1]; }).join(" ")); }); n = es.length;
+        body = es.map(function (e) {
+          var main = e.fields.slice(0, 2), rest = e.fields.slice(2);
+          var dl = function (fs) { return '<dl class="xp-dl">' + fs.map(function (f) { return "<dt>" + esc(f[0]) + "</dt><dd>" + link(f[1], null, { idsOnly: true }) + "</dd>"; }).join("") + "</dl>"; };
+          return '<article class="rcard" id="' + esc(e.id) + '"><h3><span class="rid">' + esc(e.id) + "</span> " + esc(e.title) + srcBtn(regSrc(e)) + "</h3>" + dl(main) +
+            (rest.length ? "<details><summary>All fields (" + e.fields.length + ")</summary>" + dl(rest) + "</details>" : "") +
+            (e.criteria.length ? '<div class="xp-used">Used by ' + chipsFor(e.criteria) + "</div>" : "") + "</article>";
+        }).join("");
       }
     }
-    return '<h2>Reference</h2><p>Terms, registers and documents behind the testing criteria. Hover or tap an underlined term anywhere in the scorecard to see its meaning; the full entries are here.</p>' +
-      '<div class="rhome">' + NAV.map(function (n) { return '<a class="rtile" href="#ref/' + n[0] + '"><b>' + n[1] + "</b></a>"; }).join("") +
-      R.docs.map(function (d) { return '<a class="rtile" href="#ref/doc:' + d.id + ":" + d.chapters[0].id + '"><b>' + esc(d.title) + "</b><span>" + d.chapters.length + " chapters</span></a>"; }).join("") + "</div>";
+    return '<section class="reg-block" id="reg-' + esc(key) + '"><div class="reg-note"><span class="reg-tag">Register</span>' +
+      "<span>" + esc(REG_LABEL[key] || key) + " — kept as structured data in <code>" + esc(file) + "</code> and linked to the criteria that use it" +
+      (refFilter ? " · " + n + " matching" : "") + "</span>" + editLink(file, "Edit register") + "</div>" +
+      (body || '<p class="muted">No entries match “' + esc(refFilter) + '”.</p>') + "</section>";
   }
+
+  function chapterHtml(ch) {
+    var g = guide(), list = chapters(), i = list.indexOf(ch), prev = list[i - 1], next = list[i + 1];
+    var srcE = { title: g.title + ": " + ch.title, id: ch.title, p: g.source, l: ch.l, text: "" };
+    var html = ch.html.replace(/<!--\s*register:\s*([\w-]+)\s*-->/g, function (_, key) { return registerBlock(key); });
+    var filter = ch.registers.length ? '<div class="ref-tools"><input type="search" id="ref-filter" placeholder="Filter the ' +
+      esc(ch.registers.map(function (k) { return (REG_LABEL[k] || k).toLowerCase(); }).join(", ")) + '" value="' + esc(refFilter) + '"></div>' : "";
+    return '<div class="xp-kind">' + esc(g.title) + " · Chapter " + esc(ch.num) + '</div><h2 class="ch-title">' + esc(ch.short) + srcBtn(srcE) + "</h2>" +
+      srcLine(srcE) + filter + '<div class="doc">' + html + '</div><nav class="docnav" aria-label="Chapters">' +
+      (prev ? '<a href="' + chHref(prev) + '">‹ ' + esc(prev.num + " · " + prev.short) + "</a>" : '<a href="#ref/">‹ Overview</a>') +
+      (next ? '<a href="' + chHref(next) + '">' + esc(next.num + " · " + next.short) + " ›</a>" : "<span></span>") + "</nav>";
+  }
+
+  function homeHtml() {
+    var g = guide(), intro = g.chapters.filter(function (c) { return !c.num; })[0];
+    var count = function (ch) {
+      var parts = ch.registers.map(function (k) {
+        var n = k === "glossary" ? R.glossary.length : k === "abbreviations" ? R.abbreviations.length : k === "prefixes" ? R.prefixes.length :
+          k === "retired" ? (R.retired || []).length : ((R.registers.filter(function (r) { return r.key === k; })[0] || { entries: [] }).entries.length);
+        return n + " " + ({ glossary: "terms", abbreviations: "abbreviations", prefixes: "ID prefixes", retired: "retired IDs" }[k] || "entries");
+      });
+      return parts.length ? parts.join(" · ") : ch.sections.length + " sections";
+    };
+    var quick = [["glossary", "Glossary"], ["abbreviations", "Abbreviations"], ["prefixes", "ID prefixes"], ["TB", "TB-"], ["SRC", "SRC-"], ["TR", "TR-"], ["IND", "IND-"], ["retired", "Retired IDs"]];
+    return '<div class="xp-kind">Reference</div><h2>' + esc(g.title) + "</h2>" + (intro ? '<div class="doc">' + intro.html + "</div>" : "") +
+      '<p class="muted">Tip: hover or tap an underlined term or ID anywhere in the scorecard to see it here without leaving the page. Press <kbd>/</kbd> to search.</p>' +
+      '<div class="quick">' + quick.map(function (q) { return '<a href="#ref/' + q[0] + '">' + esc(q[1]) + "</a>"; }).join("") + "</div>" +
+      '<div class="rhome">' + chapters().map(function (ch) {
+        return '<a class="rtile" href="' + chHref(ch) + '"><span class="rt-num">' + esc(ch.num) + "</span><b>" + esc(ch.short) + "</b><span>" + esc(count(ch)) + "</span></a>";
+      }).join("") + "</div>";
+  }
+
+  function pageHtml(path) { var r = resolve(path); return r.ch ? chapterHtml(r.ch) : homeHtml(); }
 
   function viewReference(path) {
-    var parts = path.split("/"), page = parts[0] || "", target = parts[1] || "";
-    return '<div class="refview">' + picker(page) + '<section class="panel rbody" data-page="' + esc(page) + '" data-target="' + esc(target) + '">' + pageHtml(page) + "</section></div>";
+    var r = resolve(path);
+    return '<div class="refview">' + picker(path) + '<section class="panel rbody" data-path="' + esc(path) + '" data-target="' + esc(r.target) + '">' + pageHtml(path) + "</section></div>";
   }
 
+  /** Link IDs inside the guide's prose (terms are not linked there, to keep long text calm). */
+  function linkProse(body) {
+    body.querySelectorAll(".doc").forEach(function (docEl) {
+      var w = document.createTreeWalker(docEl, NodeFilter.SHOW_TEXT, { acceptNode: function (nd) { return nd.parentNode.closest(".reg-block, .xref, a, code") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+      var nodes = [], n, test = new RegExp(reIds.source);
+      while ((n = w.nextNode())) if (test.test(n.nodeValue)) nodes.push(n);
+      nodes.forEach(function (tn) { var span = document.createElement("span"); span.innerHTML = link(tn.nodeValue, null, { idsOnly: true }); tn.parentNode.replaceChild(span, tn); });
+    });
+  }
   function afterReference() {
     var body = document.querySelector(".rbody");
     if (!body) return;
-    // link IDs inside rendered documents (terms are not linked there, to keep long text calm)
-    body.querySelectorAll(".doc").forEach(function (docEl) {
-      var w = document.createTreeWalker(docEl, NodeFilter.SHOW_TEXT), nodes = [], n;
-      var test = new RegExp(reIds.source);
-      while ((n = w.nextNode())) if (test.test(n.nodeValue)) nodes.push(n);
-      nodes.forEach(function (tn) {
-        var span = document.createElement("span");
-        span.innerHTML = link(tn.nodeValue, null, { idsOnly: true });
-        tn.parentNode.replaceChild(span, tn);
-      });
-    });
+    linkProse(body);
     var t = body.getAttribute("data-target");
     var el = t && document.getElementById(t);
-    if (el) { el.classList.add("target"); el.scrollIntoView({ block: "center" }); }
+    if (el) {
+      el.classList.add("target");
+      var top = document.getElementById("top"), off = (top ? top.offsetHeight : 0) + 12;
+      window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - (/^(sec|gs|reg)-/.test(t) ? off : Math.max(off, window.innerHeight / 3)));
+    }
   }
 
   document.addEventListener("input", function (e) {
@@ -532,10 +597,12 @@
     refFilter = e.target.value;
     var body = document.querySelector(".rbody");
     var pos = e.target.selectionStart;
-    body.innerHTML = pageHtml(body.getAttribute("data-page"));
+    body.innerHTML = pageHtml(body.getAttribute("data-path"));
+    linkProse(body);
     var box = document.getElementById("ref-filter");
     if (box) { box.focus(); box.setSelectionRange(pos, pos); }
   });
+  window.addEventListener("hashchange", function () { if (!/^#ref\//.test(location.hash)) refFilter = ""; });
 
   // ------------------------------------------------------------------ search
   function searchAll(q) {
@@ -572,8 +639,10 @@
     });
     R.docs.forEach(function (d) {
       d.chapters.forEach(function (ch) {
-        if (ch.title.toLowerCase().indexOf(q) >= 0) add(2, d.title, ch.title, "", "#ref/doc:" + d.id + ":" + ch.id);
-        else if (ch.html.toLowerCase().indexOf(q) >= 0) add(6, d.title, ch.title, "mentions “" + q + "”", "#ref/doc:" + d.id + ":" + ch.id);
+        var lbl = ch.num ? "Chapter " + ch.num + " · " + ch.short : ch.title;
+        if (ch.title.toLowerCase().indexOf(q) >= 0) add(2, d.title, lbl, "", "#ref/" + ch.id);
+        else (ch.sections || []).some(function (sc) { if (sc.title.toLowerCase().indexOf(q) >= 0) { add(2, d.title, sc.title, lbl, "#ref/" + ch.id + "/" + sc.id); return true; } return false; }) ||
+          (ch.html.replace(/<[^>]+>/g, " ").toLowerCase().indexOf(q) >= 0 && add(6, d.title, lbl, "mentions “" + q + "”", "#ref/" + ch.id));
       });
     });
     return out.sort(function (a, b) { return a.score - b.score; }).slice(0, 14);

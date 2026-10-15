@@ -3,10 +3,10 @@
  "ref_type": "branch",
  "kind": "branch",
  "path": "preview/ui-qol",
- "commit": "352cfc1",
- "commit_date": "2026-10-15T13:33:27+08:00",
- "subject": "feat(tool): left sidebar, docked guide panel, report fix and \"Met \u2013 for compliance\"",
- "built": "2026-10-15 05:34 UTC",
+ "commit": "596e550",
+ "commit_date": "2026-10-15T14:02:30+08:00",
+ "subject": "feat(tool): Technical Reference Guide as the Reference; drop Review Edition; guide follows clicks",
+ "built": "2026-10-15 06:02 UTC",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -14,7 +14,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 352cfc1",
+ "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 596e550",
  "counts": {
   "criteria": 103,
   "sub_items": 272
