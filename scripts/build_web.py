@@ -15,8 +15,23 @@ import os
 import shutil
 from pathlib import Path
 
+from build_reference import build_reference
 from build_xlsx import retired_list
-from common import CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, active, active_subs, load_criteria, load_scoring, load_sheets, version_info
+from common import CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, TEMPLATE_XLSX, TITLE, active, active_subs, load_criteria, load_scoring, load_sheets, version_info
+
+
+def report_text() -> dict:
+    """Background and scope paragraphs of the printed report, kept in the workbook template."""
+    import warnings
+    import openpyxl
+    warnings.filterwarnings("ignore")
+    ws = openpyxl.load_workbook(TEMPLATE_XLSX)["Printed Evaluation Report"]
+    out = {}
+    for r in range(1, 40):
+        v = ws.cell(r, 1).value
+        if v in ("Background", "Scope and Coverage"):
+            out["background" if v == "Background" else "scope"] = str(ws.cell(r + 1, 1).value or "").replace("\r\n", "\n")
+    return out
 
 
 def export(out: Path) -> Path:
@@ -27,7 +42,8 @@ def export(out: Path) -> Path:
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     data = {
         "meta": {**info, "repository": f"https://github.com/{repo}" if repo else "", "owner": OWNER,
-                 "content_license": CONTENT_LICENSE, "code_license": CODE_LICENSE, "credit": CREDIT},
+                 "content_license": CONTENT_LICENSE, "code_license": CODE_LICENSE, "credit": CREDIT, "title": TITLE},
+        "report": report_text(),
         "scoring": scoring,
         "sheets": [
             {
@@ -47,6 +63,7 @@ def export(out: Path) -> Path:
         shutil.rmtree(out)
     shutil.copytree(ROOT / "tool", out, ignore=shutil.ignore_patterns("landing.html"))
     (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    (out / "reference.json").write_text(json.dumps(build_reference(), ensure_ascii=False), encoding="utf-8")
     return out
 
 

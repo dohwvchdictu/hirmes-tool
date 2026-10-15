@@ -175,6 +175,13 @@
       "items": {
         "type": "object"
       }
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Extra glossary terms or abbreviations to show in the Terms tab of the guide (terms found in the text are detected automatically)."
     }
   }
 }

@@ -22,7 +22,7 @@ import openpyxl
 from openpyxl.formatting.formatting import ConditionalFormattingList
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from common import (CREDIT, CRITICAL_TO_XLSX, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
+from common import (CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
                     load_legacy_retired, load_scoring, load_sheets, version_info)
 
 warnings.filterwarnings("ignore")
@@ -343,10 +343,14 @@ def build_report(ws, sheets, criteria_by_sheet):
 def stamp(wb, info, policy_status):
     label = f"Version {info['label']} · built {info['built']}"
     for ws in wb.worksheets:
-        ws.oddFooter.left.text = label
-        ws.oddFooter.left.size = 8
+        ws.oddHeader.right.text = label
+        ws.oddHeader.right.size = 7
+        ws.oddFooter.left.text = TITLE if ws.title == REPORT_SHEET else None
+        ws.oddFooter.left.size = 7
+        ws.oddFooter.center.text = "Page &P of &N"
+        ws.oddFooter.center.size = 7
         ws.oddFooter.right.text = "© DOH WV CHD · CC BY 4.0"
-        ws.oddFooter.right.size = 8
+        ws.oddFooter.right.size = 7
     ins = wb["Instructions"]
     cur = ins["B3"].value or ""
     rest = re.sub(r"^DRAFT — Revision \d+ \([^)]*\)\.\s*", "", cur)

@@ -88,11 +88,16 @@ def build_ref(pages: Path, ref: str, ref_type: str) -> dict:
             ]
             if ref_type != "tag" and '"--label"' in (wt / "scripts" / "change_summary.py").read_text(encoding="utf-8"):
                 steps[-1] += ["--label", f"branch {ref}"]
+            # Each ref may pin different packages (a branch can add one that the default branch does
+            # not have yet), so install the ref's own requirements before building it.
+            if (wt / "requirements.txt").exists():
+                steps.insert(0, [sys.executable, "-m", "pip", "install", "--quiet", "--disable-pip-version-check",
+                                 "-r", "requirements.txt"])
             for cmd in steps:
                 r = subprocess.run(cmd, cwd=wt, env=env, capture_output=True, text=True)
                 log.append(f"$ {' '.join(cmd[1:])}\n{r.stdout}{r.stderr}")
                 if r.returncode != 0:
-                    meta["error"] = f"{cmd[1]} failed"
+                    meta["error"] = f"{cmd[-1] if cmd[1] == '-m' else cmd[1]} failed"
                     break
             else:
                 meta["ok"] = True
