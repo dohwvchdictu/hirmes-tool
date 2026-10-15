@@ -22,7 +22,7 @@ import openpyxl
 from openpyxl.formatting.formatting import ConditionalFormattingList
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from common import (CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
+from common import (workbook_name, CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
                     load_legacy_retired, load_scoring, load_sheets, version_info)
 
 warnings.filterwarnings("ignore")
@@ -375,8 +375,7 @@ def build(out_dir: Path) -> Path:
     build_report(wb[REPORT_SHEET], sheets, criteria)
     stamp(wb, info, scoring["policy"]["status"])
     out_dir.mkdir(parents=True, exist_ok=True)
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", info["version"]).strip("-")
-    path = out_dir / f"testing-criteria-scorecard-{safe}.xlsx"
+    path = out_dir / workbook_name(info)
     wb.save(path)
     return path
 

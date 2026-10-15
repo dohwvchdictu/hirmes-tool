@@ -565,6 +565,7 @@
 
   document.addEventListener("click", function (e) {
     var t = e.target.closest ? (e.target.closest("button, a, label") || e.target) : e.target;
+    if (t.getAttribute && t.getAttribute("aria-disabled") === "true") { e.preventDefault(); return; }
     if (t.id === "menu-btn") { setMenu($("#menu-list").hidden); return; }
     if (!t.closest || !t.closest(".menu")) setMenu(false); else if (t.getAttribute("role") === "menuitem") setMenu(false);
     if (t.id === "nav-toggle") { setNav(!document.body.classList.contains("nav-open")); return; }
@@ -633,6 +634,20 @@
     return fetch(u + (BUILD ? "?v=" + BUILD : ""), { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); });
   };
 
+  // ------------------------------------------------------------------ workbook download
+  // The publishing workflow puts this version's workbook next to the scorecard (data.meta.workbook).
+  // A local build has none, so the link is checked first and explained when the file is missing.
+  function setupWorkbookLink() {
+    var a = $("#dl-blank"), note = $("#dl-blank-note"), name = data.meta.workbook;
+    var off = function (why) { a.removeAttribute("href"); a.setAttribute("aria-disabled", "true"); a.classList.add("soon"); note.textContent = why; };
+    if (!name) { off("Not available for this build."); return; }
+    a.href = name + (BUILD ? "?v=" + BUILD : "");
+    a.setAttribute("download", name);
+    fetch(a.href, { method: "HEAD", cache: "no-store" }).then(function (r) {
+      if (!r.ok) off("Not in this build — the workbook is added when the version is published (or download it from the release).");
+    }).catch(function () { /* offline: leave the link as is */ });
+  }
+
   // ------------------------------------------------------------------ newer build published?
   // The page may come from the browser cache (GitHub Pages allows 10 minutes). version.json is
   // always fetched fresh: on opening, a stale page reloads itself once; a page left open shows a
@@ -668,6 +683,7 @@
     restore();
     recompute();
     renderBanner();
+    setupWorkbookLink();
     if (Ref.ready()) Ref.initSearch($("#q"), $("#q-list")); else $(".search").hidden = true;
     route();
   }).catch(function (err) {

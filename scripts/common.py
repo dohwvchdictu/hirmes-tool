@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -138,6 +139,12 @@ def _git(*args: str, root: Path = ROOT) -> str:
         return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
     except Exception:
         return ""
+
+
+def workbook_name(info: dict) -> str:
+    """File name of the generated scorecard workbook for a build (used by build_xlsx and the web page)."""
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", info["version"]).strip("-")
+    return f"testing-criteria-scorecard-{safe}.xlsx"
 
 
 def version_info(root: Path = ROOT) -> dict:

@@ -528,3 +528,11 @@ dl.gl dd { margin: 0; padding: 2px 0; border-bottom: 1px dashed var(--line); }
 .update-bar .muted { color: inherit; opacity: .7; }
 .update-bar #btn-update { background: #ffd400; color: #111; border-color: #c9a400; font-weight: 700; padding: 4px 12px; }
 .update-bar .ub-close { background: none; border: 0; color: inherit; font-size: 20px; line-height: 1; padding: 0 4px; }
+
+/* ---- Evaluation menu groups */
+.menu-h { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 8px 10px 2px; }
+.menu-h:not(:first-child) { border-top: 1px solid var(--line); margin-top: 4px; }
+.menu-list a.button { text-decoration: none; color: inherit; display: block; }
+.menu-list .soon { opacity: .6; cursor: not-allowed; }
+.menu-list .soon:hover { background: none; }
+.soon-tag { font-style: normal; font-size: 10.5px; font-weight: 700; background: var(--lock-soft); color: var(--muted); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }

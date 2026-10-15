@@ -19,7 +19,7 @@ from pathlib import Path
 from build_reference import build_reference
 from build_xlsx import retired_list
 from common import (CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
-                    active_subs, load_criteria, load_scoring, load_sheets, version_info, yaml_lines)
+                    active_subs, load_criteria, load_scoring, load_sheets, version_info, workbook_name, yaml_lines)
 
 
 def report_text() -> dict:
@@ -76,7 +76,8 @@ def export(out: Path) -> Path:
         "meta": {**info, "repository": f"https://github.com/{repo}" if repo else "", "owner": OWNER,
                  "content_license": CONTENT_LICENSE, "code_license": CODE_LICENSE, "credit": CREDIT, "title": TITLE,
                  "sha": os.environ.get("GITHUB_SHA") or _git("rev-parse", "HEAD") or "",
-                 "default_branch": os.environ.get("DEFAULT_BRANCH") or "main"},
+                 "default_branch": os.environ.get("DEFAULT_BRANCH") or "main",
+                 "workbook": workbook_name(info)},
         "report": report_text(),
         "scoring": scoring,
         "sheets": [
