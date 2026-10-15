@@ -11,15 +11,25 @@
   var current = "summary";
   var filter = { text: "", show: "all" };
 
-  var PROFILE_FIELDS = [
-    ["application_no", "Application no."], ["vendor", "Service provider / vendor"], ["system_name", "System name"],
-    ["version", "Version / build under test"], ["category", "Applicant category"], ["deployment", "Deployment model"],
-    ["test_dates", "Date(s) of testing"], ["technical_lead", "Technical Lead"], ["validators", "Validators"],
-    ["observers", "Observers"], ["administrator", "Administrator"], ["office", "Conducting office"],
-    ["ph_core", "PH Core IG version"], ["pheref", "PHeReF IG version"], ["terminology", "Terminology release"],
-    ["evaluation_type", "Evaluation type"], ["date_received", "Date application received"],
-    ["certificate_no", "Certificate no. (assigned on approval)"], ["certificate_date", "Certificate date"],
-    ["valid_until", "Valid until"], ["conditions", "Conditions"]
+  // Grouped and ordered as on the workbook's System Profile sheet; the choice lists are the
+  // workbook's data validations. t: date | names (one per line) | long; opt: choice list.
+  var PROFILE_GROUPS = [
+    { id: "A", title: "Application and system", note: "From the application submitted by the service provider.", fields: [
+      { k: "application_no", l: "Application no." }, { k: "date_received", l: "Date application received", t: "date" },
+      { k: "vendor", l: "Service provider / vendor" }, { k: "system_name", l: "System name" },
+      { k: "version", l: "Version / build under test" },
+      { k: "category", l: "Applicant category", opt: ["Third-party EMR provider", "In-house developed system"] },
+      { k: "deployment", l: "Deployment model", opt: ["Cloud", "On-premise", "Hybrid"] },
+      { k: "evaluation_type", l: "Evaluation type", opt: ["Initial", "Re-evaluation after update", "Revalidation (major change)", "Partial regression (minor change)"] }] },
+    { id: "B", title: "Evaluation team and schedule", note: "These names are printed on the sign-off of the Printed Report.", team: true, fields: [
+      { k: "technical_lead", l: "Technical Lead", req: "required" }, { k: "administrator", l: "Administrator" },
+      { k: "validators", l: "Validators", t: "names", req: "at least 2" }, { k: "observers", l: "Observers", t: "names", req: "at least 1" },
+      { k: "office", l: "Conducting office" }, { k: "test_dates", l: "Date(s) of testing", ph: "e.g. 2026-10-12 to 2026-10-14" }] },
+    { id: "C", title: "Versions tested", fields: [
+      { k: "ph_core", l: "PH Core IG version" }, { k: "pheref", l: "PHeReF IG version" }, { k: "terminology", l: "Terminology release" }] },
+    { id: "D", title: "Certificate", note: "Filled in by the Regional Validation Team on approval.", fields: [
+      { k: "certificate_no", l: "Certificate no." }, { k: "certificate_date", l: "Certificate date", t: "date" },
+      { k: "valid_until", l: "Valid until" }, { k: "conditions", l: "Conditions", t: "long" }] }
   ];
 
   // ------------------------------------------------------------------ utilities
@@ -198,11 +208,68 @@
   }
 
   // ------------------------------------------------------------------ profile
+  /** Validators and observers: one name per line. */
+  function nameList(s) { return String(s || "").split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean); }
+  /** Default validity, as in the workbook: 2 years from the certificate date (PROPOSED). */
+  function validDefault() {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(state.profile.certificate_date || "");
+    return m ? (+m[1] + 2) + "-" + m[2] + "-" + (m[2] + m[3] === "0229" ? "28" : m[3]) : "";
+  }
+  function validPlaceholder() {
+    var d = validDefault();
+    return d ? "Leave blank for " + d + " (2 years, PROPOSED)" : "Leave blank for 2 years from the certificate date";
+  }
+  function teamCheck() {
+    var p = state.profile, v = nameList(p.validators).length, o = nameList(p.observers).length, miss = [];
+    if (!String(p.technical_lead || "").trim()) miss.push("a Technical Lead");
+    if (v < 2) miss.push(v ? "1 more validator" : "2 validators");
+    if (o < 1) miss.push("an observer");
+    return miss.length ? '<span class="pf-warn">Team incomplete: add ' + miss.join(", ") + ".</span>"
+      : '<span class="pf-ok">✓ Team complete: ' + v + " validators, " + o + " observer" + (o > 1 ? "s" : "") + ".</span>";
+  }
+  function groupCount(g) {
+    var n = g.fields.filter(function (f) { return String(state.profile[f.k] || "").trim(); }).length;
+    return n + " of " + g.fields.length + " filled";
+  }
+
+  function profileField(f) {
+    var v = state.profile[f.k] || "", id = "pf-" + f.k, h = Ref.getHelp("profile." + f.k);
+    var attrs = ' id="' + id + '" data-profile="' + f.k + '"' + (h ? ' aria-describedby="' + id + '-h"' : "") + (f.req ? ' aria-required="true"' : "");
+    var ctl;
+    if (f.opt) {
+      var opts = v && f.opt.indexOf(v) < 0 ? f.opt.concat([v]) : f.opt;   // keep a value typed before the list existed
+      ctl = "<select" + attrs + '><option value="">Choose…</option>' +
+        opts.map(function (o) { return "<option" + (o === v ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select>";
+    } else if (f.t === "names" || f.t === "long") {
+      ctl = "<textarea" + attrs + ' rows="3"' + (f.t === "names" ? ' placeholder="One name per line"' : "") + ">" + esc(v) + "</textarea>";
+    } else {
+      var date = f.t === "date" && (!v || /^\d{4}-\d{2}-\d{2}$/.test(v));   // older free-text dates stay editable as text
+      var ph = f.k === "valid_until" ? validPlaceholder() : f.ph;
+      ctl = '<input type="' + (date ? "date" : "text") + '"' + attrs + ' value="' + esc(v) + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : "") + ">";
+    }
+    return '<div class="pf-field' + (f.t === "long" ? " wide" : "") + '"><label for="' + id + '">' + esc(f.l) +
+      (f.req ? ' <span class="pf-req">' + esc(f.req) + "</span>" : "") + "</label>" + ctl +
+      (h ? '<span class="pf-hint" id="' + id + '-h">' + esc(h.text) + "</span>" : "") + "</div>";
+  }
+
   function viewProfile() {
-    return '<section class="panel"><h2>System Profile</h2><p class="intro">These details appear on the Summary and the Printed Report.</p><div class="profile">' +
-      PROFILE_FIELDS.map(function (f) {
-        return '<div><label for="pf-' + f[0] + '">' + esc(f[1]) + "</label> " + Ref.help("profile." + f[0], f[1]) + '<input id="pf-' + f[0] + '" data-profile="' + f[0] + '" value="' + esc(state.profile[f[0]] || "") + '"></div>';
-      }).join("") + "</div></section>";
+    var first = data.sheets[0];
+    return '<section class="panel"><h2>System Profile</h2><p class="intro">These details appear on the Summary and the Printed Report. ' +
+      "Each change is saved in this browser as you type; use <b>Evaluation › Save evaluation</b> to keep a copy as a file.</p></section>" +
+      PROFILE_GROUPS.map(function (g) {
+        return '<fieldset class="panel pf-group"><legend class="pf-legend"><span class="pf-letter">' + g.id + "</span>" + esc(g.title) + "</legend>" +
+          '<span class="pf-count" id="pf-cnt-' + g.id + '">' + groupCount(g) + "</span>" +
+          (g.note ? '<p class="pf-note">' + esc(g.note) + "</p>" : "") +
+          '<div class="profile">' + g.fields.map(profileField).join("") + "</div>" +
+          (g.team ? '<p class="pf-team" id="pf-team" role="status">' + teamCheck() + "</p>" : "") + "</fieldset>";
+      }).join("") +
+      '<nav class="pager noprint" aria-label="Pages"><a href="#summary">‹ Summary</a><a href="#' + first.key + '">' + esc(first.tab) + " ›</a></nav>";
+  }
+  /** Refresh the counts, the team check and the default validity while typing, without re-rendering the form. */
+  function refreshProfile() {
+    PROFILE_GROUPS.forEach(function (g) { var el = document.getElementById("pf-cnt-" + g.id); if (el) el.textContent = groupCount(g); });
+    var team = $("#pf-team"); if (team) team.innerHTML = teamCheck();
+    var vu = $("#pf-valid_until"); if (vu) vu.placeholder = validPlaceholder();
   }
 
   // ------------------------------------------------------------------ criteria sheet
@@ -487,7 +554,7 @@
         (rt.scope ? "<h3>Scope and coverage</h3><p>" + esc(rt.scope).replace(/\n\n/g, "</p><p>") + "</p>" : "") + "</section>" : "") +
       '<h2 class="rp-h">A. System profile</h2>' + kv([["System name", p.system_name], ["Version / build", p.version], ["Vendor / developer", p.vendor], ["Applicant category", p.category],
         ["Deployment model", p.deployment], ["Evaluation type", p.evaluation_type], ["Application no.", p.application_no], ["Date application received", p.date_received],
-        ["Technical Lead", p.technical_lead], ["Administrator", p.administrator], ["Validators", p.validators], ["Observers", p.observers],
+        ["Technical Lead", p.technical_lead], ["Administrator", p.administrator], ["Validators", nameList(p.validators).join("; ")], ["Observers", nameList(p.observers).join("; ")],
         ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Conducting office", p.office]]) +
       '<h2 class="rp-h">B. Summary scorecard</h2>' + legend +
       '<table class="rp-table rp-sum"><thead><tr><th>Level</th><th>Level name · evaluation progress</th><th>Threshold</th><th>Status</th><th>Score</th><th>Items &amp; findings</th></tr></thead><tbody>' +
@@ -500,9 +567,9 @@
       (r.criticalOpen === 0 ? '<span class="chip st-met">✓ MET — no critical item open</span>' : '<span class="chip st-fail">✗ NOT MET — certificate cannot be issued</span>') + "</td></tr></tbody></table>" +
       '<h2 class="rp-h">E. Certificate details</h2>' + kv([["Certificate no.", p.certificate_no], ["Certificate date", p.certificate_date], ["Product · version", (p.system_name || "—") + " · " + (p.version || "—")],
         ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest + (data.scoring.policy.status !== "Approved" ? " (thresholds PROPOSED — provisional)" : "")],
-        ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || "2 years from approval or until a major change / IG major version (PROPOSED)"], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"]]) +
+        ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || (validDefault() ? validDefault() + " — 2 years from approval or until a major change / IG major version (PROPOSED)" : "2 years from approval or until a major change / IG major version (PROPOSED)")], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"]]) +
       '<h2 class="rp-h">F. Sign-off</h2><table class="rp-table rp-sign"><thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>' +
-      [["Validated by", p.validators], ["Witnessed by", p.observers], ["Processed by — Administrator", p.administrator], ["Approved by — Technical Lead", p.technical_lead], ["Conforme — Vendor / Developer", p.vendor ? "Authorized signatory of " + p.vendor : ""]].map(function (x) {
+      [["Validated by", nameList(p.validators).join("; ")], ["Witnessed by", nameList(p.observers).join("; ")], ["Processed by — Administrator", p.administrator], ["Approved by — Technical Lead", p.technical_lead], ["Conforme — Vendor / Developer", p.vendor ? "Authorized signatory of " + p.vendor : ""]].map(function (x) {
         return "<tr><td>" + esc(x[0]) + "</td><td>" + esc(x[1] || "") + "</td><td></td><td></td></tr>";
       }).join("") + "</tbody></table>" +
       '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
@@ -564,7 +631,10 @@
   document.addEventListener("input", function (e) {
     var t = e.target;
     if (t.dataset.note) { if (t.value) state.notes[t.dataset.note] = t.value; else delete state.notes[t.dataset.note]; save(); }
-    else if (t.dataset.profile) { state.profile[t.dataset.profile] = t.value; save(); }
+    else if (t.dataset.profile) {
+      if (t.value) state.profile[t.dataset.profile] = t.value; else delete state.profile[t.dataset.profile];
+      save(); refreshProfile();
+    }
     else if (t.id === "flt-text") {
       filter.text = t.value;
       var pos = t.selectionStart; route();

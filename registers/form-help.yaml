@@ -93,7 +93,7 @@ profile:
   ph_core: PH Core IG version tested, e.g. 0.2.0.
   pheref: PHeReF IG version tested, e.g. 0.1.0.
   terminology: Terminology / PSGC release used on the sandbox.
-  evaluation_type: Initial, or re-evaluation after an update.
+  evaluation_type: Initial; re-evaluation after an update; revalidation after a major change; or partial regression after a minor change.
   date_received: Date the application was received by the DOH.
   certificate_no: Assigned on approval.
   certificate_date: Date of approval.
