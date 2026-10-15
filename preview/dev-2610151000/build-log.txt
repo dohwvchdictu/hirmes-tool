@@ -1,24 +1,12 @@
 $ scripts/check.py
-
-Count Register
-Sheet  Criteria Critical  ★ subs  Subs  Info Scored
-L0            6        4       0     6     0      6
-L1            6        1       0    12     0      6
-L2A           8        4      13    20     1      7
-L2B          20        3      18    58     2     18
-L2C          13        3      19    50     0     13
-L2D          22        7      12    51     0     22
-L3           21        4       0    52     1     20
-L4            7        1       0    23     0      7
-TOTAL       103       27      62   272     4     99
-
-0 error(s), 0 warning(s).
-
-$ scripts/build_web.py --out /tmp/tmpz3kpowel/out
-Wrote web scorecard to /tmp/tmpz3kpowel/out
-
-$ scripts/build_xlsx.py --out /tmp/tmpz3kpowel/out
-Wrote /tmp/tmpz3kpowel/out/testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx
-
-$ scripts/change_summary.py --to e425f892971bc4664dac55a023ca5ae3ceb6658c --out /tmp/tmpz3kpowel/out/CHANGE-SUMMARY.md --label branch dev-2610151000
-Wrote /tmp/tmpz3kpowel/out/CHANGE-SUMMARY.md
+Traceback (most recent call last):
+  File "/tmp/tmpfjoa_kj3/src/scripts/check.py", line 224, in <module>
+    main()
+  File "/tmp/tmpfjoa_kj3/src/scripts/check.py", line 205, in main
+    check_reference(err, warn)
+  File "/tmp/tmpfjoa_kj3/src/scripts/check.py", line 72, in check_reference
+    from build_reference import build_reference  # local import: needs Markdown
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tmpfjoa_kj3/src/scripts/build_reference.py", line 14, in <module>
+    import markdown
+ModuleNotFoundError: No module named 'markdown'
