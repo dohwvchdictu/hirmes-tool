@@ -3,10 +3,10 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "88621e8",
- "commit_date": "2026-10-15T09:32:42+08:00",
- "subject": "ci: publish every branch and tag with a landing page on gh-pages",
- "built": "2026-10-15 01:35 UTC",
+ "commit": "073e132",
+ "commit_date": "2026-10-15T11:13:34+08:00",
+ "subject": "Merge pull request #1 from dohwvchdictu/copilot/dev-2610151000",
+ "built": "2026-10-15 03:13 UTC",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx",
@@ -14,7 +14,7 @@
   "scorecard": "index.html"
  },
  "version": "v1.0.0-rc1+dev",
- "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 88621e8",
+ "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 073e132",
  "counts": {
   "criteria": 103,
   "sub_items": 272
