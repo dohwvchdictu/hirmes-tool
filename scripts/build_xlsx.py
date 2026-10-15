@@ -22,7 +22,7 @@ import openpyxl
 from openpyxl.formatting.formatting import ConditionalFormattingList
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from common import (workbook_name, CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
+from common import (workbook_name, SHOW_LICENSE_NOTICE, CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
                     load_legacy_retired, load_scoring, load_sheets, version_info)
 
 warnings.filterwarnings("ignore")
@@ -349,16 +349,17 @@ def stamp(wb, info, policy_status):
         ws.oddFooter.left.size = 7
         ws.oddFooter.center.text = "Page &P of &N"
         ws.oddFooter.center.size = 7
-        ws.oddFooter.right.text = "© DOH WV CHD · CC BY 4.0"
+        ws.oddFooter.right.text = "© DOH WV CHD · CC BY 4.0" if SHOW_LICENSE_NOTICE else None
         ws.oddFooter.right.size = 7
     ins = wb["Instructions"]
     cur = ins["B3"].value or ""
     rest = re.sub(r"^DRAFT — Revision \d+ \([^)]*\)\.\s*", "", cur)
     rest = re.sub(r"^Version [^.]*\.\s*", "", rest)
     prefix = "" if info["is_release"] else "DRAFT — "
-    ws_last = ins.max_row + 2
-    ins.cell(ws_last, 2).value = f"License: {CREDIT} (https://creativecommons.org/licenses/by/4.0/)."
-    ins.cell(ws_last, 2)._style = copy.copy(ins["B6"]._style)
+    if SHOW_LICENSE_NOTICE:
+        ws_last = ins.max_row + 2
+        ins.cell(ws_last, 2).value = f"License: {CREDIT} (https://creativecommons.org/licenses/by/4.0/)."
+        ins.cell(ws_last, 2)._style = copy.copy(ins["B6"]._style)
     ins["B3"] = f"{prefix}Version {info['label']} (built {info['built']}). " + rest.replace(
         "Thresholds and policy values are PROPOSED", f"Thresholds and policy values are {policy_status.upper()}")
 

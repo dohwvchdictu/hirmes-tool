@@ -463,18 +463,17 @@
     if (!R) return "";
     var cur = path == null ? { ch: undefined } : resolve(path);
     var a = function (href, label, on, cls) { return '<a href="' + href + '"' + (on ? ' aria-current="page"' : "") + (cls ? ' class="' + cls + '"' : "") + ">" + label + "</a>"; };
-    return '<div class="sd-sub">' + a("#ref/", "Overview", path != null && cur.ch === null) +
-      '<div class="sd-h">' + esc(guide().title) + "</div>" +
+    return a("#ref/", "Tool Overview", path != null && cur.ch === null) +
       chapters().map(function (ch) {
         var on = cur.ch === ch;
         return a(chHref(ch), '<span class="sd-num">' + esc(ch.num) + "</span><span>" + esc(ch.short) + "</span>", on, "sd-ch") +
           (on ? '<div class="sd-secs">' + sectionsOf(ch).map(function (sc) { return '<a href="' + chHref(ch, sc.id) + '">' + esc(sc.title) + "</a>"; }).join("") + "</div>" : "");
-      }).join("") + "</div>";
+      }).join("");
   }
   function picker(path) {
     var cur = resolve(path);
     var opt = function (v, label, sel) { return '<option value="' + esc(v) + '"' + (sel ? " selected" : "") + ">" + esc(label) + "</option>"; };
-    return '<label class="ref-picker"><span>Contents</span><select id="ref-pick">' + opt("", "Overview", !cur.ch) +
+    return '<label class="ref-picker"><span>Contents</span><select id="ref-pick">' + opt("", "Tool Overview", !cur.ch) +
       chapters().map(function (ch) {
         var o = opt(ch.id, ch.num + " · " + ch.short, cur.ch === ch && !/^(sec|gs)-/.test(cur.target));
         if (cur.ch === ch) o += sectionsOf(ch).map(function (sc) { return opt(ch.id + "/" + sc.id, "    " + sc.title, cur.target === sc.id); }).join("");
@@ -540,7 +539,7 @@
       esc(ch.registers.map(function (k) { return (REG_LABEL[k] || k).toLowerCase(); }).join(", ")) + '" value="' + esc(refFilter) + '"></div>' : "";
     return '<div class="xp-kind">' + esc(g.title) + " · Chapter " + esc(ch.num) + '</div><h2 class="ch-title">' + esc(ch.short) + srcBtn(srcE) + "</h2>" +
       srcLine(srcE) + filter + '<div class="doc">' + html + '</div><nav class="docnav" aria-label="Chapters">' +
-      (prev ? '<a href="' + chHref(prev) + '">‹ ' + esc(prev.num + " · " + prev.short) + "</a>" : '<a href="#ref/">‹ Overview</a>') +
+      (prev ? '<a href="' + chHref(prev) + '">‹ ' + esc(prev.num + " · " + prev.short) + "</a>" : '<a href="#ref/">‹ Tool Overview</a>') +
       (next ? '<a href="' + chHref(next) + '">' + esc(next.num + " · " + next.short) + " ›</a>" : "<span></span>") + "</nav>";
   }
 
@@ -555,7 +554,7 @@
       return parts.length ? parts.join(" · ") : ch.sections.length + " sections";
     };
     var quick = [["glossary", "Glossary"], ["abbreviations", "Abbreviations"], ["prefixes", "ID prefixes"], ["TB", "TB-"], ["SRC", "SRC-"], ["TR", "TR-"], ["IND", "IND-"], ["retired", "Retired IDs"]];
-    return '<div class="xp-kind">Reference</div><h2>' + esc(g.title) + "</h2>" + (intro ? '<div class="doc">' + intro.html + "</div>" : "") +
+    return '<div class="xp-kind">Reference · ' + esc(g.title) + "</div><h2>Tool Overview</h2>" + (intro ? '<div class="doc">' + intro.html + "</div>" : "") +
       '<p class="muted">Tip: hover or tap an underlined term or ID anywhere in the scorecard to see it here without leaving the page. Press <kbd>/</kbd> to search.</p>' +
       '<div class="quick">' + quick.map(function (q) { return '<a href="#ref/' + q[0] + '">' + esc(q[1]) + "</a>"; }).join("") + "</div>" +
       '<div class="rhome">' + chapters().map(function (ch) {

@@ -18,7 +18,7 @@ from pathlib import Path
 
 from build_reference import build_reference
 from build_xlsx import retired_list
-from common import (CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
+from common import (SHOW_LICENSE_NOTICE, CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
                     active_subs, load_criteria, load_scoring, load_sheets, version_info, workbook_name, yaml_lines)
 
 
@@ -56,12 +56,12 @@ def stamp_assets(out: Path, meta: dict) -> None:
     gets "?v=<commit>", the page records its build, and version.json (always fetched without
     cache) lets an open page notice that a newer build was published.
     """
-    build = (meta.get("sha") or meta.get("commit") or "")[:12] or meta["built"].replace(" ", "T")
+    build = (meta.get("sha") or meta.get("commit") or "")[:12] or meta["built_iso"]
     page = (out / "index.html").read_text(encoding="utf-8")
     page = re.sub(r'(<(?:script|link)[^>]+(?:src|href)=")([\w./-]+\.(?:js|css))(")', lambda m: f"{m.group(1)}{m.group(2)}?v={build}{m.group(3)}", page)
     page = page.replace('<meta charset="utf-8">', f'<meta charset="utf-8">\n  <meta name="build" content="{build}">', 1)
     (out / "index.html").write_text(page, encoding="utf-8")
-    (out / "version.json").write_text(json.dumps({"build": build, "commit": meta.get("commit"), "built": meta["built"]}), encoding="utf-8")
+    (out / "version.json").write_text(json.dumps({"build": build, "commit": meta.get("commit"), "built": meta["built"], "built_iso": meta["built_iso"]}), encoding="utf-8")
 
 
 def export(out: Path) -> Path:
@@ -77,7 +77,7 @@ def export(out: Path) -> Path:
                  "content_license": CONTENT_LICENSE, "code_license": CODE_LICENSE, "credit": CREDIT, "title": TITLE,
                  "sha": os.environ.get("GITHUB_SHA") or _git("rev-parse", "HEAD") or "",
                  "default_branch": os.environ.get("DEFAULT_BRANCH") or "main",
-                 "workbook": workbook_name(info)},
+                 "workbook": workbook_name(info), "show_license": SHOW_LICENSE_NOTICE},
         "report": report_text(),
         "scoring": scoring,
         "sheets": [

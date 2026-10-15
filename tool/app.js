@@ -28,6 +28,17 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
+  /** "2026-10-15 14:32 (PH time, UTC+8)" in the reader's time zone; falls back to the stored text. */
+  function when(iso, fallback) {
+    var d = iso ? new Date(iso) : null;
+    if (!d || isNaN(d)) return fallback || "";
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    var off = -d.getTimezoneOffset(), oh = Math.floor(Math.abs(off) / 60), om = Math.abs(off) % 60;
+    var utc = "UTC" + (off >= 0 ? "+" : "−") + oh + (om ? ":" + p(om) : "");
+    var zone = ""; try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { /* old browser */ }
+    var label = zone === "Asia/Manila" ? "PH time, " + utc : "your time, " + utc;
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()) + " (" + label + ")";
+  }
   function pct(x, d) { return (x * 100).toFixed(d == null ? 1 : d) + "%"; }
   function statusPill(s) { return '<span class="status s-' + s.replace(/ /g, "-") + '">' + esc(s) + "</span>"; }
   function $(sel) { return document.querySelector(sel); }
@@ -54,17 +65,17 @@
     var home = m.home ? ' · <a href="' + esc(m.home) + '">All published versions</a>' : "";
     if (m.is_release) {
       b.className = "banner release";
-      b.innerHTML = "Released version " + esc(m.version) + " · commit " + esc(m.commit) + " · built " + esc(m.built) + home;
+      b.innerHTML = "Released version " + esc(m.version) + " · commit " + esc(m.commit) + " · built " + esc(when(m.built_iso, m.built)) + home;
     } else {
       b.className = "banner draft";
       var what = m.kind === "candidate" ? "RELEASE CANDIDATE" : m.kind === "branch" ? "BRANCH PREVIEW" : "DRAFT";
-      b.innerHTML = what + " — " + esc(m.label) + " · built " + esc(m.built) + " — for review only, not for official evaluation." + home;
+      b.innerHTML = what + " — " + esc(m.label) + " · built " + esc(when(m.built_iso, m.built)) + " — for review only, not for official evaluation." + home;
     }
     $("#foot").innerHTML = "Criteria version " + esc(m.label) +
       (m.repository ? ' · <a href="' + esc(m.repository) + '">source repository</a>' : "") +
-      " · Scores follow the same rules as the scorecard workbook.<br>Content © " + esc(m.owner || "") +
-      ' · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · Web scorecard code ' +
-      '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>';
+      " · Scores follow the same rules as the scorecard workbook." +
+      (m.show_license ? "<br>Content © " + esc(m.owner || "") + ' · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · Web scorecard code ' +
+        '<a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>' : "");
   }
 
   var PHONE = 767;
@@ -99,8 +110,7 @@
       '<div class="tg"><span class="tg-l">Overview</span>' + link("summary", "Summary") + link("profile", "System profile") + "</div>" +
       '<div class="tg tg-levels"><span class="tg-l">Levels</span>' + levels + "</div>" +
       '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + "</div>" +
-      (Ref.ready() ? '<div class="tg"><span class="tg-l">Reference</span><details class="sd-ref"' + (onRef ? " open" : "") + "><summary>" +
-        "Technical Reference Guide</summary>" + Ref.navTree(onRef ? current.slice(4) : null) + "</details></div>" : "");
+      (Ref.ready() ? '<div class="tg tg-ref"><span class="tg-l">Reference</span>' + Ref.navTree(onRef ? current.slice(4) : null) + "</div>" : "");
     var cur = head === "summary" ? "Summary" : head === "profile" ? "System profile" : head === "report" ? "Printed report" : head === "ref" ? "Reference" :
       (sheetByKey(head) ? sheetByKey(head).tab : "");
     $("#nav-cur").textContent = cur;
@@ -472,7 +482,7 @@
     return controls + '<article id="report" class="paper">' +
       '<header class="rp-letter">Republic of the Philippines<br>Department of Health' + office + "</header>" +
       '<h1 class="rp-title">' + esc(title) + "<small>Evaluation Report</small></h1>" +
-      '<p class="rp-ver">Criteria version ' + esc(m.label) + " · built " + esc(m.built) + " " + draft + "</p>" +
+      '<p class="rp-ver">Criteria version ' + esc(m.label) + " · built " + esc(when(m.built_iso, m.built)) + " · printed " + esc(when(new Date().toISOString())) + " " + draft + "</p>" +
       (rt.background ? '<section class="rp-text"><h3>Background</h3><p>' + esc(rt.background).replace(/\n\n/g, "</p><p>") + "</p>" +
         (rt.scope ? "<h3>Scope and coverage</h3><p>" + esc(rt.scope).replace(/\n\n/g, "</p><p>") + "</p>" : "") + "</section>" : "") +
       '<h2 class="rp-h">A. System profile</h2>' + kv([["System name", p.system_name], ["Version / build", p.version], ["Vendor / developer", p.vendor], ["Applicant category", p.category],
@@ -498,7 +508,7 @@
       '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
       '<table class="rp-table rp-crits"><colgroup><col class="w-ref"><col><col class="w-type"><col class="w-res"><col class="w-score"><col class="w-out"></colgroup>' +
       "<thead><tr><th>Ref</th><th>Criterion</th><th>Type · W</th><th>Result</th><th>Score</th><th>Outstanding / notes</th></tr></thead>" + breakdown + "</table>" +
-      '<p class="rp-credit">' + esc(m.credit || "") + "</p></article>";
+      (m.show_license ? '<p class="rp-credit">' + esc(m.credit || "") + "</p>" : "") + "</article>";
   }
 
   function pageStyle() {
