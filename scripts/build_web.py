@@ -15,6 +15,7 @@ import os
 import shutil
 from pathlib import Path
 
+from build_reference import build_reference
 from build_xlsx import retired_list
 from common import CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, TEMPLATE_XLSX, TITLE, active, active_subs, load_criteria, load_scoring, load_sheets, version_info
 
@@ -62,6 +63,7 @@ def export(out: Path) -> Path:
         shutil.rmtree(out)
     shutil.copytree(ROOT / "tool", out, ignore=shutil.ignore_patterns("landing.html"))
     (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    (out / "reference.json").write_text(json.dumps(build_reference(), ensure_ascii=False), encoding="utf-8")
     return out
 
 

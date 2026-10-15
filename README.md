@@ -22,7 +22,8 @@ criteria/            one YAML file per criterion, in a folder per sheet (L0, L1,
 criteria/sheets.yaml sheet titles, introductions and the display order of criteria
 criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
 scoring.yaml         pass thresholds, level gating and the TWG approval record
-registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-), glossary
+registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-),
+                     glossary, abbreviations, and form-help.yaml (the ⓘ help in the web scorecard)
 schema/              rules every YAML file must follow
 templates/           workbook layout used to generate the scorecard
 scripts/             check, build and change-summary scripts
@@ -39,6 +40,11 @@ docs/                narrative chapters (being converted; see docs/README.md)
 | Web scorecard and landing page | `scripts/build_web.py`, `scripts/publish.py` | Every push to any branch or tag (GitHub Pages, `gh-pages` branch) |
 | Change summary | `scripts/change_summary.py` | Every release (compared with the previous release) |
 | Change log | git-cliff, from commit messages | Every release |
+
+The web scorecard also carries the glossary, registers and documents: terms in the criteria open a
+short popover, each criterion has a guide drawer (Developer, Validator, Evidence, Traces, Terms), and
+the Reference tab and search box (press `/`) lead to every register entry and document chapter. See
+[CONTRIBUTING.md](CONTRIBUTING.md#help-terms-and-documents-in-the-web-scorecard) for how to edit them.
 
 Every file carries its version, branch and commit, so a printed copy can be traced to its source.
 

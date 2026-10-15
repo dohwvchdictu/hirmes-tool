@@ -15,6 +15,10 @@
         <h1>Healthcare Interoperability Readiness Matrix for EMR Systems Evaluation Tool</h1>
         <p class="sub">HIE System Validation — Testing Criteria Scorecard</p>
       </div>
+      <div class="search" role="search">
+        <input id="q" type="search" placeholder="Search criteria, terms, registers…  ( / )" aria-label="Search criteria, terms, registers and documents" autocomplete="off">
+        <div id="q-list" class="q-list" role="listbox" hidden></div>
+      </div>
       <div class="actions">
         <button id="btn-save" type="button">Save evaluation</button>
         <label class="button" for="file-load">Load evaluation</label>
@@ -29,6 +33,7 @@
   <main id="main" tabindex="-1"><p class="loading">Loading criteria…</p></main>
   <footer class="foot" id="foot"></footer>
   <script src="scoring.js"></script>
+  <script src="reference.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

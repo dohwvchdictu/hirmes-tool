@@ -66,6 +66,40 @@ def counts(criteria_by_sheet):
     return rows
 
 
+def check_reference(err, warn):
+    """Every `see` in registers/form-help.yaml and every `terms` entry of a criterion must name a
+    glossary term (or one of its aliases), an abbreviation, a register ID or a criterion ID."""
+    from build_reference import build_reference  # local import: needs Markdown
+
+    ref = build_reference()
+    known = {k.lower() for g in ref["glossary"] for k in g["keys"]}
+    known |= {g["term"].lower() for g in ref["glossary"]}
+    known |= {a["abbreviation"].lower() for a in ref["abbreviations"]}
+    known |= {e["id"].lower() for r in ref["registers"] for e in r["entries"]}
+    known |= {k.lower() for k in ref["criteria"]}
+    terms = [g["term"].lower() for g in ref["glossary"]]
+
+    def ok(name: str) -> bool:
+        n = name.lower()
+        return n in known or any(t.startswith(n) for t in terms)
+
+    def walk(node, path):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if k == "see":
+                    for x in v or []:
+                        if not ok(str(x)):
+                            err(f"registers/form-help.yaml: {path}.see '{x}' is not a glossary term, abbreviation or register ID")
+                else:
+                    walk(v, f"{path}.{k}" if path else str(k))
+    walk(ref["help"], "")
+    for items in load_criteria().values():
+        for c in active(items):
+            for x in c.get("terms") or []:
+                if not ok(str(x)):
+                    err(f"criteria/{c['id']}: terms '{x}' is not a glossary term, abbreviation or register ID")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--counts", action="store_true", help="print the Count Register")
@@ -166,6 +200,9 @@ def main():
     level_parts = [p for lvl in scoring["levels"] for p in lvl["parts"]]
     if sorted(level_parts) != sorted(sheet_keys):
         err("scoring.yaml: levels.parts must list every sheet exactly once")
+
+    # ---- reference layer: form help and criterion `terms` must resolve to something the web tool can link
+    check_reference(err, warn)
 
     # ---- report
     for w in warnings:

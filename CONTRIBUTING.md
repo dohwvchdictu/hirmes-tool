@@ -91,6 +91,34 @@ The release workflow builds the workbook, the change summary (compared with the 
 change log, and publishes them as a GitHub Release. Tags with `-rc` are marked as pre-releases.
 After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
 
+## Help, terms and documents in the web scorecard
+
+The web scorecard links every criterion to its terms, registers and guides. Nothing is written by
+hand in the tool: it is generated from the files below, so editing one file updates every view.
+
+| To change | Edit | Shows up as |
+| --- | --- | --- |
+| A term's meaning | `registers/glossary.yaml` | Underlined term in criteria text → popover; Reference › Glossary |
+| An abbreviation | `registers/abbreviations.yaml` | Dotted acronym → popover; Reference › Abbreviations |
+| A TB-, SRC-, TR- or IND- entry | the matching file in `registers/` | ID → popover with "Used by"; register page |
+| Help next to a control (ⓘ) | `registers/form-help.yaml` | ⓘ popover on Result, Scoring, Critical, Weight, Validation role, profile fields, summary |
+| Developer's / Validator's guide, Evidence | the criterion's YAML (`developer_guide`, `validator_guide`, `evidence`) | Guide drawer (buttons under each criterion) |
+| Traces | the criterion's `traces` | Guide drawer › Traces, and "Used by" on the register entry |
+| Narrative chapters | `docs/**/*.md` | Reference › documents (one page per chapter) |
+
+How terms are linked:
+
+- Acronyms (FHIR, NHFR), CamelCase names (ServiceRequest) and multi-word phrases in a glossary term
+  are linked automatically, once per criterion. Ordinary single words are not, so text is not flooded.
+- To link another spelling, add `aliases: [Patient ID, PIN]` to the glossary entry.
+- To stop a term being linked, add `link: false`.
+- To attach a term to a criterion that does not mention it, add `terms: [Referral Hub]` to the criterion.
+- `see:` in `form-help.yaml` and `terms:` in a criterion must name a glossary term, abbreviation,
+  register ID or criterion ID; the check fails otherwise.
+
+Every reference page and the guide drawer has an "✎ Edit" link that opens the source file on GitHub,
+so a reviewer can propose a change directly from the page they are reading.
+
 ## What the checks enforce
 
 - every file matches its schema (`schema/`)
@@ -103,3 +131,4 @@ After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
 - every sheet has a threshold; an Approved policy has its approval details
 - the generated workbook matches the YAML (round trip), and the workbook and web scorecard score the
   same test scenarios identically
+- `see:` entries in `registers/form-help.yaml` and criterion `terms:` resolve to a glossary term, abbreviation, register ID or criterion ID

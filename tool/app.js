@@ -71,6 +71,7 @@
     var items = [["summary", "Summary"], ["profile", "System Profile"]];
     data.sheets.forEach(function (s) { items.push([s.key, s.tab]); });
     items.push(["report", "Printed Report"]);
+    if (Ref.ready()) items.push(["ref", "Reference"]);
     $("#tabs").innerHTML = items.map(function (it) {
       var dot = "";
       if (result.sheets[it[0]]) {
@@ -78,21 +79,28 @@
         var col = st === "PASSED" ? "var(--good)" : st === "NOT PASSED" ? "var(--bad)" : "var(--warn)";
         dot = '<span class="dot" style="background:' + col + '" title="' + st + '"></span>';
       }
-      return '<a href="#' + it[0] + '"' + (current === it[0] ? ' aria-current="page"' : "") + ">" + esc(it[1]) + dot + "</a>";
+      return '<a href="#' + it[0] + '"' + (current.split("/")[0] === it[0] ? ' aria-current="page"' : "") + ">" + esc(it[1]) + dot + "</a>";
     }).join("");
   }
 
   function route() {
-    var h = (location.hash || "#summary").slice(1);
+    var h = decodeURIComponent((location.hash || "#summary").slice(1));
+    var head = h.split("/")[0], rest = h.slice(head.length + 1);
     current = h;
     renderTabs();
-    var main = $("#main");
-    if (h === "summary") main.innerHTML = viewSummary();
-    else if (h === "profile") main.innerHTML = viewProfile();
-    else if (h === "report") main.innerHTML = viewReport();
-    else if (sheetByKey(h)) main.innerHTML = viewSheet(sheetByKey(h));
+    var main = $("#main"), focus = null;
+    if (head === "summary") main.innerHTML = viewSummary();
+    else if (head === "profile") main.innerHTML = viewProfile();
+    else if (head === "report") main.innerHTML = viewReport();
+    else if (head === "ref" && Ref.ready()) { main.innerHTML = Ref.viewReference(rest); Ref.afterReference(); return; }
+    else if (sheetByKey(head)) {
+      if (rest) { filter.text = ""; filter.show = "all"; focus = rest; }
+      main.innerHTML = viewSheet(sheetByKey(head));
+    }
     else { location.hash = "#summary"; return; }
-    window.scrollTo(0, 0);
+    var card = focus && document.getElementById("card-" + focus);
+    if (card) { card.classList.add("target"); card.scrollIntoView({ block: "start" }); window.scrollBy(0, -150); }
+    else window.scrollTo(0, 0);
   }
 
   // ------------------------------------------------------------------ summary
@@ -120,10 +128,10 @@
         ? "APPROVED by " + esc(pol.approved_by) + " on " + esc(pol.date_approved) + " (" + esc(pol.reference) + ")"
         : "PROPOSED — for DOH approval") + "</p>" +
       '<div class="stats"><div class="stat"><div class="k">Highest level achieved</div><div class="v">' + esc(r.highest) + "</div></div>" +
-      '<div class="stat"><div class="k">Conformant for use in the HIE?</div><div class="v">' + (r.conformant ? "YES" + (pol.status !== "Approved" ? " (provisional)" : "") : "NOT YET") + "</div></div>" +
+      '<div class="stat"><div class="k">Conformant for use in the HIE? ' + Ref.help("summary.conformant", "Conformant") + '</div><div class="v">' + (r.conformant ? "YES" + (pol.status !== "Approved" ? " (provisional)" : "") : "NOT YET") + "</div></div>" +
       '<div class="stat"><div class="k">Critical items not met</div><div class="v">' + r.criticalOpen + "</div></div></div></section>" +
-      '<section class="panel"><table class="grid"><thead><tr><th>Level</th><th class="num">Score</th><th class="num">Pass threshold</th>' +
-      '<th class="num">Critical not met</th><th class="num">Items not tested</th><th class="num">Progress</th><th>Sheet status</th><th>Level status (gated)</th></tr></thead><tbody>' +
+      '<section class="panel"><table class="grid"><thead><tr><th>Level</th><th class="num">Score</th><th class="num">Pass threshold ' + Ref.help("summary.threshold", "Pass threshold") + '</th>' +
+      '<th class="num">Critical not met</th><th class="num">Items not tested</th><th class="num">Progress ' + Ref.help("summary.progress", "Progress") + '</th><th>Sheet status</th><th>Level status (gated) ' + Ref.help("status.LOCKED", "Level status") + '</th></tr></thead><tbody>' +
       rows + "</tbody></table>" +
       '<p class="sub" style="margin-top:10px">A level is LOCKED until the level before it passes. Level 2 passes only when all four parts pass. Conformant = Levels 0 to 3 passed and no critical item not met.</p></section>';
   }
@@ -132,7 +140,7 @@
   function viewProfile() {
     return '<section class="panel"><h2>System Profile</h2><p class="intro">These details appear on the Summary and the Printed Report.</p><div class="profile">' +
       PROFILE_FIELDS.map(function (f) {
-        return '<div><label for="pf-' + f[0] + '">' + esc(f[1]) + '</label><input id="pf-' + f[0] + '" data-profile="' + f[0] + '" value="' + esc(state.profile[f[0]] || "") + '"></div>';
+        return '<div><label for="pf-' + f[0] + '">' + esc(f[1]) + "</label> " + Ref.help("profile." + f[0], f[1]) + '<input id="pf-' + f[0] + '" data-profile="' + f[0] + '" value="' + esc(state.profile[f[0]] || "") + '"></div>';
       }).join("") + "</div></section>";
   }
 
@@ -160,30 +168,33 @@
 
   function renderCard(c, x) {
     var std = data.scoring.answers.standard, tier = data.scoring.answers.tier;
-    var crit = c.critical === "yes" ? '<span class="tag critical">★ CRITICAL</span>' : c.critical === "subs" ? '<span class="tag critical">★ critical sub-items</span>' : "";
+    var seen = new Set();
+    var crit = c.critical === "yes" ? '<span class="tag critical">★ CRITICAL ' + Ref.help("critical.yes", "Critical") + "</span>"
+      : c.critical === "subs" ? '<span class="tag critical">★ critical sub-items ' + Ref.help("critical.subs", "Critical sub-items") + "</span>" : "";
     var answer;
     if (!c.sub_items.length) {
       var list = c.scoring === "tier" ? tier : std;
-      answer = '<div class="answer"><label for="a-' + esc(c.id) + '">Result</label><select id="a-' + esc(c.id) + '" data-answer="' + esc(c.id) + '">' +
+      answer = '<div class="answer"><label for="a-' + esc(c.id) + '">Result</label> ' + Ref.help("result", "Result") + '<select id="a-' + esc(c.id) + '" data-answer="' + esc(c.id) + '">' +
         options(list, state.answers[c.id] || Scoring.NOT_TESTED) + "</select></div>";
     } else {
       answer = '<ul class="subs">' + c.sub_items.map(function (s) {
-        return '<li><span class="sid">' + esc(s.id) + "</span><span>" + (s.critical ? '<span class="tag critical">★</span> ' : "") + esc(s.text) +
+        return '<li><span class="sid">' + esc(s.id) + "</span><span>" + (s.critical ? '<span class="tag critical">★</span> ' : "") + Ref.link(s.text, seen) +
           '</span><select aria-label="Result for ' + esc(s.id) + '" data-answer="' + esc(s.id) + '">' + options(std, state.answers[s.id] || Scoring.NOT_TESTED) + "</select></li>";
       }).join("") + "</ul>";
     }
-    var t = c.traces || {};
-    var traces = ["fhir_traceability", "technical_baseline", "sources", "ig_requirements"].filter(function (k) { return t[k] && t[k].length; })
-      .map(function (k) { return t[k].join(", "); }).join(" · ");
+    var n = Ref.ready() ? Ref.counts(c) : { trc: 0, trm: 0 };
+    var g = function (tab, label, cnt) {
+      return '<button type="button" class="gbtn" data-guide="' + esc(c.id) + '" data-tab="' + tab + '">' + label + (cnt != null ? ' <span class="cnt">' + cnt + "</span>" : "") + "</button>";
+    };
     return '<article class="crit ' + cardClass(x) + '" id="card-' + esc(c.id) + '">' +
-      '<div class="crit-head"><span class="cid">' + esc(c.id) + '</span><span class="section">' + esc(c.section) + "</span>" + crit +
-      '<span class="tag">' + esc(c.scoring) + " · weight " + esc(c.weight) + (c.weight === 0 ? " (info only)" : "") + '</span><span class="tag">' + esc(c.validation_role) + "</span></div>" +
-      '<p class="title">' + esc(c.title) + "</p>" + answer +
+      '<div class="crit-head"><a class="cid" href="#' + esc(current.split("/")[0]) + "/" + esc(c.id) + '" title="Link to this criterion">' + esc(c.id) + '</a><span class="section">' + esc(c.section) + "</span>" + crit +
+      '<span class="tag">' + esc(c.scoring) + " " + Ref.help("scoring." + c.scoring, c.scoring) + " · weight " + esc(c.weight) + (c.weight === 0 ? " (info only)" : "") + " " + Ref.help("weight", "Weight") +
+      '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span></div>" +
+      '<p class="title">' + Ref.link(c.title, seen) + "</p>" + answer +
       '<div class="result" id="res-' + esc(c.id) + '">' + resultLine(c, x) + "</div>" +
       '<textarea class="notes" placeholder="Evidence reference / notes" data-note="' + esc(c.id) + '" aria-label="Notes for ' + esc(c.id) + '">' + esc(state.notes[c.id] || "") + "</textarea>" +
-      "<details><summary>Guides, evidence and traces</summary><div class=\"guide\"><h4>Developer's guide</h4>" + esc(c.developer_guide) +
-      "<h4>Validator's guide</h4>" + esc(c.validator_guide) + "<h4>Evidence required</h4>" + esc(c.evidence) +
-      (traces ? "<h4>Traces</h4>" + esc(traces) : "") + "</div></details></article>";
+      '<div class="gbar" aria-label="Guides and references">' + g("dev", "Developer's guide") + g("val", "Validator's guide") + g("evd", "Evidence required") +
+      g("trc", "Traces", n.trc) + g("trm", "Terms", n.trm) + "</div></article>";
   }
 
   function sheetStats(s) {
@@ -458,11 +469,14 @@
   window.addEventListener("hashchange", route);
 
   // ------------------------------------------------------------------ start
-  fetch("data.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
-    data = d;
+  var getJSON = function (u) { return fetch(u, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
+  Promise.all([getJSON("data.json"), getJSON("reference.json").catch(function () { return null; })]).then(function (res) {
+    data = res[0];
+    if (res[1]) Ref.init(data, res[1]);
     restore();
     recompute();
     renderBanner();
+    if (Ref.ready()) Ref.initSearch($("#q"), $("#q-list")); else $(".search").hidden = true;
     route();
   }).catch(function (err) {
     $("#main").innerHTML = '<p class="out-bad">Could not load the criteria (data.json). Open this page through a web server. ' + esc(err) + "</p>";

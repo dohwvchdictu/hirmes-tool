@@ -1,0 +1,96 @@
+title: Form help
+source: Instructions sheet of the scorecard workbook and the Technical Reference Guide (legacy Rev 9)
+# Short help shown next to the scorecard's controls (the ⓘ buttons). Keep each entry to one or
+# two sentences; longer explanations belong in the glossary or the documents. `see` lists glossary
+# terms or register IDs (TB-01, SRC-02, TR-014, IND-03) that the help popover links to.
+
+result:
+  label: Result
+  help: Record what the evidence shows. Not Tested blocks the level; always write the evidence reference, and the reason for N/A, in the notes.
+  see: [Criterion / Ref ID]
+
+answers:
+  Met: The evidence shows the requirement is fully satisfied.
+  Not Met: The evidence is missing or does not satisfy the requirement. A Not Met critical item stops the level from passing.
+  Not Tested: Not evaluated yet. Any Not Tested item keeps the sheet INCOMPLETE.
+  N/A: Does not apply to this system. On a critical item, N/A counts as Not Met. Record the reason in the notes.
+  Fully integrated: eReferral is part of the EMR, or a separate system that receives patient details automatically from it (score 100%).
+  Standalone - manual encoding: Patient details are re-typed or copy-pasted into a separate eReferral system (score 50%).
+
+scoring:
+  binary:
+    label: Binary
+    help: Choose Met or Not Met for the criterion as a whole.
+  count:
+    label: Count
+    help: Mark every ↳ sub-item. The score is the share of applicable sub-items that are Met.
+  all-or-nothing:
+    label: All-or-nothing
+    help: Mark every ↳ sub-item. The score is 100% only when every applicable sub-item is Met; otherwise 0%.
+  tier:
+    label: Tier
+    help: Choose the integration level. Fully integrated scores 100%, standalone with manual encoding 50%.
+
+critical:
+  "yes":
+    label: Critical
+    help: Must be Met for the level to pass, whatever the score. N/A on a critical item counts as Not Met.
+  subs:
+    label: Critical sub-items
+    help: The criterion is critical through its ★ sub-items. Any ★ sub-item that is Not Met or N/A makes the criterion a critical failure.
+  "no":
+    label: Not critical
+    help: Counts toward the score with its weight, but a Not Met result alone does not stop the level.
+
+weight:
+  label: Weight
+  help: How much the criterion counts toward the sheet score. Weight 0 means information only — recorded but not scored.
+
+validation_role:
+  label: Validation role
+  help: Who verifies the item. Level 2 and Level 4 items must be confirmed with server-side evidence, not the EMR screen alone.
+  see: [Regional Validation Team, Validator, Observer]
+
+notes:
+  label: Evidence reference / notes
+  help: Write where the evidence is (file name, log reference, screenshot number) and the reason for any N/A.
+
+status:
+  PASSED: Every applicable item tested, every critical item and ★ sub-item Met, and the score reaches the threshold.
+  NOT PASSED: Tested, but a critical item or ★ sub-item is not Met, or the score is below the threshold.
+  INCOMPLETE: At least one item is still Not Tested.
+  LOCKED: The level before this one has not passed yet. Each level is a gate.
+
+summary:
+  threshold:
+    label: Pass threshold
+    help: Minimum score for the level, set by DOH policy (scoring.yaml). PROPOSED until approved by the TWG.
+  conformant:
+    label: Conformant for use in the HIE
+    help: Levels 0 to 3 passed and no critical item Not Met. Level 4 is the maturity target.
+  progress:
+    label: Evaluation progress
+    help: Share of items already evaluated (not Not Tested).
+
+profile:
+  application_no: Assigned by the Administrator when the application is received.
+  vendor: Name of the service provider or vendor (or the facility, for an in-house system).
+  system_name: Product name as it will be offered to HIE facilities.
+  version: Exact version or build submitted for testing. Results apply to this version only.
+  category: Third-party EMR provider, or in-house developed system.
+  deployment: Cloud, on-premise or hybrid.
+  test_dates: Date(s) of evaluation for each level tested.
+  technical_lead: Leads the Regional Validation Team for this evaluation (required).
+  validators: At least two validators are required.
+  observers: At least one observer is required.
+  administrator: Receives applications, assigns numbers and keeps the records.
+  office: Conducting DOH office; printed on the report letterhead when filled in.
+  ph_core: PH Core IG version tested, e.g. 0.2.0.
+  pheref: PHeReF IG version tested, e.g. 0.1.0.
+  terminology: Terminology / PSGC release used on the sandbox.
+  evaluation_type: Initial, or re-evaluation after an update.
+  date_received: Date the application was received by the DOH.
+  certificate_no: Assigned on approval.
+  certificate_date: Date of approval.
+  valid_until: 2 years from approval or until a major change or IG major version (PROPOSED).
+  conditions: Conditions attached to the result, if any.
