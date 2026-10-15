@@ -37,7 +37,7 @@ jobs:
         run: cat dist/CHANGE-SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         with:
-          name: scorecard-${{ github.ref_name }}-${{ github.sha }}
+          name: scorecard-${{ github.sha }}
           path: |
             dist/
             site/
