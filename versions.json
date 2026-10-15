@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15T07:22:46+00:00",
+ "generated": "2026-10-15T07:23:01+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -29,28 +29,5 @@
    }
   }
  ],
- "branches": [
-  {
-   "ref": "ui-qol",
-   "ref_type": "branch",
-   "kind": "branch",
-   "path": "preview/ui-qol",
-   "commit": "15f9c96",
-   "commit_date": "2026-10-15T15:10:47+08:00",
-   "subject": "fix(build): tab names in sheets.yaml rename the workbook sheets",
-   "built": "2026-10-15 07:11 UTC",
-   "ok": true,
-   "files": {
-    "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
-    "change_summary": "CHANGE-SUMMARY.md",
-    "scorecard": "index.html"
-   },
-   "version": "unreleased draft",
-   "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 15f9c96",
-   "counts": {
-    "criteria": 103,
-    "sub_items": 272
-   }
-  }
- ]
+ "branches": []
 }
