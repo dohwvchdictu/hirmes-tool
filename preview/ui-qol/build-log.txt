@@ -16,11 +16,19 @@ TOTAL       103       27      62   272     4     99
 
 0 error(s), 0 warning(s).
 
-$ scripts/build_web.py --out /tmp/tmp0qp13_g_/out
-Wrote web scorecard to /tmp/tmp0qp13_g_/out
+$ scripts/build_web.py --out /tmp/tmp0z3ohbuf/out
+Wrote web scorecard to /tmp/tmp0z3ohbuf/out
 
-$ scripts/build_xlsx.py --out /tmp/tmp0qp13_g_/out
-Wrote /tmp/tmp0qp13_g_/out/testing-criteria-scorecard-unreleased-draft.xlsx
-
-$ scripts/change_summary.py --to a106d5de4066061cbead04a2058d78fd429e361a --out /tmp/tmp0qp13_g_/out/CHANGE-SUMMARY.md --label branch ui-qol
-Wrote /tmp/tmp0qp13_g_/out/CHANGE-SUMMARY.md
+$ scripts/build_xlsx.py --out /tmp/tmp0z3ohbuf/out
+Traceback (most recent call last):
+  File "/tmp/tmp0z3ohbuf/src/scripts/build_xlsx.py", line 392, in <module>
+    main()
+  File "/tmp/tmp0z3ohbuf/src/scripts/build_xlsx.py", line 388, in main
+    print(f"Wrote {build(args.out)}")
+                   ^^^^^^^^^^^^^^^
+  File "/tmp/tmp0z3ohbuf/src/scripts/build_xlsx.py", line 374, in build
+    build_criteria_sheet(wb[sheet["tab"]], sheet, criteria[sheet["key"]])
+                         ~~^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/openpyxl/workbook/workbook.py", line 287, in __getitem__
+    raise KeyError("Worksheet {0} does not exist.".format(key))
+KeyError: 'Worksheet L2-A TS0-Terminology does not exist.'

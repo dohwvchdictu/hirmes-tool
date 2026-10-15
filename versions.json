@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15T06:57:49+00:00",
+ "generated": "2026-10-15T07:03:47+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -34,18 +34,17 @@
    "ref_type": "branch",
    "kind": "branch",
    "path": "preview/ui-qol",
-   "commit": "a106d5d",
-   "commit_date": "2026-10-15T14:57:25+08:00",
-   "subject": "feat(tool): local time display, licence notices off, flat Reference menu",
-   "built": "2026-10-15 06:57 UTC",
-   "ok": true,
+   "commit": "8bd33ad",
+   "commit_date": "2026-10-15T15:03:20+08:00",
+   "subject": "fix(tool): correct tab labels for Level 2 sheets in YAML configuration",
+   "built": "2026-10-15 07:03 UTC",
+   "ok": false,
    "files": {
-    "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
-    "change_summary": "CHANGE-SUMMARY.md",
     "scorecard": "index.html"
    },
+   "error": "scripts/build_xlsx.py failed",
    "version": "unreleased draft",
-   "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit a106d5d",
+   "label": "unreleased draft \u00b7 branch ui-qol \u00b7 commit 8bd33ad",
    "counts": {
     "criteria": 103,
     "sub_items": 272
