@@ -8,10 +8,10 @@ they edit registers/*.yaml, registers/form-help.yaml and docs/**/*.md.
 """
 from __future__ import annotations
 
+import html
 import re
+import sys
 from pathlib import Path
-
-import markdown
 
 from common import ROOT, active, load_criteria, load_sheets, load_yaml
 
@@ -81,7 +81,18 @@ def criteria_index():
     return out, crit
 
 
+_warned: list = []
+
+
 def render_md(text: str) -> str:
+    try:
+        import markdown  # in requirements.txt; imported here so check.py does not depend on it
+    except ImportError:
+        if not _warned:
+            _warned.append(1)
+            print("WARNING  Markdown is not installed (pip install -r requirements.txt); "
+                  "document chapters are shown as plain text", file=sys.stderr)
+        return "".join(f"<p>{html.escape(p).replace(chr(10), '<br>')}</p>" for p in text.split("\n\n") if p.strip())
     return markdown.markdown(text, extensions=["tables", "sane_lists", "attr_list"], output_format="html")
 
 
