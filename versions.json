@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-15T07:11:14+00:00",
+ "generated": "2026-10-15T07:22:46+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -10,18 +10,19 @@
    "ref_type": "branch",
    "kind": "draft",
    "path": "draft",
-   "commit": "7c46fb5",
-   "commit_date": "2026-10-15T11:56:08+08:00",
-   "subject": "style(tool): yellow Edit button with black icon, always visible",
-   "built": "2026-10-15 04:26 UTC",
+   "commit": "b373025",
+   "commit_date": "2026-10-15T15:22:28+08:00",
+   "subject": "Merge pull request #3 from dohwvchdictu/ui-qol",
+   "built": "2026-10-15 15:22 PHT",
+   "built_iso": "2026-10-15T07:22:42+00:00",
    "ok": true,
    "files": {
-    "workbook": "testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx",
+    "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
     "change_summary": "CHANGE-SUMMARY.md",
     "scorecard": "index.html"
    },
-   "version": "v1.0.0-rc1+dev",
-   "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 7c46fb5",
+   "version": "unreleased draft",
+   "label": "unreleased draft \u00b7 branch main \u00b7 commit b373025",
    "counts": {
     "criteria": 103,
     "sub_items": 272

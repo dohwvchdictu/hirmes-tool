@@ -1,19 +1,22 @@
 {
  "meta": {
-  "version": "v1.0.0-rc1+dev",
+  "version": "unreleased draft",
   "branch": "main",
-  "commit": "7c46fb5",
-  "built": "2026-10-15 04:26 UTC",
+  "commit": "b373025",
+  "built": "2026-10-15 15:22 PHT",
+  "built_iso": "2026-10-15T07:22:44+00:00",
   "is_release": false,
-  "label": "v1.0.0-rc1+dev · branch main · commit 7c46fb5",
+  "label": "unreleased draft · branch main · commit b373025",
   "repository": "https://github.com/dohwvchdictu/hirmes-tool",
   "owner": "Department of Health – Western Visayas Center for Health Development",
   "content_license": "CC BY 4.0",
   "code_license": "GPL-3.0-or-later",
   "credit": "Healthcare Interoperability Readiness Matrix for EMR Systems, Department of Health – Western Visayas Center for Health Development, licensed under CC BY 4.0",
   "title": "Healthcare Interoperability Readiness Matrix for EMR Systems",
-  "sha": "7c46fb53ad5d4fbdbbf97a5adefc0210e21c8daa",
+  "sha": "b373025943450a01ab0fbdb59c7afd184f619324",
   "default_branch": "main",
+  "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
+  "show_license": false,
   "home": "../",
   "kind": "draft"
  },
@@ -106,6 +109,7 @@
    "tab": "L0 Application",
    "title": "Level 0 — Application & Commitment",
    "intro": "The vendor/developer formally applies and commits to the process. All items are documents. Critical items (red) must all be Met.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.9,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -611,6 +615,7 @@
    "tab": "L1 Documentation",
    "title": "Level 1 — Product Documentation",
    "intro": "Documentation of the EMR system itself. Facility-level legal, privacy, infrastructure and personnel requirements are outside the scope of this tool.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -1179,9 +1184,10 @@
   },
   {
    "key": "L2A",
-   "tab": "L2-TS0 Terminology",
+   "tab": "L2-A TS0-Terminology",
    "title": "Level 2A — TS0 Terminology & Registry Validation (GATE)",
    "intro": "Before submitting (TS1) or reading (TS2) an eReferral, every coded element must use the official terminology and every registry value or patient identifier must follow the official registry — the exact server, registry or API for each concept is named in the Terminology & Registry Sources (Reference Guide, Ch. 4) (SRC-01 to SRC-15). CRITICAL (must be 100%): the IG-required bindings (TS0-01, TS0-02), invalid-code handling (TS0-03), PSGC and NHFR (★ in TS0-06) and the PhilHealth / PhilSys identifiers (TS0-07) — TS1, TS2 and Level 3 cannot work without them. Other items (display text, code-system validity, NHWR, DSWD) carry normal weight but are not critical. How values are obtained (live look-up, scheduled sync or cached copy) is the vendor's choice. Test this part FIRST.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -2012,9 +2018,10 @@
   },
   {
    "key": "L2B",
-   "tab": "L2-TS1 Submission",
+   "tab": "L2-B TS1-Submission",
    "title": "Level 2B — TS1 eReferral Submission by Referring Facility",
    "intro": "The referring facility submits the Test Data referral to the Shared Health Record (SHR). Every item is verified ON THE SERVER using any one form of server-side evidence: an Interoperability Layer log (e.g., OpenHIM), an Inferno / FHIR validator report, or the raw request / response payload from the developer. Fields are grouped by FHIR resource — open the resource once and tick its fields. ★ marks critical sub-items. How the data is sent (HTTP verbs, bundle style) is the vendor's choice.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -4044,9 +4051,10 @@
   },
   {
    "key": "L2C",
-   "tab": "L2-TS2 Retrieval",
+   "tab": "L2-C TS2-Retrieval",
    "title": "Level 2C — TS2 eReferral Retrieval and Status Update by Receiving Facility",
    "intro": "The receiving facility retrieves the referral from the SHR, displays it, and updates the referral status. Compare every value with the Test Data sheet and confirm with server-side evidence (IOL log, Inferno / validator report, or raw payload). Fields are grouped by screen area / FHIR resource. ★ marks critical sub-items. Screen layout is the vendor's choice.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -5502,9 +5510,10 @@
   },
   {
    "key": "L2D",
-   "tab": "L2-Security",
+   "tab": "L2-D System Resilience",
    "title": "Level 2D — Security, Reliability & Exception Handling",
    "intro": "Baseline technical safeguards required before live patient data is exchanged. Each criterion states the OUTCOME tested; the minimum measurable specification is given in the Technical Baseline (Reference Guide, Ch. 3) (TB-01 to TB-14). Any product, platform or method that meets or exceeds the baseline is acceptable. Outcomes are tested by using the system (black-box); where documents are needed, vendors may choose any evidence option in Instructions 4B — internals and trade secrets are never required. DISCLAIMER: this is SECURITY CONFORMANCE TESTING of defined controls. Passing it is NOT equivalent to passing a vulnerability assessment and penetration test (VAPT) or a full cybersecurity assessment (TEC-14 only checks that an independent assessment exists). EXCEPTION HANDLING (TS3-01 to TS3-09): the EMR must not show a failed exchange as successful, must explain the error, allow correction, and leave exactly one correct referral on the SHR — inputs and expected results are in Test Data Section D (TD-D##).",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -7584,6 +7593,7 @@
    "tab": "L3 Reports",
    "title": "Level 3 — Report Generation & Dashboard",
    "intro": "Reports must contain the required features and AGGREGATED DATA must be complete. Completeness is checked with the 10 known referrals in Test Data Section B — the aggregated figures must match the expected numbers.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.85,
    "src": {
     "p": "criteria/sheets.yaml",
@@ -9572,6 +9582,7 @@
    "tab": "L4 Advanced",
    "title": "Level 4 — Advanced Interoperability",
    "intro": "Advanced interoperability. Rev 7 separates two tracks: CORE-TRACK items are fundamental interoperability requirements that will MIGRATE to Level 2 (minimum conformance) as soon as the PHeReF IG models them (back-referral and the multi-tier referral chain are not yet modelled in IG v0.1.0); MATURITY items are capability targets that remain optional. Moved to Level 2 in Rev 7: status timestamps (L4-06 → TS2-13), patient de-duplication (L4-08 → TS1-16) and NHFR-sourced facility data (L4-09 → TS0-06.2). The track is shown in the Section column.",
+   "note": "Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.",
    "threshold": 0.75,
    "src": {
     "p": "criteria/sheets.yaml",
