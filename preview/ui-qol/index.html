@@ -4,10 +4,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="build" content="0dcc109181a2">
+  <meta name="build" content="f104f35a0c55">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria Scorecard</title>
-  <link rel="stylesheet" href="style.css?v=0dcc109181a2">
+  <link rel="stylesheet" href="style.css?v=f104f35a0c55">
 </head>
 <body>
   <header class="top" id="top">
@@ -28,11 +28,15 @@
       <div class="menu">
         <button id="menu-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu-list">Evaluation <span aria-hidden="true">▾</span></button>
         <div id="menu-list" class="menu-list" role="menu" hidden>
+          <div class="menu-h">This evaluation</div>
           <button id="btn-save" type="button" role="menuitem"><b>Save evaluation</b><span>Download answers, notes and profile (.json)</span></button>
           <label class="button" for="file-load" role="menuitem"><b>Load evaluation…</b><span>Continue from a saved .json file</span></label>
           <input id="file-load" type="file" accept="application/json,.json" hidden>
           <button id="btn-print" type="button" role="menuitem"><b>Print report</b><span>Printed evaluation report / PDF</span></button>
           <button id="btn-reset" type="button" role="menuitem" class="danger"><b>Clear answers</b><span>Remove everything saved in this browser</span></button>
+          <div class="menu-h">Excel workbook</div>
+          <a id="dl-blank" class="button" role="menuitem" href="#" download><b>Blank workbook (.xlsx)</b><span id="dl-blank-note">Scorecard workbook of this version, to fill in offline</span></a>
+          <button id="dl-filled" type="button" role="menuitem" aria-disabled="true" class="soon"><b>Workbook with my answers (.xlsx) <i class="soon-tag">Coming soon</i></b><span>Not available yet. Meanwhile use Save evaluation, or copy the results into the blank workbook.</span></button>
         </div>
       </div>
     </div>
@@ -42,8 +46,8 @@
   <div id="scrim" class="scrim" hidden></div>
   <main id="main" tabindex="-1"><p class="loading">Loading criteria…</p></main>
   <footer class="foot" id="foot"></footer>
-  <script src="scoring.js?v=0dcc109181a2"></script>
-  <script src="reference.js?v=0dcc109181a2"></script>
-  <script src="app.js?v=0dcc109181a2"></script>
+  <script src="scoring.js?v=f104f35a0c55"></script>
+  <script src="reference.js?v=f104f35a0c55"></script>
+  <script src="app.js?v=f104f35a0c55"></script>
 </body>
 </html>
