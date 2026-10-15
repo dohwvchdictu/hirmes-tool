@@ -116,8 +116,22 @@ How terms are linked:
 - `see:` in `form-help.yaml` and `terms:` in a criterion must name a glossary term, abbreviation,
   register ID or criterion ID; the check fails otherwise.
 
-Every reference page and the guide drawer has an "✎ Edit" link that opens the source file on GitHub,
-so a reviewer can propose a change directly from the page they are reading.
+### Edit links (✎) on every item
+
+Every criterion card, sheet heading, guide drawer tab, help popover, glossary term, abbreviation,
+register entry, ID prefix and document chapter has a ✎ button (hover to reveal it on reference lists).
+It knows the exact file and lines the item comes from and offers three actions:
+
+| Action | What it does | Who it suits |
+| --- | --- | --- |
+| ✎ Edit on GitHub | Opens the file in GitHub's editor on the branch being viewed (releases open `main`). Without write access GitHub makes a fork and a pull request. | Editors |
+| ⌗ Show the lines | Opens the file at the exact lines, in the exact commit the page was built from. | Anyone checking where text lives |
+| ✉ Suggest a change | Opens a change request (issue) with the item, its location and its current text filled in. | TWG and workstream reviewers |
+
+A criterion's ✎ menu also lists every field and sub-item with its own lines and ✉ link, and the
+guide drawer shows the source of the tab you are reading (Developer's guide, Validator's guide…).
+Line numbers are computed at build time, so they never need maintaining. Edit links appear only on
+the published site (they need the repository address that GitHub Actions provides).
 
 ## What the checks enforce
 

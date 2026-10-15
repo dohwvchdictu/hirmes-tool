@@ -189,7 +189,7 @@
     return '<article class="crit ' + cardClass(x) + '" id="card-' + esc(c.id) + '">' +
       '<div class="crit-head"><a class="cid" href="#' + esc(current.split("/")[0]) + "/" + esc(c.id) + '" title="Link to this criterion">' + esc(c.id) + '</a><span class="section">' + esc(c.section) + "</span>" + crit +
       '<span class="tag">' + esc(c.scoring) + " " + Ref.help("scoring." + c.scoring, c.scoring) + " · weight " + esc(c.weight) + (c.weight === 0 ? " (info only)" : "") + " " + Ref.help("weight", "Weight") +
-      '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span></div>" +
+      '</span><span class="tag">' + esc(c.validation_role) + " " + Ref.help("validation_role", "Validation role") + "</span>" + Ref.src(Ref.critSrc(c), "card") + "</div>" +
       '<p class="title">' + Ref.link(c.title, seen) + "</p>" + answer +
       '<div class="result" id="res-' + esc(c.id) + '">' + resultLine(c, x) + "</div>" +
       '<textarea class="notes" placeholder="Evidence reference / notes" data-note="' + esc(c.id) + '" aria-label="Notes for ' + esc(c.id) + '">' + esc(state.notes[c.id] || "") + "</textarea>" +
@@ -220,7 +220,7 @@
   function viewSheet(s) {
     var r = result.sheets[s.key];
     var cards = s.criteria.map(function (c, i) { return visible(c, r.rows[i]) ? renderCard(c, r.rows[i]) : ""; }).join("");
-    return '<section class="panel"><h2>' + esc(s.title) + '</h2><p class="intro">' + esc(s.intro) + "</p>" + sheetStats(s) + "</section>" +
+    return '<section class="panel"><h2>' + esc(s.title) + Ref.src(Ref.sheetSrc(s)) + '</h2><p class="intro">' + esc(s.intro) + "</p>" + sheetStats(s) + "</section>" +
       '<div class="toolbar noprint"><input type="search" id="flt-text" placeholder="Search this sheet" value="' + esc(filter.text) + '">' +
       '<select id="flt-show"><option value="all">All criteria</option><option value="untested">Not yet tested</option>' +
       '<option value="needs">Needing compliance</option><option value="critical">Critical only</option></select>' +
@@ -472,6 +472,7 @@
   var getJSON = function (u) { return fetch(u, { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
   Promise.all([getJSON("data.json"), getJSON("reference.json").catch(function () { return null; })]).then(function (res) {
     data = res[0];
+    Ref.base(data);
     if (res[1]) Ref.init(data, res[1]);
     restore();
     recompute();

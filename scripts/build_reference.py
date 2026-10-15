@@ -13,7 +13,7 @@ import re
 import sys
 from pathlib import Path
 
-from common import ROOT, active, load_criteria, load_sheets, load_yaml
+from common import ROOT, active, load_criteria, load_sheets, load_yaml, yaml_lines
 
 # register file, id field, title field, short key, display name
 REGISTERS = [
@@ -101,17 +101,19 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
     lines = text.split("\n")
     levels = [len(m.group(1)) for line in lines if (m := re.match(r"^(#{1,2}) ", line))]
     split_level = 1 if levels.count(1) > 1 else 2
-    chapters, current = [], {"title": "Introduction", "lines": []}
-    for line in lines:
+    chapters, current = [], {"title": "Introduction", "lines": [], "start": 1}
+    for n, line in enumerate(lines, 1):
         m = re.match(r"^(#{1,6}) (.*)", line)
         if m and len(m.group(1)) == split_level:
+            current["end"] = n - 1
             if any(x.strip() for x in current["lines"]):
                 chapters.append(current)
-            current = {"title": m.group(2).strip(), "lines": []}
+            current = {"title": m.group(2).strip(), "lines": [], "start": n}
         elif m and len(m.group(1)) < split_level:
             continue  # document title
         else:
             current["lines"].append(line)
+    current["end"] = len(lines)
     chapters.append(current)
     out = []
     for ch in chapters:
@@ -122,7 +124,10 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
                     f'{"" if page == "glossary" else "register"}</a>.</p>')
         else:
             html = render_md("\n".join(ch["lines"]))
-        out.append({"id": slug(ch["title"]) or "intro", "title": ch["title"], "html": html})
+        end = ch["end"]
+        while end > ch["start"] and not lines[end - 1].strip():
+            end -= 1
+        out.append({"id": slug(ch["title"]) or "intro", "title": ch["title"], "html": html, "l": [ch["start"], end]})
     return {"id": doc_id, "title": title, "source": str(path.relative_to(ROOT)), "chapters": out}
 
 
@@ -133,19 +138,23 @@ def build_reference() -> dict:
     # glossary + abbreviations
     glossary = []
     gdoc = load_yaml(reg_dir / "glossary.yaml")
-    for sec in gdoc.get("sections", []):
-        for t in sec["terms"]:
+    gl = yaml_lines(reg_dir / "glossary.yaml")
+    for si, sec in enumerate(gdoc.get("sections", [])):
+        for ti, t in enumerate(sec["terms"]):
             term = t.get("term") or ""
             keys = [] if t.get("link") is False else sorted(set(match_keys(term)) | set(t.get("aliases") or []))
             glossary.append({"id": "g-" + slug(term), "term": term, "meaning": t.get("meaning") or "",
-                             "section": sec["section"], "keys": keys})
+                             "section": sec["section"], "keys": keys,
+                             "src": {"p": "registers/glossary.yaml", "l": gl.get(("sections", si, "terms", ti))}})
     gkeys = {k for g in glossary for k in g["keys"]}
     abbreviations = []
-    for a in load_yaml(reg_dir / "abbreviations.yaml").get("entries", []):
+    al = yaml_lines(reg_dir / "abbreviations.yaml")
+    for ai, a in enumerate(load_yaml(reg_dir / "abbreviations.yaml").get("entries", [])):
         ab = a.get("abbreviation") or ""
         keys = [ab] if (re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9\-\.&]*", ab) and sum(c.isupper() for c in ab) >= 2
                         and len(ab) >= 3 and ab not in gkeys and ab not in SKIP_KEYS) else []
-        abbreviations.append({"id": "a-" + slug(ab), "abbreviation": ab, "stands_for": a.get("stands_for") or "", "keys": keys})
+        abbreviations.append({"id": "a-" + slug(ab), "abbreviation": ab, "stands_for": a.get("stands_for") or "", "keys": keys,
+                              "src": {"p": "registers/abbreviations.yaml", "l": al.get(("entries", ai))}})
 
     # registers, with reverse links to criteria
     used_by: dict[str, set] = {}
@@ -157,8 +166,9 @@ def build_reference() -> dict:
     registers = []
     for fname, idf, titlef, key, name in REGISTERS:
         doc = load_yaml(reg_dir / fname)
+        rl = yaml_lines(reg_dir / fname)
         entries = []
-        for e in doc.get("entries", []):
+        for ei, e in enumerate(doc.get("entries", [])):
             rid = e.get(idf)
             if not rid:
                 continue
@@ -168,9 +178,11 @@ def build_reference() -> dict:
                     crits.add(cindex[cid][1])
             fields = [[label(k), v] for k, v in e.items() if k not in (idf, titlef) and v]
             entries.append({"id": rid, "title": e.get(titlef) or "", "fields": fields,
-                            "criteria": sorted(crits)})
-        registers.append({"key": key, "name": name, "title": doc.get("title", name), "entries": entries})
-    prefixes = load_yaml(reg_dir / "id-prefixes.yaml").get("entries", [])
+                            "criteria": sorted(crits), "src": {"p": "registers/" + fname, "l": rl.get(("entries", ei))}})
+        registers.append({"key": key, "name": name, "title": doc.get("title", name), "entries": entries, "src": "registers/" + fname})
+    pl = yaml_lines(reg_dir / "id-prefixes.yaml")
+    prefixes = [dict(p, src={"p": "registers/id-prefixes.yaml", "l": pl.get(("entries", i))})
+                for i, p in enumerate(load_yaml(reg_dir / "id-prefixes.yaml").get("entries", []))]
 
     docs = []
     for path, doc_id, title in ((ROOT / "docs/reference-guide/reference-guide.md", "reference-guide", "Technical Reference Guide"),
@@ -178,7 +190,10 @@ def build_reference() -> dict:
         if path.exists():
             docs.append(split_doc(path, doc_id, title))
 
-    help_doc = load_yaml(reg_dir / "form-help.yaml") if (reg_dir / "form-help.yaml").exists() else {}
+    help_doc, help_src = {}, {}
+    if (reg_dir / "form-help.yaml").exists():
+        help_doc = load_yaml(reg_dir / "form-help.yaml")
+        help_src = {".".join(map(str, k)): v for k, v in yaml_lines(reg_dir / "form-help.yaml").items() if k}
     crit_titles = {k: {"sheet": v[0], "criterion": v[1], "title": v[2]} for k, v in cindex.items()}
     return {"glossary": glossary, "abbreviations": abbreviations, "registers": registers, "prefixes": prefixes,
-            "docs": docs, "help": help_doc, "criteria": crit_titles}
+            "docs": docs, "help": help_doc, "help_src": help_src, "criteria": crit_titles}

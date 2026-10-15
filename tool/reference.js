@@ -111,26 +111,30 @@
     }).join(" ");
   }
 
+  function glossSrc(g) { return g.src ? { title: "Glossary: " + g.term, id: g.term, p: g.src.p, l: g.src.l, text: g.term + " — " + g.meaning } : null; }
+  function abbrSrc(a) { return a.src ? { title: "Abbreviation: " + a.abbreviation, id: a.abbreviation, p: a.src.p, l: a.src.l, text: a.abbreviation + " — " + a.stands_for } : null; }
+  function regSrc(e) { return e.src ? { title: e.id + " — " + clip(e.title, 60), id: e.id, p: e.src.p, l: e.src.l, text: e.title } : null; }
+
   function popContent(ref) {
     var kind = ref[0], id = ref.slice(2), h = "";
     if (kind === "g") {
       var g = idx.g[id]; if (!g) return "";
       h = '<div class="xp-kind">Glossary · ' + esc(g.section.replace(/^\d+(\.\d+)?\s*/, "")) + '</div><div class="xp-title">' + esc(g.term) + "</div><p>" + esc(clip(g.meaning, 420)) +
-        '</p><div class="xp-links"><a href="#ref/glossary/' + esc(g.id) + '">Open in glossary ›</a></div>';
+        '</p><div class="xp-links"><a href="#ref/glossary/' + esc(g.id) + '">Open in glossary ›</a></div>' + srcLine(glossSrc(g));
     } else if (kind === "a") {
       var a = idx.a[id]; if (!a) return "";
       h = '<div class="xp-kind">Abbreviation</div><div class="xp-title">' + esc(a.abbreviation) + "</div><p>" + esc(a.stands_for) +
-        '</p><div class="xp-links"><a href="#ref/abbreviations/' + esc(a.id) + '">Open in abbreviations ›</a></div>';
+        '</p><div class="xp-links"><a href="#ref/abbreviations/' + esc(a.id) + '">Open in abbreviations ›</a></div>' + srcLine(abbrSrc(a));
     } else if (kind === "r") {
       var e = idx.r[id], reg = idx.regOf[id]; if (!e) return "";
       var f = e.fields.slice(0, 2).map(function (x) { return "<dt>" + esc(x[0]) + "</dt><dd>" + esc(clip(x[1], 220)) + "</dd>"; }).join("");
       h = '<div class="xp-kind">' + esc(reg.name) + '</div><div class="xp-title">' + esc(id) + " — " + esc(e.title) + '</div><dl class="xp-dl">' + f + "</dl>" +
         (e.criteria.length ? '<div class="xp-used">Used by ' + chipsFor(e.criteria.slice(0, 12)) + (e.criteria.length > 12 ? " …" : "") + "</div>" : "") +
-        '<div class="xp-links"><a href="#ref/' + esc(reg.key) + "/" + esc(id) + '">Open full entry ›</a></div>';
+        '<div class="xp-links"><a href="#ref/' + esc(reg.key) + "/" + esc(id) + '">Open full entry ›</a></div>' + srcLine(regSrc(e));
     } else if (kind === "c") {
       var x = idx.crit[id]; if (!x) return "";
       h = '<div class="xp-kind">Criterion · ' + esc(x.sheet.tab) + '</div><div class="xp-title">' + esc(id) + "</div><p>" + esc(clip(x.c.title, 300)) +
-        '</p><div class="xp-links"><a href="#' + x.sheet.key + "/" + esc(id) + '">Go to criterion ›</a> <a href="#" data-guide="' + esc(id) + '">Open guide ›</a></div>';
+        '</p><div class="xp-links"><a href="#' + x.sheet.key + "/" + esc(id) + '">Go to criterion ›</a> <a href="#" data-guide="' + esc(id) + '">Open guide ›</a></div>' + srcLine(critSrc(x.c));
     } else if (kind === "h") {
       var v = getHelp(id); if (!v) return "";
       var see = (v.see || []).map(function (s) {
@@ -139,7 +143,9 @@
         return r ? '<span class="xref x-' + r[0] + '" tabindex="0" role="button" data-ref="' + esc(r) + '">' + esc(s) + "</span>" : esc(s);
       }).join(", ");
       h = '<div class="xp-kind">Help</div>' + (v.label ? '<div class="xp-title">' + esc(v.label) + "</div>" : "") + "<p>" + esc(v.text) + "</p>" +
-        (see ? '<div class="xp-used">See also: ' + see + "</div>" : "");
+        (see ? '<div class="xp-used">See also: ' + see + "</div>" : "") + srcLine(helpSrc(id, v));
+    } else if (kind === "s") {
+      h = srcPop(id);
     }
     return h;
   }
@@ -183,7 +189,7 @@
   document.addEventListener("click", function (e) {
     var t = e.target;
     if (t.classList && t.classList.contains("xp-close")) { hidePop(); return; }
-    var el = t.closest && t.closest(".xref, .help");
+    var el = t.closest && t.closest(".xref, .help, .srcbtn");
     if (el) { e.preventDefault(); if (pinned && popFor === el) hidePop(); else showPop(el, true); return; }
     var g = t.closest && t.closest("[data-guide]");
     if (g) { e.preventDefault(); hidePop(); var x = idx.crit[g.getAttribute("data-guide")]; if (x) openDrawer(x.c, x.sheet, g.getAttribute("data-tab") || "dev"); return; }
@@ -206,15 +212,97 @@
   var drawer = null, drawerFor = null;
   var TABS = [["dev", "Developer"], ["val", "Validator"], ["evd", "Evidence"], ["trc", "Traces"], ["trm", "Terms"]];
 
-  function sourceUrl(path) {
-    var m = D.meta;
-    if (!m.repository || !path) return "";
-    var ref = m.branch || (m.kind === "draft" ? "main" : "main");
-    return m.repository + "/edit/" + encodeURIComponent(ref).replace(/%2F/g, "/") + "/" + path;
+  // ------------------------------------------------------------------ source links (✎)
+  // Every criterion, register entry, term, help text and document chapter carries `src`
+  // ({p: file, l: [first, last line]}) from the build. The ✎ button opens a small menu that
+  // edits that file on GitHub, shows the exact lines in the version being viewed, or opens a
+  // change request with the location and current text filled in.
+  var srcReg = {}, srcSeq = 0;
+  var FIELD_LABELS = [["title", "Title"], ["section", "Section"], ["critical", "Critical flag"], ["scoring", "Scoring method"],
+    ["weight", "Weight"], ["validation_role", "Validation role"], ["evidence", "Evidence required"], ["developer_guide", "Developer's guide"],
+    ["validator_guide", "Validator's guide"], ["traces", "Traces"], ["terms", "Terms"]];
+  var TAB_FIELD = { dev: "developer_guide", val: "validator_guide", evd: "evidence", trc: "traces", trm: "terms" };
+
+  function editRef() { var m = D.meta; return m.branch || m.default_branch || "main"; }
+  function encRef(r) { return encodeURIComponent(r).replace(/%2F/g, "/"); }
+  function lines(l) { return l ? (l[1] > l[0] ? "lines " + l[0] + "–" + l[1] : "line " + l[0]) : ""; }
+  function editUrl(p) { return D.meta.repository && p ? D.meta.repository + "/edit/" + encRef(editRef()) + "/" + p : ""; }
+  function viewUrl(p, l) {
+    if (!D.meta.repository || !p) return "";
+    return D.meta.repository + "/blob/" + encRef(D.meta.sha || editRef()) + "/" + p + (/\.md$/.test(p) ? "?plain=1" : "") +
+      (l ? "#L" + l[0] + (l[1] > l[0] ? "-L" + l[1] : "") : "");
   }
+  function suggestUrl(e, row) {
+    if (!D.meta.repository) return "";
+    var l = row ? row.l : e.l, what = e.title + (row ? " — " + row.label : "");
+    var text = String((row ? row.text : e.text) || "").trim();
+    if (text.length > 1200) text = text.slice(0, 1200) + " …";
+    var body = "Location: " + (row && row.p || e.p) + (l ? " (" + lines(l) + ")" : "") + "\n" + viewUrl(row && row.p || e.p, l) +
+      (text ? "\n\nCurrent text:\n" + text.split("\n").map(function (x) { return "> " + x; }).join("\n") : "") + "\n\nProposed text:\n";
+    return D.meta.repository + "/issues/new?template=change-request.yml&title=" + encodeURIComponent("Change: " + what) +
+      "&criterion=" + encodeURIComponent(e.id || "") + "&change=" + encodeURIComponent(body);
+  }
+  /** ✎ button for one source location. entry: {title, id?, p, l, text?, rows?:[{label, p?, l, text?}]} */
+  function srcBtn(entry, cls) {
+    if (!D || !D.meta.repository || !entry || !entry.p) return "";
+    var key = entry.p + "|" + entry.title;
+    var id = srcReg[key] ? srcReg[key].n : "s" + (++srcSeq);
+    entry.n = id; srcReg[key] = entry; srcReg[id] = entry;
+    return '<button type="button" class="srcbtn' + (cls ? " " + cls : "") + '" data-ref="s:' + id + '" aria-label="Source of ' + esc(entry.title) +
+      '" title="Edit or suggest a change (' + esc(entry.p) + (entry.l ? ", " + lines(entry.l) : "") + ')">✎</button>';
+  }
+  /** One-line footer with the same three actions, for popovers and the guide drawer. */
+  function srcLine(entry, row) {
+    if (!D || !D.meta.repository || !entry || !entry.p) return "";
+    var p = row && row.p || entry.p, l = row ? row.l : entry.l;
+    return '<div class="xp-src"><a href="' + esc(editUrl(p)) + '" target="_blank" rel="noopener">✎ Edit</a>' +
+      '<a href="' + esc(viewUrl(p, l)) + '" target="_blank" rel="noopener" title="' + esc(p) + '">' + esc(p.split("/").pop()) + (l ? " · " + lines(l) : "") + "</a>" +
+      '<a href="' + esc(suggestUrl(entry, row)) + '" target="_blank" rel="noopener">Suggest a change</a></div>';
+  }
+  function srcPop(id) {
+    var e = srcReg[id]; if (!e) return "";
+    var tag = !D.meta.branch;
+    var rows = (e.rows || []).filter(function (r) { return r.l; });
+    return '<div class="xp-kind">Source</div><div class="xp-title">' + esc(e.title) + '</div><p class="xp-path"><code>' + esc(e.p) + "</code>" + (e.l ? " · " + lines(e.l) : "") + "</p>" +
+      '<div class="src-acts">' +
+      '<a href="' + esc(editUrl(e.p)) + '" target="_blank" rel="noopener"><b>✎ Edit on GitHub</b><span>Opens the file in GitHub\'s editor' + (tag ? " on " + esc(editRef()) + " (releases cannot be edited)" : " on branch " + esc(editRef())) + ". Without write access, GitHub offers a fork and pull request.</span></a>" +
+      '<a href="' + esc(viewUrl(e.p, e.l)) + '" target="_blank" rel="noopener"><b>⌗ Show the lines</b><span>Highlights ' + (e.l ? esc(lines(e.l)) : "the file") + " in this exact version (commit " + esc(D.meta.commit) + ").</span></a>" +
+      '<a href="' + esc(suggestUrl(e)) + '" target="_blank" rel="noopener"><b>✉ Suggest a change</b><span>Opens a change request with this location and the current text filled in. No editing needed.</span></a></div>' +
+      (rows.length ? '<div class="src-rows"><div class="xp-kind">Jump to a part</div>' + rows.map(function (r) {
+        return '<div><a href="' + esc(viewUrl(r.p || e.p, r.l)) + '" target="_blank" rel="noopener">' + esc(r.label) + ' <span class="muted">' + esc(lines(r.l)) + "</span></a>" +
+          '<a class="sg" href="' + esc(suggestUrl(e, r)) + '" target="_blank" rel="noopener" title="Suggest a change to ' + esc(r.label) + '">✉</a></div>';
+      }).join("") + "</div>" : "");
+  }
+
   function editLink(path, labelText) {
-    var u = sourceUrl(path);
-    return u ? '<a class="edit-src" href="' + esc(u) + '" target="_blank" rel="noopener">✎ ' + esc(labelText || "Edit source") + "</a>" : "";
+    var u = D && editUrl(path);
+    return u ? '<a class="edit-src" href="' + esc(u) + '" target="_blank" rel="noopener">✎ ' + esc(labelText || "Edit file") + "</a>" : "";
+  }
+
+  /** Source entry of a criterion, with a row per field and per sub-item. */
+  function critSrc(c) {
+    var s = c.src; if (!s) return null;
+    var rows = FIELD_LABELS.filter(function (f) { return s.f && s.f[f[0]]; }).map(function (f) {
+      var v = c[f[0]];
+      return { label: f[1], l: s.f[f[0]], text: typeof v === "object" ? "" : String(v == null ? "" : v) };
+    });
+    (c.sub_items || []).forEach(function (sb) { if (s.s && s.s[sb.id]) rows.push({ label: "Sub-item " + sb.id, l: s.s[sb.id], text: sb.text }); });
+    return { title: "Criterion " + c.id, id: c.id, p: s.p, l: s.l, text: c.title, rows: rows };
+  }
+  function critFieldSrc(c, field) {
+    var e = critSrc(c); if (!e) return null;
+    var f = FIELD_LABELS.filter(function (x) { return x[0] === field; })[0];
+    return { entry: e, row: { label: f ? f[1] : field, l: c.src.f && c.src.f[field], text: typeof c[field] === "string" ? c[field] : "" } };
+  }
+  function sheetSrc(s) {
+    if (!s.src) return null;
+    return { title: "Sheet " + s.tab, id: s.key, p: s.src.p, l: s.src.l, text: s.intro,
+      rows: [{ label: "Title", l: s.src.f.title, text: s.title }, { label: "Introduction", l: s.src.f.intro, text: s.intro },
+        { label: "Pass threshold (scoring.yaml)", p: s.src.threshold.p, l: s.src.threshold.l, text: String(s.threshold) }] };
+  }
+  function helpSrc(path, v) {
+    var l = R && R.help_src && R.help_src[path];
+    return l ? { title: "Help: " + (v && v.label || path), p: "registers/form-help.yaml", l: l, text: v ? v.text : "" } : null;
   }
 
   function paras(text, seen) {
@@ -295,8 +383,15 @@
       '<div class="d-tabs" role="tablist">' + TABS.map(function (t) {
         var badge = t[0] === "trc" ? n.trc : t[0] === "trm" ? n.trm : null;
         return '<button type="button" role="tab" data-dtab="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + (badge != null ? ' <span class="cnt">' + badge + "</span>" : "") + "</button>";
-      }).join("") + '</div><div class="d-body" role="tabpanel">' + tabBody(c, tab) + '</div><div class="d-foot">' +
-      editLink("criteria/" + sheet.key + "/" + c.id + ".yaml", "Edit this criterion") + "</div>";
+      }).join("") + '</div><div class="d-body" role="tabpanel">' + tabBody(c, tab) + '</div><div class="d-foot">' + drawerFoot(c, tab) + "</div>";
+  }
+  function drawerFoot(c, tab) {
+    var fs = critFieldSrc(c, TAB_FIELD[tab]), all = critSrc(c);
+    if (!all) return "";
+    var label = fs && fs.row.l ? fs.row.label : null;
+    return (label ? '<div class="xp-kind">Source of the ' + esc(label.toLowerCase()) + "</div>" + srcLine(fs.entry, fs.row)
+      : '<div class="xp-kind">' + (tab === "trm" ? "Terms are detected from the text; add more with <code>terms:</code>" : "Not set in this criterion yet") + "</div>" + srcLine(all)) +
+      '<div class="d-all">Whole criterion ' + srcBtn(all) + "</div>";
   }
   function closeDrawer() {
     if (drawer) { drawer.classList.remove("open"); document.body.classList.remove("drawer-open"); }
@@ -324,25 +419,26 @@
   function match(text) { return !refFilter || String(text).toLowerCase().indexOf(refFilter.toLowerCase()) >= 0; }
 
   function pageHtml(page) {
-    var src = { glossary: "registers/glossary.yaml", abbreviations: "registers/abbreviations.yaml", prefixes: "registers/id-prefixes.yaml",
-      TB: "registers/technical-baseline.yaml", SRC: "registers/sources.yaml", TR: "registers/traceability.yaml", IND: "registers/indicators.yaml" };
+    var src = { glossary: "registers/glossary.yaml", abbreviations: "registers/abbreviations.yaml", prefixes: "registers/id-prefixes.yaml" };
+    R.registers.forEach(function (r) { src[r.key] = r.src; });
     var filterBox = '<input type="search" id="ref-filter" placeholder="Filter this page" value="' + esc(refFilter) + '">';
     if (page === "glossary") {
       var bySec = {};
       R.glossary.forEach(function (g) { if (match(g.term + " " + g.meaning)) (bySec[g.section] = bySec[g.section] || []).push(g); });
       return "<h2>Glossary</h2>" + filterBox + editLink(src.glossary) + Object.keys(bySec).map(function (s) {
         return "<h3>" + esc(s) + '</h3><dl class="gl">' + bySec[s].map(function (g) {
-          return '<dt id="' + esc(g.id) + '">' + esc(g.term) + "</dt><dd>" + link(g.meaning, null, { idsOnly: true }) + "</dd>";
+          return '<dt id="' + esc(g.id) + '">' + esc(g.term) + srcBtn(glossSrc(g), "hov") + "</dt><dd>" + link(g.meaning, null, { idsOnly: true }) + "</dd>";
         }).join("") + "</dl>";
       }).join("") || '<p class="muted">No terms match.</p>';
     }
     if (page === "abbreviations") {
       return "<h2>Abbreviations</h2>" + filterBox + editLink(src.abbreviations) + '<table class="grid"><tbody>' + R.abbreviations.filter(function (a) { return match(a.abbreviation + " " + a.stands_for); })
-        .map(function (a) { return '<tr id="' + esc(a.id) + '"><th>' + esc(a.abbreviation) + "</th><td>" + esc(a.stands_for) + "</td></tr>"; }).join("") + "</tbody></table>";
+        .map(function (a) { return '<tr id="' + esc(a.id) + '"><th>' + esc(a.abbreviation) + "</th><td>" + esc(a.stands_for) + srcBtn(abbrSrc(a), "hov") + "</td></tr>"; }).join("") + "</tbody></table>";
     }
     if (page === "prefixes") {
       return "<h2>ID prefixes</h2>" + editLink(src.prefixes) + '<table class="grid"><thead><tr><th>Prefix</th><th>Meaning</th><th>Where</th></tr></thead><tbody>' +
-        R.prefixes.map(function (p) { return "<tr><th>" + esc(p.prefix) + "</th><td>" + esc(p.meaning) + "</td><td>" + esc(p.where) + "</td></tr>"; }).join("") + "</tbody></table>";
+        R.prefixes.map(function (p) { return "<tr><th>" + esc(p.prefix) + "</th><td>" + esc(p.meaning) + "</td><td>" + esc(p.where) +
+          (p.src ? srcBtn({ title: "ID prefix " + p.prefix, id: p.prefix, p: p.src.p, l: p.src.l, text: p.meaning }, "hov") : "") + "</td></tr>"; }).join("") + "</tbody></table>";
     }
     var reg = R.registers.filter(function (r) { return r.key === page; })[0];
     if (reg) {
@@ -351,7 +447,7 @@
       }).map(function (e) {
         var main = e.fields.slice(0, 2), rest = e.fields.slice(2);
         var dl = function (fs) { return '<dl class="xp-dl">' + fs.map(function (f) { return "<dt>" + esc(f[0]) + "</dt><dd>" + link(f[1], null, { idsOnly: true }) + "</dd>"; }).join("") + "</dl>"; };
-        return '<article class="rcard" id="' + esc(e.id) + '"><h3><span class="rid">' + esc(e.id) + "</span> " + esc(e.title) + "</h3>" + dl(main) +
+        return '<article class="rcard" id="' + esc(e.id) + '"><h3><span class="rid">' + esc(e.id) + "</span> " + esc(e.title) + srcBtn(regSrc(e)) + "</h3>" + dl(main) +
           (rest.length ? "<details><summary>All fields (" + e.fields.length + ")</summary>" + dl(rest) + "</details>" : "") +
           (e.criteria.length ? '<div class="xp-used">Used by ' + chipsFor(e.criteria) + "</div>" : "") + "</article>";
       }).join("") || '<p class="muted">No entries match.</p>';
@@ -362,7 +458,8 @@
       var ch = doc && doc.chapters.filter(function (c) { return c.id === m[2]; })[0];
       if (ch) {
         var i = doc.chapters.indexOf(ch), prev = doc.chapters[i - 1], next = doc.chapters[i + 1];
-        return '<div class="xp-kind">' + esc(doc.title) + "</div><h2>" + esc(ch.title) + "</h2>" + editLink(doc.source, "Edit this document") +
+        return '<div class="xp-kind">' + esc(doc.title) + "</div><h2>" + esc(ch.title) +
+          srcBtn({ title: doc.title + ": " + ch.title, id: ch.title, p: doc.source, l: ch.l, text: "" }) + "</h2>" + srcLine({ title: doc.title + ": " + ch.title, id: ch.title, p: doc.source, l: ch.l }) +
           '<div class="doc">' + ch.html + '</div><div class="docnav">' +
           (prev ? '<a href="#ref/doc:' + doc.id + ":" + prev.id + '">‹ ' + esc(prev.title) + "</a>" : "<span></span>") +
           (next ? '<a href="#ref/doc:' + doc.id + ":" + next.id + '">' + esc(next.title) + " ›</a>" : "") + "</div>";
@@ -478,6 +575,7 @@
   }
 
   root.Ref = {
+    base: function (data) { D = data; }, src: srcBtn, critSrc: critSrc, sheetSrc: sheetSrc,
     init: init, link: link, help: help, openDrawer: openDrawer, closeDrawer: closeDrawer, counts: counts,
     viewReference: viewReference, afterReference: afterReference, initSearch: initSearch, ready: function () { return !!R; }
   };

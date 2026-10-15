@@ -63,6 +63,33 @@ def load_yaml(path: Path):
 
 
 # --------------------------------------------------------------------------- data
+def yaml_lines(path: Path) -> dict[tuple, list[int]]:
+    """{key path: [first line, last line]} (1-based) for every value in a YAML file.
+
+    Lets the web scorecard point a reviewer to the exact lines of an entry in its source file,
+    e.g. ("sections", 0, "terms", 3) -> [12, 13] or ("developer_guide",) -> [10, 13].
+    """
+    with open(path, encoding="utf-8") as fh:
+        root = yaml.compose(fh)
+    out: dict[tuple, list[int]] = {}
+
+    def walk(node, key: tuple, first: int) -> int:
+        # a collection ends with its last value (its own end mark points at the next token)
+        if isinstance(node, yaml.MappingNode):
+            end = max([walk(v, key + (k.value,), k.start_mark.line + 1) for k, v in node.value] or [first])
+        elif isinstance(node, yaml.SequenceNode):
+            end = max([walk(v, key + (i,), v.start_mark.line + 1) for i, v in enumerate(node.value)] or [first])
+        else:
+            m = node.end_mark
+            end = m.line if m.column == 0 and m.line > node.start_mark.line else m.line + 1
+        out[key] = [first, max(first, end)]
+        return out[key][1]
+
+    if root is not None:
+        walk(root, (), 1)
+    return out
+
+
 def load_sheets(root: Path = ROOT) -> list[dict]:
     return load_yaml(root / "criteria" / "sheets.yaml")["sheets"]
 
