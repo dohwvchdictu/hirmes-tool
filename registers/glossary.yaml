@@ -1,7 +1,7 @@
 title: Glossary
 source: Technical Reference Guide (legacy Rev 9)
 sections:
-- section: 2.1 Validation process and roles2.1 Validation process and roles2.1 Validation process and roles
+- section: 2.1 Validation process and roles
   terms:
   - term: Validation process
     meaning: 'The four steps this tool follows: 1.0 Registration, 2.0 Assessment of submitted documents, 3.0 Validation (testing), 4.0 Issuance of certificate.'
@@ -75,7 +75,7 @@ sections:
     meaning: A different security measure the vendor considers equal to or stronger than the Technical Baseline; accepted only if the Technical Lead approves it before testing.
   - term: Connectathon
     meaning: 'An interoperability testing event where vendors exchange data with each other; items tagged "(Connectathon Issue #n)" come from the June 2026 PHeReF Connectathon issue log.'
-- section: 2.2 Workbook, scoring and reporting terms2.2 Workbook, scoring and reporting terms2.2 Workbook, scoring and reporting terms
+- section: 2.2 Workbook, scoring and reporting terms
   terms:
   - term: Level
     meaning: One of five gated stages (0 to 4). Each must be PASSED before the next counts.
@@ -167,7 +167,7 @@ sections:
     meaning: The heading at the top of each report page (Republic of the Philippines · Department of Health · conducting office).
   - term: Retired / moved ID
     meaning: A criterion ID no longer used on its sheet; it is never reused (list in section 2.12).
-- section: 2.3 Health care, referral and reporting terms2.3 Health care, referral and reporting terms2.3 Health care, referral and reporting terms
+- section: 2.3 Health care, referral and reporting terms
   terms:
   - term: eReferral (electronic referral)
     meaning: Sending a patient referral from one facility to another electronically through the HIE instead of on paper.
@@ -255,7 +255,7 @@ sections:
     meaning: An on-screen message telling the receiving user that a new referral arrived, without manual refresh.
   - term: Universal Health Care (UHC) Act
     meaning: Republic Act 11223 (2019), which calls for integrated, coordinated health services and networks.
-- section: 2.4 Interoperability and FHIR terms2.4 Interoperability and FHIR terms2.4 Interoperability and FHIR terms
+- section: 2.4 Interoperability and FHIR terms
   terms:
   - term: Interoperability
     meaning: The ability of different systems to exchange data and use it correctly without re-typing.
@@ -389,7 +389,7 @@ sections:
     meaning: A difference between this tool and the published IG that the TDG must resolve.
   - term: REF-n (TDG row)
     meaning: Row numbers in the TDG's eReferral data mapping (e.g., REF-15 Time Called).
-- section: 2.5 FHIR resources used in eReferral2.5 FHIR resources used in eReferral2.5 FHIR resources used in eReferral
+- section: 2.5 FHIR resources used in eReferral
   terms:
   - term: ERef… profiles (ERefPatient, ERefServiceRequest, ERefTask, ERefPractitionerRole, ERefRelatedPerson, ERefEncounter, ERefDiagnosticReport …)
     meaning: 'The PHeReF profile names: "ERef" + the FHIR resource, i.e., the eReferral version of that resource with its Philippine rules.'
@@ -427,7 +427,7 @@ sections:
     meaning: A FHIR resource for audit-log entries (one accepted way to store the audit trail).
   - term: CodeSystem / ValueSet
     meaning: A full list of codes from one source / the subset of codes allowed for a specific field.
-- section: 2.6 FHIR elements named in the criteria2.6 FHIR elements named in the criteria2.6 FHIR elements named in the criteria
+- section: 2.6 FHIR elements named in the criteria
   terms:
   - term: identifier
     meaning: An ID number of a resource (e.g., Patient.identifier = PhilSys / PhilHealth number; Organization.identifier = NHFR code).
@@ -469,7 +469,7 @@ sections:
     meaning: Free-text comment (used for clinical history).
   - term: _history / meta.versionId
     meaning: The list of previous versions of a resource / the current version number.
-- section: 2.7 Code systems, value sets and registries2.7 Code systems, value sets and registries2.7 Code systems, value sets and registries
+- section: 2.7 Code systems, value sets and registries
   terms:
   - term: EReferralPriority / EReferralReason / EReferralReceivingResponse
     meaning: PHeReF value sets for referral priority, reason for referral (service type), and the receiving facility's response (received, accepted, rejected, referred onward).
@@ -529,7 +529,7 @@ sections:
     meaning: DSWD's data-exchange service; optional source for household / beneficiary IDs (TS0-08).
   - term: Release (of a code system or registry)
     meaning: A dated edition of a terminology or registry (e.g., PSGC 2024 release); the release used must match the DOH server.
-- section: 2.8 Security and reliability terms2.8 Security and reliability terms2.8 Security and reliability terms
+- section: 2.8 Security and reliability terms
   terms:
   - term: Encryption in transit / at rest
     meaning: Scrambling data while it travels over the network (in transit) / while stored on disks and backups (at rest), so others cannot read it.
@@ -629,7 +629,7 @@ sections:
     meaning: User interface — the screens of the system.
   - term: CSV / Excel / PDF / A4
     meaning: File formats for exported data (comma-separated values, spreadsheet), printable documents, and the paper size used for the report.
-- section: 2.9 Agencies, laws, standards and tools2.9 Agencies, laws, standards and tools2.9 Agencies, laws, standards and tools
+- section: 2.9 Agencies, laws, standards and tools
   terms:
   - term: DOH / CHD / ICTU
     meaning: Department of Health / Center for Health Development (DOH regional office) / Information and Communications Technology Unit.

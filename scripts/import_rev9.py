@@ -177,7 +177,7 @@ def import_guide(path: Path):
         if tag == "p":
             style = child.xpath("string(.//w:pStyle/@w:val)")
             if style.lower().startswith("heading"):
-                heading = "".join(child.itertext()).strip()
+                heading = "".join(child.xpath(".//w:t/text()")).strip()
         elif tag == "tbl":
             tables.append((heading, d.tables[ti]))
             ti += 1

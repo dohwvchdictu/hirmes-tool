@@ -1,4 +1,4 @@
-# HIE System Validation Testing Criteria — Review Edition (Rev 9)
+# Healthcare Interoperability Readiness Matrix for EMR Systems — Review Edition (imported from legacy Rev 9)
 
 Oct 15, 2026 · Department of Health — draft for review
 
