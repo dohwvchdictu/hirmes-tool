@@ -93,6 +93,13 @@ def check_reference(err, warn):
                 else:
                     walk(v, f"{path}.{k}" if path else str(k))
     walk(ref["help"], "")
+    from build_reference import REGISTER_FILES
+    used = [k for d in ref["docs"] for ch in d["chapters"] for k in ch["registers"]]
+    for k in used:
+        if k not in REGISTER_FILES:
+            err(f"docs/reference-guide/reference-guide.md: unknown register marker '{k}' (known: {', '.join(REGISTER_FILES)})")
+    for k in {k for k in used if used.count(k) > 1}:
+        err(f"docs/reference-guide/reference-guide.md: register '{k}' is inserted more than once")
     for items in load_criteria().values():
         for c in active(items):
             for x in c.get("terms") or []:

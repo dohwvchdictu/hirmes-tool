@@ -493,3 +493,30 @@ dl.gl dd { margin: 0; padding: 2px 0; border-bottom: 1px dashed var(--line); }
 @media (prefers-color-scheme: dark) { .b-met, .b-fail, .b-partial { color: #111; } }
 @media print { .side, .drawer { display: none !important; } main, .foot { margin: 0 !important; } }
 @media print { .tracker, .pager, .badge-slot, .nav-toggle, .menu, .scrim { display: none !important; } .crit { background: none !important; } }
+
+/* ---- Technical Reference Guide pages */
+.ch-title { font-size: 20px; margin: 2px 0 6px; }
+.ref-tools { position: sticky; top: var(--hdr, 64px); z-index: 5; background: var(--panel); padding: 8px 0; margin: 6px 0 4px; box-shadow: 0 6px 6px -6px rgba(0,0,0,.12); }
+.ref-tools #ref-filter { width: 100%; max-width: 520px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); margin: 0; }
+.doc > h2 { font-size: 16px; margin: 22px 0 8px; padding-top: 6px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--hdr, 64px) + 60px); }
+.reg-block { margin: 10px 0 18px; }
+.reg-block h3 { font-size: 14px; margin: 16px 0 6px; scroll-margin-top: calc(var(--hdr, 64px) + 60px); }
+.reg-note { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 7px 10px; margin-bottom: 10px; border: 1px dashed var(--accent);
+  border-radius: 8px; background: var(--accent-soft); font-size: 12.5px; }
+.reg-note code { font-size: 12px; }
+.reg-note .edit-src { margin-left: auto; }
+.reg-tag { font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: var(--accent); border-radius: 4px; padding: 1px 6px; }
+.rcard, dl.gl dt, table.grid tr { scroll-margin-top: calc(var(--hdr, 64px) + 70px); }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.quick a { padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: 12.5px; background: var(--bg); }
+.quick a:hover { border-color: var(--accent); }
+.rtile { position: relative; padding-left: 46px; }
+.rtile .rt-num { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+  font-weight: 700; display: grid; place-items: center; font-size: 12.5px; margin: 0; }
+.sd-ch { align-items: flex-start !important; }
+.sd-num { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); font-size: 11px; font-weight: 700;
+  display: grid; place-items: center; margin-top: 1px; }
+.sd-ch[aria-current="page"] .sd-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+.sd-secs { margin: 2px 0 6px 18px; padding-left: 8px; border-left: 2px solid var(--accent-soft); }
+.sd-secs a { font-size: 12.5px; padding: 4px 8px; color: var(--muted); }
+.sd-secs a:hover { color: var(--ink); }

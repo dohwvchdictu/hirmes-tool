@@ -4,7 +4,7 @@
 and documents, with the links between them and the criteria.
 
 Called by build_web.py; writes reference.json next to data.json. Editors never touch the output:
-they edit registers/*.yaml, registers/form-help.yaml and docs/**/*.md.
+they edit registers/*.yaml, registers/form-help.yaml and docs/reference-guide/reference-guide.md.
 """
 from __future__ import annotations
 
@@ -24,9 +24,14 @@ REGISTERS = [
 ]
 # which register field lists the criteria an entry applies to
 CRITERIA_FIELD = {"TB": "related_criteria", "SRC": "tested_in", "TR": "criteria", "IND": "criteria"}
-# chapters of the Reference Guide that are now generated from registers/ (shown as links instead)
-CHAPTER_TO_PAGE = [("Glossary", "glossary"), ("Technical Baseline", "TB"), ("Terminology & Registry Sources", "SRC"),
-                   ("FHIR Traceability", "TR"), ("Indicator Definitions", "IND")]
+# The Technical Reference Guide (docs/reference-guide/reference-guide.md) is prose only: a line
+# "<!-- register: KEY -->" marks where a structured table from registers/ is shown.
+GUIDE = ROOT / "docs" / "reference-guide" / "reference-guide.md"
+MARKER = re.compile(r"<!--\s*register:\s*([\w-]+)\s*-->")
+REGISTER_FILES = {"glossary": "registers/glossary.yaml", "abbreviations": "registers/abbreviations.yaml",
+                  "prefixes": "registers/id-prefixes.yaml", "retired": "criteria/retired-legacy.yaml",
+                  "TB": "registers/technical-baseline.yaml", "SRC": "registers/sources.yaml",
+                  "TR": "registers/traceability.yaml", "IND": "registers/indicators.yaml"}
 LABELS = {"card": "Cardinality", "fhir_source": "FHIR source", "notes_doh_decision": "Notes / DOH decision",
           "source_authority": "Source / authority", "resource_profile": "Resource / profile",
           "binding_fixed": "Binding / fixed value", "how_the_validators_verify": "How the Validators verify",
@@ -97,8 +102,12 @@ def render_md(text: str) -> str:
 
 
 def split_doc(path: Path, doc_id: str, title: str) -> dict:
-    text = path.read_text(encoding="utf-8")
-    lines = text.split("\n")
+    """Split a document into chapters (one page each) at its repeated top heading level.
+
+    Each chapter keeps its source line range (for the edit links), its second-level sections
+    (for the sidebar) and the registers its markers insert.
+    """
+    lines = path.read_text(encoding="utf-8").split("\n")
     levels = [len(m.group(1)) for line in lines if (m := re.match(r"^(#{1,2}) ", line))]
     split_level = 1 if levels.count(1) > 1 else 2
     chapters, current = [], {"title": "Introduction", "lines": [], "start": 1}
@@ -106,7 +115,7 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
         m = re.match(r"^(#{1,6}) (.*)", line)
         if m and len(m.group(1)) == split_level:
             current["end"] = n - 1
-            if any(x.strip() for x in current["lines"]):
+            if any(x.strip() and not x.lstrip().startswith("<!--") for x in current["lines"]) or current["title"] != "Introduction":
                 chapters.append(current)
             current = {"title": m.group(2).strip(), "lines": [], "start": n}
         elif m and len(m.group(1)) < split_level:
@@ -117,17 +126,23 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
     chapters.append(current)
     out = []
     for ch in chapters:
-        page = next((p for k, p in CHAPTER_TO_PAGE if k in ch["title"]), None)
-        if page and doc_id == "reference-guide":
-            html = (f'<p class="ref-moved">This chapter is maintained as structured data and shown on its own page, '
-                    f'linked to the criteria: <a href="#ref/{page}">open {page if page == "glossary" else page + "-"} '
-                    f'{"" if page == "glossary" else "register"}</a>.</p>')
-        else:
-            html = render_md("\n".join(ch["lines"]))
         end = ch["end"]
         while end > ch["start"] and not lines[end - 1].strip():
             end -= 1
-        out.append({"id": slug(ch["title"]) or "intro", "title": ch["title"], "html": html, "l": [ch["start"], end]})
+        sections, body = [], []
+        for line in ch["lines"]:
+            m = re.match(r"^(#{%d}) (.*)$" % (split_level + 1), line)
+            if m:
+                sid = "sec-" + slug(m.group(2))
+                sections.append({"id": sid, "title": m.group(2).strip()})
+                line = f"{line} {{#{sid}}}"
+            body.append(line)
+        text = "\n".join(body)
+        num = re.match(r"Chapter (\d+)\s*[—-]\s*(.*)", ch["title"])
+        out.append({"id": f"ch{num.group(1)}" if num else (slug(ch["title"]) or "intro"),
+                    "num": num.group(1) if num else "", "title": ch["title"], "short": num.group(2) if num else ch["title"],
+                    "html": render_md(text), "l": [ch["start"], end], "sections": sections,
+                    "registers": MARKER.findall(text)})
     return {"id": doc_id, "title": title, "source": str(path.relative_to(ROOT)), "chapters": out}
 
 
@@ -184,11 +199,14 @@ def build_reference() -> dict:
     prefixes = [dict(p, src={"p": "registers/id-prefixes.yaml", "l": pl.get(("entries", i))})
                 for i, p in enumerate(load_yaml(reg_dir / "id-prefixes.yaml").get("entries", []))]
 
-    docs = []
-    for path, doc_id, title in ((ROOT / "docs/reference-guide/reference-guide.md", "reference-guide", "Technical Reference Guide"),
-                                (ROOT / "docs/review-edition/review-edition.md", "review-edition", "Review Edition")):
-        if path.exists():
-            docs.append(split_doc(path, doc_id, title))
+    docs = [split_doc(GUIDE, "reference-guide", "Technical Reference Guide")] if GUIDE.exists() else []
+
+    # retired and moved IDs (legacy list plus criteria retired in this repository)
+    from build_xlsx import retired_list
+    rl = yaml_lines(ROOT / "criteria" / "retired-legacy.yaml")
+    retired = retired_list(crit)
+    for i, r in enumerate(retired):
+        r["src"] = {"p": "criteria/retired-legacy.yaml", "l": rl.get(("retired", i))} if ("retired", i) in rl else None
 
     help_doc, help_src = {}, {}
     if (reg_dir / "form-help.yaml").exists():
@@ -196,4 +214,4 @@ def build_reference() -> dict:
         help_src = {".".join(map(str, k)): v for k, v in yaml_lines(reg_dir / "form-help.yaml").items() if k}
     crit_titles = {k: {"sheet": v[0], "criterion": v[1], "title": v[2]} for k, v in cindex.items()}
     return {"glossary": glossary, "abbreviations": abbreviations, "registers": registers, "prefixes": prefixes,
-            "docs": docs, "help": help_doc, "help_src": help_src, "criteria": crit_titles}
+            "docs": docs, "retired": retired, "register_files": REGISTER_FILES, "help": help_doc, "help_src": help_src, "criteria": crit_titles}
