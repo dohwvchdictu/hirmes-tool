@@ -1,18 +1,31 @@
 # Documents
 
-| Folder | Content | Status |
+| File | Content | Status |
 | --- | --- | --- |
-| `review-edition/` | Review Edition of the testing criteria (narrative) | Imported from the legacy Rev 9 document; reference text only |
-| `reference-guide/` | Technical Reference Guide (instructions, glossary, registers, certification) | Imported from the legacy Rev 9 document; reference text only |
+| `reference-guide/reference-guide.md` | Technical Reference Guide — the prose of Chapters 1 to 7 | Current; shown on the web scorecard under Reference |
 | `maintainer-setup.md` | One-time GitHub setup for the repository | Current |
 
-The two documents were converted automatically and still contain their Rev 9 wording, numbering and
-tables. Until the follow-on work turns them into generated documents, **do not edit them as the
-source of criteria content**:
+The Technical Reference Guide holds the explanations only. Its tables are not written in the guide:
+they are kept as structured data and inserted where the guide has a marker line such as
 
-- criteria content lives in `criteria/`;
-- the TB-, SRC-, TR-, IND-, glossary, abbreviation and ID-prefix tables live in `registers/`;
-- thresholds and the approval record live in `scoring.yaml`.
+```
+<!-- register: TB -->
+```
 
-Follow-on: split the narrative into chapters, replace the copied tables with tables generated from
-`registers/` and `criteria/`, and generate DOCX/PDF with Pandoc (`scripts/build_docs.py`).
+| Marker | Table | Source |
+| --- | --- | --- |
+| `glossary` | Glossary (2.1–2.9) | `registers/glossary.yaml` |
+| `abbreviations` | Abbreviations (2.10) | `registers/abbreviations.yaml` |
+| `prefixes` | ID prefixes (2.11) | `registers/id-prefixes.yaml` |
+| `retired` | Retired and moved IDs (2.12) | `criteria/retired-legacy.yaml` and retired criteria |
+| `TB` | Technical Baseline (Chapter 3) | `registers/technical-baseline.yaml` |
+| `SRC` | Terminology & Registry Sources (Chapter 4) | `registers/sources.yaml` |
+| `TR` | FHIR Traceability (Chapter 5) | `registers/traceability.yaml` |
+| `IND` | Indicator Definitions (Chapter 6) | `registers/indicators.yaml` |
+
+So a table is edited in one place and every view — the Reference chapter, the term popovers, the
+criteria's Traces — shows the same entry. Criteria content lives in `criteria/` and thresholds in
+`scoring.yaml`; the guide explains them but does not repeat them.
+
+Each `# Chapter N — Title` heading starts a page on the web scorecard, and each `##` heading appears
+as a section in the sidebar.

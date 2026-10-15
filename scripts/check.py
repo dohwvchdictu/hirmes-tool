@@ -93,6 +93,13 @@ def check_reference(err, warn):
                 else:
                     walk(v, f"{path}.{k}" if path else str(k))
     walk(ref["help"], "")
+    from build_reference import REGISTER_FILES
+    used = [k for d in ref["docs"] for ch in d["chapters"] for k in ch["registers"]]
+    for k in used:
+        if k not in REGISTER_FILES:
+            err(f"docs/reference-guide/reference-guide.md: unknown register marker '{k}' (known: {', '.join(REGISTER_FILES)})")
+    for k in {k for k in used if used.count(k) > 1}:
+        err(f"docs/reference-guide/reference-guide.md: register '{k}' is inserted more than once")
     for items in load_criteria().values():
         for c in active(items):
             for x in c.get("terms") or []:
@@ -196,6 +203,19 @@ def main():
     pol = scoring["policy"]
     if pol["status"] == "Approved" and not all(pol[k] for k in ("approved_by", "date_approved", "reference")):
         err("scoring.yaml: policy status is Approved but approved_by, date_approved or reference is empty")
+
+    # tab names become Excel sheet names
+    fixed = {"Instructions", "Summary", "System Profile", "Test Data", "Printed Evaluation Report"}
+    tabs = [s["tab"] for s in sheets]
+    for t in tabs:
+        bad = sorted(set(t) & set(":\\/?*[]'"))
+        if len(t) > 31 or bad or not t.strip():
+            err(f"criteria/sheets.yaml: tab '{t}' is not a valid Excel sheet name "
+                f"(at most 31 characters, none of : \\ / ? * [ ] ')" + (f" — found {' '.join(bad)}" if bad else f" — {len(t)} characters"))
+        if t in fixed:
+            err(f"criteria/sheets.yaml: tab '{t}' clashes with a fixed sheet of the workbook")
+    for t in {t for t in tabs if tabs.count(t) > 1}:
+        err(f"criteria/sheets.yaml: tab '{t}' is used by more than one sheet")
 
     level_parts = [p for lvl in scoring["levels"] for p in lvl["parts"]]
     if sorted(level_parts) != sorted(sheet_keys):

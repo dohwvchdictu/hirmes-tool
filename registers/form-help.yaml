@@ -44,11 +44,11 @@ critical:
 
 weight:
   label: Weight
-  help: How much the criterion counts toward the sheet score. Weight 0 means information only — recorded but not scored.
+  help: How much the criterion counts toward the sheet score in %percent. [Criteria Score]x[Weight]=Weighted Score
 
 validation_role:
   label: Validation role
-  help: Who verifies the item. Level 2 and Level 4 items must be confirmed with server-side evidence, not the EMR screen alone.
+  help: Who verifies the item criteria. Level 2 and Level 4 items must be confirmed with server-side evidence, not the EMR screen alone.
   see: [Regional Validation Team, Validator, Observer]
 
 notes:
@@ -60,6 +60,11 @@ status:
   NOT PASSED: Tested, but a critical item or ★ sub-item is not Met, or the score is below the threshold.
   INCOMPLETE: At least one item is still Not Tested.
   LOCKED: The level before this one has not passed yet. Each level is a gate.
+
+sheet:
+  label: How to evaluate this sheet
+  help: Choose a result for every criterion, or for every ↳ sub-item of count and all-or-nothing criteria. The sheet passes when nothing is left Not Tested, every critical item and ★ sub-item is Met, and the score reaches the pass threshold. Write the evidence reference in the notes of each criterion.
+  see: [Criterion / Ref ID]
 
 summary:
   threshold:

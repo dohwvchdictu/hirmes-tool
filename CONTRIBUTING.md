@@ -104,7 +104,7 @@ hand in the tool: it is generated from the files below, so editing one file upda
 | Help next to a control (ⓘ) | `registers/form-help.yaml` | ⓘ popover on Result, Scoring, Critical, Weight, Validation role, profile fields, summary |
 | Developer's / Validator's guide, Evidence | the criterion's YAML (`developer_guide`, `validator_guide`, `evidence`) | Guide drawer (buttons under each criterion) |
 | Traces | the criterion's `traces` | Guide drawer › Traces, and "Used by" on the register entry |
-| Narrative chapters | `docs/**/*.md` | Reference › documents (one page per chapter) |
+| Technical Reference Guide prose | `docs/reference-guide/reference-guide.md` | Reference (one page per chapter; the register tables appear where the guide has a `<!-- register: KEY -->` marker, see `docs/README.md`) |
 
 How terms are linked:
 
@@ -146,3 +146,5 @@ the published site (they need the repository address that GitHub Actions provide
 - the generated workbook matches the YAML (round trip), and the workbook and web scorecard score the
   same test scenarios identically
 - `see:` entries in `registers/form-help.yaml` and criterion `terms:` resolve to a glossary term, abbreviation, register ID or criterion ID
+- every `<!-- register: KEY -->` marker in the Technical Reference Guide names a known register, and each register appears once
+- sheet `tab` names in `criteria/sheets.yaml` are valid Excel sheet names (at most 31 characters, none of `: \ / ? * [ ] '`) and unique; renaming a tab there renames the workbook sheet and every formula that refers to it

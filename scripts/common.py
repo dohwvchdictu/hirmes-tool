@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -26,6 +27,20 @@ TITLE = "Healthcare Interoperability Readiness Matrix for EMR Systems"
 OWNER = "Department of Health – Western Visayas Center for Health Development"
 CONTENT_LICENSE = "CC BY 4.0"
 CODE_LICENSE = "GPL-3.0-or-later"
+# Licence notices on the web pages, the printed report and the workbook. Off for now; the LICENSE
+# files and the per-file licence headers in this repository are unaffected.
+SHOW_LICENSE_NOTICE = False
+# Times are stored in UTC (ISO 8601) and shown in the reader's own time zone on the web; where a
+# fixed text is needed (workbook, fallback) Philippine Standard Time is used.
+PHT = _dt.timezone(_dt.timedelta(hours=8), "PHT")
+
+
+def now_stamp() -> dict:
+    """{"built": "2026-10-15 14:32 PHT", "built_iso": "2026-10-15T06:32:00+00:00"}"""
+    now = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0)
+    return {"built": now.astimezone(PHT).strftime("%Y-%m-%d %H:%M PHT"), "built_iso": now.isoformat()}
+
+
 CREDIT = f"Healthcare Interoperability Readiness Matrix for EMR Systems, {OWNER}, licensed under {CONTENT_LICENSE}"
 
 # Values as they appear in the workbook <-> values stored in YAML
@@ -140,6 +155,12 @@ def _git(*args: str, root: Path = ROOT) -> str:
         return ""
 
 
+def workbook_name(info: dict) -> str:
+    """File name of the generated scorecard workbook for a build (used by build_xlsx and the web page)."""
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", info["version"]).strip("-")
+    return f"testing-criteria-scorecard-{safe}.xlsx"
+
+
 def version_info(root: Path = ROOT) -> dict:
     """Version, branch and commit for stamping outputs.
 
@@ -160,7 +181,7 @@ def version_info(root: Path = ROOT) -> dict:
         "version": version,
         "branch": branch,
         "commit": commit or "local",
-        "built": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        **now_stamp(),
         "is_release": is_release,
         "label": (f"{version}" + (f" · branch {branch}" if branch else "") + f" · commit {commit or 'local'}"),
     }

@@ -29,7 +29,7 @@ templates/           workbook layout used to generate the scorecard
 scripts/             check, build and change-summary scripts
 tool/                web scorecard (static page) and landing page template
 tests/               round-trip and scoring tests
-docs/                narrative chapters (being converted; see docs/README.md)
+docs/                Technical Reference Guide (prose; its tables come from registers/, see docs/README.md)
 ```
 
 ## How outputs are produced

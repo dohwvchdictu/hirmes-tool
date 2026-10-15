@@ -3,6 +3,7 @@
      SPDX-License-Identifier: GPL-3.0-or-later -->
 <html lang="en">
 <head>
+  <meta name="generated" content="{{GENERATED_ISO}}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria — Published Versions</title>
@@ -69,10 +70,33 @@
     Generated {{GENERATED}} by the publishing workflow ·
     <a href="{{REPO_URL}}">Source repository</a> ·
     <a href="{{ACTIONS_URL}}">Republish (maintainers)</a> ·
-    <a href="versions.json">versions.json</a><br>
-    Content © Department of Health – Western Visayas Center for Health Development ·
-    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> ·
-    Code <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>
+    <a href="versions.json">versions.json</a>{{LICENSE}}
   </footer>
+<script>
+  /* The landing page may come from the browser cache (GitHub Pages allows 10 minutes). versions.json is
+     fetched fresh: if the list was regenerated since, reload once to show the new versions. */
+  /* Show times in the reader's own time zone (the page is generated with PH time). */
+  (function () {
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    var zone = ""; try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+    document.querySelectorAll("time[datetime]").forEach(function (t) {
+      var d = new Date(t.getAttribute("datetime")); if (isNaN(d)) return;
+      var off = -d.getTimezoneOffset(), oh = Math.floor(Math.abs(off) / 60), om = Math.abs(off) % 60;
+      var utc = "UTC" + (off >= 0 ? "+" : "−") + oh + (om ? ":" + p(om) : "");
+      t.textContent = d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()) +
+        " (" + (zone === "Asia/Manila" ? "PH time, " : "your time, ") + utc + ")";
+      t.title = "Shown in your time zone";
+    });
+  })();
+  (function () {
+    var mine = document.querySelector('meta[name="generated"]').content;
+    fetch("versions.json?t=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
+      if (!v || !v.generated || v.generated === mine) return;
+      var key = "landing-reloaded-" + v.generated;
+      try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, "1"); } catch (e) { return; }
+      location.reload();
+    }).catch(function () {});
+  })();
+</script>
 </body>
 </html>

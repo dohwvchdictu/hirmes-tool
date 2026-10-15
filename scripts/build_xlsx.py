@@ -22,7 +22,7 @@ import openpyxl
 from openpyxl.formatting.formatting import ConditionalFormattingList
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from common import (CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
+from common import (workbook_name, SHOW_LICENSE_NOTICE, CREDIT, CRITICAL_TO_XLSX, TITLE, ROOT, SCORING_TO_XLSX, TEMPLATE_XLSX, active, active_subs, load_criteria,
                     load_legacy_retired, load_scoring, load_sheets, version_info)
 
 warnings.filterwarnings("ignore")
@@ -30,6 +30,11 @@ warnings.filterwarnings("ignore")
 FIRST = 10            # first criteria row on a criteria sheet
 NCOLS = 23            # A..W
 REPORT_SHEET = "Printed Evaluation Report"
+# Names of the criteria sheets inside templates/scorecard-template.xlsx. The workbook is built with
+# these names (the template's formulas refer to them) and each sheet is then renamed to its `tab`
+# in criteria/sheets.yaml, with every formula that names it rewritten (see rename_tabs).
+TEMPLATE_TABS = {"L0": "L0 Application", "L1": "L1 Documentation", "L2A": "L2-TS0 Terminology", "L2B": "L2-TS1 Submission",
+                 "L2C": "L2-TS2 Retrieval", "L2D": "L2-Security", "L3": "L3 Reports", "L4": "L4 Advanced"}
 SUMMARY_ROWS = {"L0": 7, "L1": 8, "L2A": 10, "L2B": 11, "L2C": 12, "L2D": 13, "L3": 14, "L4": 15}
 
 
@@ -349,18 +354,47 @@ def stamp(wb, info, policy_status):
         ws.oddFooter.left.size = 7
         ws.oddFooter.center.text = "Page &P of &N"
         ws.oddFooter.center.size = 7
-        ws.oddFooter.right.text = "© DOH WV CHD · CC BY 4.0"
+        ws.oddFooter.right.text = "© DOH WV CHD · CC BY 4.0" if SHOW_LICENSE_NOTICE else None
         ws.oddFooter.right.size = 7
     ins = wb["Instructions"]
     cur = ins["B3"].value or ""
     rest = re.sub(r"^DRAFT — Revision \d+ \([^)]*\)\.\s*", "", cur)
     rest = re.sub(r"^Version [^.]*\.\s*", "", rest)
     prefix = "" if info["is_release"] else "DRAFT — "
-    ws_last = ins.max_row + 2
-    ins.cell(ws_last, 2).value = f"License: {CREDIT} (https://creativecommons.org/licenses/by/4.0/)."
-    ins.cell(ws_last, 2)._style = copy.copy(ins["B6"]._style)
+    if SHOW_LICENSE_NOTICE:
+        ws_last = ins.max_row + 2
+        ins.cell(ws_last, 2).value = f"License: {CREDIT} (https://creativecommons.org/licenses/by/4.0/)."
+        ins.cell(ws_last, 2)._style = copy.copy(ins["B6"]._style)
     ins["B3"] = f"{prefix}Version {info['label']} (built {info['built']}). " + rest.replace(
         "Thresholds and policy values are PROPOSED", f"Thresholds and policy values are {policy_status.upper()}")
+
+
+def rename_tabs(wb, renames: dict) -> None:
+    """Rename sheets {old: new} and rewrite every reference to them in formulas, data validations
+    and conditional formatting, all in one pass (so a new name may equal another sheet's old name)."""
+    renames = {o: n for o, n in renames.items() if o != n}
+    if not renames:
+        return
+    alt = "|".join(re.escape(o) for o in sorted(renames, key=len, reverse=True))
+    ref = re.compile(rf"'({alt})'!|(?<![\w.'])({alt})!")
+
+    def fix(text):
+        if not isinstance(text, str) or "!" not in text:
+            return text
+        return ref.sub(lambda m: "'" + renames[m.group(1) or m.group(2)] + "'!", text)
+
+    for ws in wb.worksheets:
+        for row in ws.iter_rows():
+            for cell in row:
+                if isinstance(cell.value, str) and cell.value.startswith("="):
+                    cell.value = fix(cell.value)
+        for dv in ws.data_validations.dataValidation:
+            dv.formula1, dv.formula2 = fix(dv.formula1), fix(dv.formula2)
+        for cf in ws.conditional_formatting:
+            for rule in cf.rules:
+                rule.formula = [fix(f) for f in rule.formula or []]
+    for old, new in renames.items():
+        wb[old].title = new
 
 
 def build(out_dir: Path) -> Path:
@@ -369,14 +403,16 @@ def build(out_dir: Path) -> Path:
     scoring = load_scoring()
     criteria = load_criteria()
     wb = openpyxl.load_workbook(TEMPLATE_XLSX)
-    for sheet in sheets:
+    # build with the template's sheet names, then rename to the tabs in sheets.yaml
+    internal = [dict(s, tab=TEMPLATE_TABS[s["key"]]) for s in sheets]
+    for sheet in internal:
         build_criteria_sheet(wb[sheet["tab"]], sheet, criteria[sheet["key"]])
     build_summary(wb["Summary"], scoring, retired_list(criteria))
-    build_report(wb[REPORT_SHEET], sheets, criteria)
+    build_report(wb[REPORT_SHEET], internal, criteria)
+    rename_tabs(wb, {TEMPLATE_TABS[s["key"]]: s["tab"] for s in sheets})
     stamp(wb, info, scoring["policy"]["status"])
     out_dir.mkdir(parents=True, exist_ok=True)
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", info["version"]).strip("-")
-    path = out_dir / f"testing-criteria-scorecard-{safe}.xlsx"
+    path = out_dir / workbook_name(info)
     wb.save(path)
     return path
 

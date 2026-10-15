@@ -35,6 +35,12 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BRANCH = os.environ.get("DEFAULT_BRANCH", "main")
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
 REPO_URL = f"https://github.com/{REPO}" if REPO else ""
+sys.path.insert(0, str(ROOT / "scripts"))
+from common import SHOW_LICENSE_NOTICE, now_stamp  # noqa: E402
+
+LICENSE_HTML = ('<br>Content © Department of Health – Western Visayas Center for Health Development · '
+                '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · '
+                'Code <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>')
 
 
 def git(*args, cwd=ROOT, check=True):
@@ -71,7 +77,7 @@ def build_ref(pages: Path, ref: str, ref_type: str) -> dict:
     subject = git("show", "-s", "--format=%s", sha)
     meta = {"ref": ref, "ref_type": ref_type, "kind": kind_for(ref, ref_type), "path": folder_for(ref, ref_type),
             "commit": sha[:7], "commit_date": date, "subject": subject,
-            "built": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "ok": False, "files": {}}
+            **now_stamp(), "ok": False, "files": {}}
     with tempfile.TemporaryDirectory() as tmp:
         wt = Path(tmp) / "src"
         git("worktree", "add", "--detach", str(wt), sha)
@@ -183,14 +189,20 @@ def build_landing(pages: Path):
     drafts = [m for m in metas if m["kind"] == "draft"]
     branches = sorted([m for m in metas if m["kind"] == "branch"], key=lambda m: m["commit_date"], reverse=True)
     latest = releases[0] if releases else (candidates[0] if candidates else None)
+    generated = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     (pages / "versions.json").write_text(json.dumps(
-        {"generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "repository": REPO_URL,
+        {"generated": generated, "repository": REPO_URL,
          "latest": latest["ref"] if latest else None,
          "releases": releases, "candidates": candidates, "draft": drafts, "branches": branches}, indent=1), encoding="utf-8")
     template = (ROOT / "tool" / "landing.html").read_text(encoding="utf-8")
 
     def e(s):
         return html.escape(str(s or ""))
+
+    def when(m):
+        """PH time text; the page script rewrites it in the reader's time zone."""
+        iso = m.get("built_iso")
+        return f'<time datetime="{e(iso)}">{e(m.get("built"))}</time>' if iso else e(m.get("built"))
 
     def links(m):
         base = m["path"] + "/"
@@ -219,7 +231,7 @@ def build_landing(pages: Path):
         counts = m.get("counts") or {}
         return (f'<tr><td><span class="ref">{e(m["ref"])}</span><div class="muted">{e(m.get("subject"))}</div></td>'
                 f'<td><span class="badge {cls}">{name}</span></td>'
-                f'<td>{e(m["commit_date"][:10])}<div class="muted">built {e(m["built"])}</div></td>'
+                f'<td>{e(m["commit_date"][:10])}<div class="muted">built {when(m)}</div></td>'
                 f'<td class="num">{e(counts.get("criteria", "—"))} / {e(counts.get("sub_items", "—"))}</td>'
                 f'<td class="actions">{links(m)}</td></tr>')
 
@@ -246,7 +258,9 @@ def build_landing(pages: Path):
             + table("Branch previews", branches, "No other branches. Every pushed branch gets a preview here."))
     actions = (f'{e(REPO_URL)}/actions/workflows/publish.yml' if REPO_URL else "#")
     page = (template.replace("{{BODY}}", body).replace("{{REPO_URL}}", e(REPO_URL)).replace("{{ACTIONS_URL}}", actions)
-            .replace("{{GENERATED}}", dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")))
+            .replace("{{GENERATED}}", when(now_stamp()))
+            .replace("{{LICENSE}}", LICENSE_HTML if SHOW_LICENSE_NOTICE else "")
+            .replace("{{GENERATED_ISO}}", generated))
     (pages / "index.html").write_text(page, encoding="utf-8")
     (pages / ".nojekyll").write_text("", encoding="utf-8")
     print(f"landing page: {len(releases)} releases, {len(candidates)} candidates, {len(drafts)} draft, {len(branches)} branches")

@@ -26,7 +26,7 @@ sheets:
   - L1-05
   - L1-06
 - key: L2A
-  tab: L2-TS0 Terminology
+  tab: L2-A TS0-Terminology
   title: Level 2A — TS0 Terminology & Registry Validation (GATE)
   intro: 'Before submitting (TS1) or reading (TS2) an eReferral, every coded element must use the official terminology and every registry value or patient identifier must follow the official registry — the exact server, registry or API for each concept is named in the Terminology & Registry Sources (Reference Guide, Ch. 4) (SRC-01 to SRC-15). CRITICAL (must be 100%): the IG-required bindings (TS0-01, TS0-02), invalid-code handling (TS0-03), PSGC and NHFR (★ in TS0-06) and the PhilHealth / PhilSys identifiers (TS0-07) — TS1, TS2 and Level 3 cannot work without them. Other items (display text, code-system validity, NHWR, DSWD) carry normal weight but are not critical. How values are obtained (live look-up, scheduled sync or cached copy) is the vendor''s choice. Test this part FIRST.'
   note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
@@ -41,7 +41,7 @@ sheets:
   - TS0-07
   - TS0-08
 - key: L2B
-  tab: L2-TS1 Submission
+  tab: L2-B TS1-Submission
   title: Level 2B — TS1 eReferral Submission by Referring Facility
   intro: 'The referring facility submits the Test Data referral to the Shared Health Record (SHR). Every item is verified ON THE SERVER using any one form of server-side evidence: an Interoperability Layer log (e.g., OpenHIM), an Inferno / FHIR validator report, or the raw request / response payload from the developer. Fields are grouped by FHIR resource — open the resource once and tick its fields. ★ marks critical sub-items. How the data is sent (HTTP verbs, bundle style) is the vendor''s choice.'
   note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
@@ -68,7 +68,7 @@ sheets:
   - TS1-T.03
   - TS1-T.04
 - key: L2C
-  tab: L2-TS2 Retrieval
+  tab: L2-C TS2-Retrieval
   title: Level 2C — TS2 eReferral Retrieval and Status Update by Receiving Facility
   intro: The receiving facility retrieves the referral from the SHR, displays it, and updates the referral status. Compare every value with the Test Data sheet and confirm with server-side evidence (IOL log, Inferno / validator report, or raw payload). Fields are grouped by screen area / FHIR resource. ★ marks critical sub-items. Screen layout is the vendor's choice.
   note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
@@ -88,7 +88,7 @@ sheets:
   - TS2-12
   - TS2-13
 - key: L2D
-  tab: L2-Security
+  tab: L2-D System Resilience
   title: Level 2D — Security, Reliability & Exception Handling
   intro: 'Baseline technical safeguards required before live patient data is exchanged. Each criterion states the OUTCOME tested; the minimum measurable specification is given in the Technical Baseline (Reference Guide, Ch. 3) (TB-01 to TB-14). Any product, platform or method that meets or exceeds the baseline is acceptable. Outcomes are tested by using the system (black-box); where documents are needed, vendors may choose any evidence option in Instructions 4B — internals and trade secrets are never required. DISCLAIMER: this is SECURITY CONFORMANCE TESTING of defined controls. Passing it is NOT equivalent to passing a vulnerability assessment and penetration test (VAPT) or a full cybersecurity assessment (TEC-14 only checks that an independent assessment exists). EXCEPTION HANDLING (TS3-01 to TS3-09): the EMR must not show a failed exchange as successful, must explain the error, allow correction, and leave exactly one correct referral on the SHR — inputs and expected results are in Test Data Section D (TD-D##).'
   note: 'Count criteria: mark each sub-item (rows marked ↳). Required, Achieved, Result and Outstanding are calculated automatically.'
