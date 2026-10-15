@@ -1,0 +1,32 @@
+{
+ "generated": "2026-10-15T01:33:45+00:00",
+ "repository": "https://github.com/dohwvchdictu/hirmes-tool",
+ "latest": null,
+ "releases": [],
+ "candidates": [],
+ "draft": [
+  {
+   "ref": "main",
+   "ref_type": "branch",
+   "kind": "draft",
+   "path": "draft",
+   "commit": "88621e8",
+   "commit_date": "2026-10-15T09:32:42+08:00",
+   "subject": "ci: publish every branch and tag with a landing page on gh-pages",
+   "built": "2026-10-15 01:33 UTC",
+   "ok": true,
+   "files": {
+    "workbook": "testing-criteria-scorecard-v1.0.0-rc1-dev.xlsx",
+    "change_summary": "CHANGE-SUMMARY.md",
+    "scorecard": "index.html"
+   },
+   "version": "v1.0.0-rc1+dev",
+   "label": "v1.0.0-rc1+dev \u00b7 branch main \u00b7 commit 88621e8",
+   "counts": {
+    "criteria": 103,
+    "sub_items": 272
+   }
+  }
+ ],
+ "branches": []
+}
