@@ -147,3 +147,4 @@ the published site (they need the repository address that GitHub Actions provide
   same test scenarios identically
 - `see:` entries in `registers/form-help.yaml` and criterion `terms:` resolve to a glossary term, abbreviation, register ID or criterion ID
 - every `<!-- register: KEY -->` marker in the Technical Reference Guide names a known register, and each register appears once
+- sheet `tab` names in `criteria/sheets.yaml` are valid Excel sheet names (at most 31 characters, none of `: \ / ? * [ ] '`) and unique; renaming a tab there renames the workbook sheet and every formula that refers to it

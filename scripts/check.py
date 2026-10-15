@@ -204,6 +204,19 @@ def main():
     if pol["status"] == "Approved" and not all(pol[k] for k in ("approved_by", "date_approved", "reference")):
         err("scoring.yaml: policy status is Approved but approved_by, date_approved or reference is empty")
 
+    # tab names become Excel sheet names
+    fixed = {"Instructions", "Summary", "System Profile", "Test Data", "Printed Evaluation Report"}
+    tabs = [s["tab"] for s in sheets]
+    for t in tabs:
+        bad = sorted(set(t) & set(":\\/?*[]'"))
+        if len(t) > 31 or bad or not t.strip():
+            err(f"criteria/sheets.yaml: tab '{t}' is not a valid Excel sheet name "
+                f"(at most 31 characters, none of : \\ / ? * [ ] ')" + (f" — found {' '.join(bad)}" if bad else f" — {len(t)} characters"))
+        if t in fixed:
+            err(f"criteria/sheets.yaml: tab '{t}' clashes with a fixed sheet of the workbook")
+    for t in {t for t in tabs if tabs.count(t) > 1}:
+        err(f"criteria/sheets.yaml: tab '{t}' is used by more than one sheet")
+
     level_parts = [p for lvl in scoring["levels"] for p in lvl["parts"]]
     if sorted(level_parts) != sorted(sheet_keys):
         err("scoring.yaml: levels.parts must list every sheet exactly once")
