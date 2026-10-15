@@ -45,7 +45,7 @@ def export(out: Path) -> Path:
     }
     if out.exists():
         shutil.rmtree(out)
-    shutil.copytree(ROOT / "tool", out)
+    shutil.copytree(ROOT / "tool", out, ignore=shutil.ignore_patterns("landing.html"))
     (out / "data.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
 

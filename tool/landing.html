@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+     SPDX-License-Identifier: GPL-3.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Criteria — Published Versions</title>
+  <style>
+    :root {
+      --bg: #f6f7f9; --panel: #fff; --ink: #1d2733; --muted: #5b6776; --line: #d9dee5;
+      --accent: #1f5fa8; --accent-soft: #e6eef8; --good: #1e7a3c; --good-soft: #e3f3e8;
+      --warn: #8a5a00; --warn-soft: #fff3d6; --bad: #b3261e; --bad-soft: #fbe6e4; --lock-soft: #eceef1;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12161c; --panel: #1b2129; --ink: #e6e9ee; --muted: #a2acb9; --line: #2e3742;
+        --accent: #7fb0ec; --accent-soft: #1d2b3d; --good: #79d095; --good-soft: #17301f;
+        --warn: #f2c66b; --warn-soft: #3a2f14; --bad: #f19a92; --bad-soft: #3a1d1b; --lock-soft: #262d36; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); }
+    header { background: var(--panel); border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 20px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    h2 { font-size: 16px; margin: 0 0 10px; }
+    a { color: var(--accent); }
+    .muted { color: var(--muted); font-size: 12px; }
+    section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 14px 0; overflow-x: auto; }
+    .hero { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; border-left: 4px solid var(--accent); }
+    .big { font-size: 22px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .num { text-align: right; white-space: nowrap; }
+    .ref { font-family: ui-monospace, Consolas, monospace; font-weight: 700; }
+    .actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .btn { display: inline-block; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; color: var(--ink); white-space: nowrap; font-size: 13px; background: var(--panel); }
+    .btn:hover { border-color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.subtle { color: var(--muted); }
+    .btn.warn { color: var(--bad); border-color: var(--bad); }
+    .badge { white-space: nowrap; display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; vertical-align: middle; }
+    .b-release { background: var(--good-soft); color: var(--good); }
+    .b-candidate { background: var(--accent-soft); color: var(--accent); }
+    .b-draft { background: var(--warn-soft); color: var(--warn); }
+    .b-branch { background: var(--lock-soft); color: var(--muted); }
+    .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 16px; margin-top: 10px; }
+    footer { color: var(--muted); font-size: 12px; text-align: center; padding: 10px 20px 30px; }
+    @media (max-width: 760px) { thead { display: none; } tr, td { display: block; border: none; } tr { border-bottom: 1px solid var(--line); padding: 8px 0; } .num { text-align: left; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>HIE System Validation — Testing Criteria</h1>
+      <div class="muted">Every release, release candidate, the main draft and each working branch, published automatically. Open a scorecard to try its scoring in the browser, or download its workbook.</div>
+      <div class="legend muted">
+        <div><span class="badge b-release">Release</span> approved by the TWG; the official version</div>
+        <div><span class="badge b-candidate">Release candidate</span> sent to the TWG for review</div>
+        <div><span class="badge b-draft">Draft · main</span> latest accepted changes, not yet released</div>
+        <div><span class="badge b-branch">Branch preview</span> work in progress on a branch</div>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+{{BODY}}
+  </main>
+  <footer>
+    Generated {{GENERATED}} by the publishing workflow ·
+    <a href="{{REPO_URL}}">Source repository</a> ·
+    <a href="{{ACTIONS_URL}}">Republish (maintainers)</a> ·
+    <a href="versions.json">versions.json</a><br>
+    Content © Department of Health – Western Visayas Center for Health Development ·
+    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> ·
+    Code <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0-or-later</a>
+  </footer>
+</body>
+</html>

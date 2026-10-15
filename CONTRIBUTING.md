@@ -13,7 +13,8 @@ Never edit a generated workbook or document by hand; change the source file inst
 5. When a revision is ready for the TWG, tag a release candidate (see *Releasing*).
 
 For a larger revision, work on a branch (for example `next-release`) and merge it into `main` when the
-TWG has reviewed it. Use hyphens, not slashes, in branch names.
+TWG has reviewed it. Every pushed branch gets its own scorecard preview on the landing page, so the TWG
+can try the changes before they are merged; the preview disappears when the branch is deleted.
 
 ## Commit messages
 

@@ -48,12 +48,14 @@
   // ------------------------------------------------------------------ chrome
   function renderBanner() {
     var m = data.meta, b = $("#banner");
+    var home = m.home ? ' · <a href="' + esc(m.home) + '">All published versions</a>' : "";
     if (m.is_release) {
       b.className = "banner release";
-      b.textContent = "Released version " + m.version + " · commit " + m.commit + " · built " + m.built;
+      b.innerHTML = "Released version " + esc(m.version) + " · commit " + esc(m.commit) + " · built " + esc(m.built) + home;
     } else {
       b.className = "banner draft";
-      b.textContent = "DRAFT — " + m.label + " · built " + m.built + " — for review only, not for official evaluation.";
+      var what = m.kind === "candidate" ? "RELEASE CANDIDATE" : m.kind === "branch" ? "BRANCH PREVIEW" : "DRAFT";
+      b.innerHTML = what + " — " + esc(m.label) + " · built " + esc(m.built) + " — for review only, not for official evaluation." + home;
     }
     $("#foot").innerHTML = "Criteria version " + esc(m.label) +
       (m.repository ? ' · <a href="' + esc(m.repository) + '">source repository</a>' : "") +

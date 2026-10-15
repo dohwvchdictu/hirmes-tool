@@ -178,6 +178,7 @@ def main():
     ap.add_argument("--from", dest="old", help="earlier tag or commit (default: previous tag)")
     ap.add_argument("--to", dest="new", default="HEAD")
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--label", help="name to show instead of --to (e.g. a branch name)")
     ap.add_argument("--print-previous", action="store_true", help="only print the tag that would be compared with")
     args = ap.parse_args()
     old = args.old or previous_tag(args.new)
@@ -185,7 +186,7 @@ def main():
         print(old or "")
         return
     repo = os.environ.get("GITHUB_SERVER_URL", "") + ("/" + os.environ["GITHUB_REPOSITORY"] if os.environ.get("GITHUB_REPOSITORY") else "")
-    label = args.new if args.new != "HEAD" else "current draft"
+    label = args.label or (args.new if args.new != "HEAD" else "current draft")
     with tempfile.TemporaryDirectory() as tmp:
         new_root = snapshot(args.new, Path(tmp) / "new")
         old_root = snapshot(old, Path(tmp) / "old") if old else None

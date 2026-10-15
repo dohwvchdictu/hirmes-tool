@@ -9,7 +9,7 @@ and every file stays in sync.
 
 | You want to… | Go to |
 | --- | --- |
-| Try the criteria in the browser | The **web scorecard** on this repository's GitHub Pages site |
+| Try the criteria in the browser | The **landing page** on this repository's GitHub Pages site: every release, release candidate, the main draft and each branch |
 | Download the official files | [Releases](../../releases): scorecard workbook, change summary, change log |
 | See what changed and why | `CHANGE-SUMMARY.md` in each release, or the [commit history](../../commits) |
 | Propose a change | [Open an issue](../../issues/new/choose) |
@@ -26,7 +26,7 @@ registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability
 schema/              rules every YAML file must follow
 templates/           workbook layout used to generate the scorecard
 scripts/             check, build and change-summary scripts
-tool/                web scorecard (static page)
+tool/                web scorecard (static page) and landing page template
 tests/               round-trip and scoring tests
 docs/                narrative chapters (being converted; see docs/README.md)
 ```
@@ -36,7 +36,7 @@ docs/                narrative chapters (being converted; see docs/README.md)
 | Output | Built by | When |
 | --- | --- | --- |
 | Scorecard workbook (`.xlsx`) | `scripts/build_xlsx.py` | Every push (download from the workflow run) and every release |
-| Web scorecard | `scripts/build_web.py` | Every push to `main` and every release tag (GitHub Pages) |
+| Web scorecard and landing page | `scripts/build_web.py`, `scripts/publish.py` | Every push to any branch or tag (GitHub Pages, `gh-pages` branch) |
 | Change summary | `scripts/change_summary.py` | Every release (compared with the previous release) |
 | Change log | git-cliff, from commit messages | Every release |
 

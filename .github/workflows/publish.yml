@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 Department of Health – Western Visayas Center for Health Development
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Publishes a scorecard for every branch and tag to the gh-pages branch and regenerates the
+# landing page. Runs on every push, when a branch or tag is deleted, and on demand.
+name: Publish scorecards
+
+on:
+  push:
+    branches: ["**", "!gh-pages"]
+    tags: ["v*"]
+  delete:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch or tag to publish. Leave empty to rebuild every branch and tag.
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-gh-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name != 'delete' || github.event.ref_type == 'branch' || startsWith(github.event.ref, 'v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the publishing scripts (default branch) with full history
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Check out the gh-pages branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --tags --force origin '+refs/heads/*:refs/remotes/origin/*'
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git worktree add -B gh-pages pages origin/gh-pages
+          else
+            git worktree add --orphan -b gh-pages pages
+          fi
+      - name: Build and publish
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          EVENT: ${{ github.event_name }}
+          INPUT_REF: ${{ github.event.inputs.ref }}
+          DELETED_REF: ${{ github.event.ref }}
+          DELETED_TYPE: ${{ github.event.ref_type }}
+        run: |
+          case "$EVENT" in
+            push)   python scripts/publish.py --pages pages --ref "$GITHUB_REF_NAME" --ref-type "$GITHUB_REF_TYPE" ;;
+            delete) python scripts/publish.py --pages pages --delete "$DELETED_REF" --ref-type "$DELETED_TYPE" ;;
+            workflow_dispatch)
+              if [ -z "$INPUT_REF" ]; then python scripts/publish.py --pages pages --all
+              else python scripts/publish.py --pages pages --ref "$INPUT_REF"; fi ;;
+          esac
+      - name: Commit and push the site
+        run: |
+          cd pages
+          git add -A
+          if git diff --cached --quiet; then echo "No changes to publish"; exit 0; fi
+          git commit -q -m "publish: ${GITHUB_EVENT_NAME} ${GITHUB_REF_NAME} (${GITHUB_SHA::7})"
+          git push origin gh-pages
+      - name: Links
+        run: |
+          owner="${GITHUB_REPOSITORY%%/*}"; repo="${GITHUB_REPOSITORY#*/}"
+          echo "Landing page: https://${owner}.github.io/${repo}/" >> "$GITHUB_STEP_SUMMARY"

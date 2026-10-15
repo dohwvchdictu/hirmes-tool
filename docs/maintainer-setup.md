@@ -21,13 +21,28 @@ git remote add origin https://github.com/<organization>/hirmes-tool.git
 git push -u origin main
 ```
 
-## 3. GitHub Pages (web scorecard)
+## 3. GitHub Pages (landing page and scorecards)
 
-*Settings → Pages → Build and deployment → Source:* **GitHub Actions**.
-*Settings → Environments → github-pages → Deployment branches and tags*: keep `main` and **add a tag
-rule `v*`**, so a release tag can publish its own version of the web scorecard.
-Then *Actions → Publish web scorecard → Run workflow* (or push to `main`). The page address is shown
-on the workflow run and under *Settings → Pages*. Add it to the repository description.
+The *Publish scorecards* workflow writes the site to the `gh-pages` branch. It creates that branch
+on its first run.
+
+1. Push once (or run *Actions → Publish scorecards → Run workflow* with the ref left empty) so the
+   `gh-pages` branch exists.
+2. *Settings → Pages → Build and deployment → Source:* **Deploy from a branch**; branch **gh-pages**,
+   folder **/ (root)**.
+3. The landing page is at `https://<organization>.github.io/hirmes-tool/`. Add it to the repository
+   description (*About → Website*).
+
+| Site folder | Content |
+| --- | --- |
+| `/` | Landing page: latest release, releases, release candidates, main draft, branch previews |
+| `/releases/<tag>/` | Scorecard, workbook and change summary of each release and release candidate |
+| `/draft/` | The main branch |
+| `/preview/<branch>/` | Every other branch; removed when the branch is deleted |
+
+Every push to a branch or tag republishes that version and regenerates the landing page. To rebuild
+everything (for example after changing the publishing scripts), run *Publish scorecards* manually
+with the ref left empty; to rebuild one version, enter its branch or tag.
 
 ## 4. Protect `main` and release tags
 
@@ -47,6 +62,6 @@ git push origin v1.0.0-rc1
 ```
 
 The *Release* workflow publishes the workbook, change summary and change log under *Releases*
-(marked pre-release), and the web scorecard switches to that version.
+(marked pre-release), and *Publish scorecards* adds the version to the landing page.
 After TWG approval: record the decision, update `scoring.yaml` if thresholds were approved, then tag
 `v1.0.0` on the approved commit.
