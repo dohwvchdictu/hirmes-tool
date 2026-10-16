@@ -16,11 +16,11 @@ TOTAL       103       27      62   272     4     99
 
 0 error(s), 0 warning(s).
 
-$ scripts/build_web.py --out /tmp/tmpbzn_f4hs/out
-Wrote web scorecard to /tmp/tmpbzn_f4hs/out
+$ scripts/build_web.py --out /tmp/tmpl7z4q1u6/out
+Wrote web scorecard to /tmp/tmpl7z4q1u6/out
 
-$ scripts/build_xlsx.py --out /tmp/tmpbzn_f4hs/out
-Wrote /tmp/tmpbzn_f4hs/out/testing-criteria-scorecard-unreleased-draft.xlsx
+$ scripts/build_xlsx.py --out /tmp/tmpl7z4q1u6/out
+Wrote /tmp/tmpl7z4q1u6/out/testing-criteria-scorecard-unreleased-draft.xlsx
 
-$ scripts/change_summary.py --to e880b6197d8fdc102e79d176549b244a51fddb9c --out /tmp/tmpbzn_f4hs/out/CHANGE-SUMMARY.md --label branch certificate-demo
-Wrote /tmp/tmpbzn_f4hs/out/CHANGE-SUMMARY.md
+$ scripts/change_summary.py --to f7bb10a1364a5c5d8263dbdb67f24b8cd46ef7a2 --out /tmp/tmpl7z4q1u6/out/CHANGE-SUMMARY.md --label branch certificate-demo
+Wrote /tmp/tmpl7z4q1u6/out/CHANGE-SUMMARY.md

@@ -2,18 +2,18 @@
  "meta": {
   "version": "unreleased draft",
   "branch": "certificate-demo",
-  "commit": "e880b61",
-  "built": "2026-10-16 11:54 PHT",
-  "built_iso": "2026-10-16T03:54:41+00:00",
+  "commit": "f7bb10a",
+  "built": "2026-10-16 12:59 PHT",
+  "built_iso": "2026-10-16T04:59:32+00:00",
   "is_release": false,
-  "label": "unreleased draft · branch certificate-demo · commit e880b61",
+  "label": "unreleased draft · branch certificate-demo · commit f7bb10a",
   "repository": "https://github.com/dohwvchdictu/hirmes-tool",
   "owner": "Department of Health – Western Visayas Center for Health Development",
   "content_license": "CC BY 4.0",
   "code_license": "GPL-3.0-or-later",
   "credit": "Healthcare Interoperability Readiness Matrix for EMR Systems, Department of Health – Western Visayas Center for Health Development, licensed under CC BY 4.0",
   "title": "Healthcare Interoperability Readiness Matrix for EMR Systems",
-  "sha": "e880b6197d8fdc102e79d176549b244a51fddb9c",
+  "sha": "f7bb10a1364a5c5d8263dbdb67f24b8cd46ef7a2",
   "default_branch": "main",
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
   "show_license": false,
@@ -998,9 +998,15 @@
   "title": "Certificate of Validation",
   "subtitle": "Healthcare Interoperability Readiness Matrix for EMR Systems",
   "certifies": "This certifies that the electronic medical record system",
-  "statement": "has been validated by the Regional Validation Team in compliance with the Standards Conformance and Interoperability Validation guidelines under DOH MC 2021-0045, against the testing criteria {criteria} and the implementation guides and resources indicated below, pursuant to DOH-PhilHealth-DICT JAO 2021-0001.",
+  "statement": "has been validated by the Regional Validation Team of the {office}, in compliance with the Standards Conformance and Interoperability Validation guidelines under DOH MC 2021-0045, against the testing criteria {criteria} and the implementation guides and resources indicated below, pursuant to DOH-PhilHealth-DICT JAO 2021-0001.",
   "microtext": "REPUBLIC OF THE PHILIPPINES · DEPARTMENT OF HEALTH · CERTIFICATE OF VALIDATION",
   "seal": "img/doh-seal.png",
+  "logos": [
+   {
+    "file": "img/bagongpilipinas.png",
+    "alt": "Bagong Pilipinas"
+   }
+  ],
   "signatories": [
    {
     "label": "Head of KMITS",
@@ -1018,52 +1024,63 @@
    "label": "Verify this certificate at"
   },
   "seal_url": "img/doh-seal.png",
+  "logo_list": [
+   {
+    "url": "img/bagongpilipinas.png",
+    "alt": "Bagong Pilipinas",
+    "present": true
+   }
+  ],
   "src": {
    "p": "criteria/certificate.yaml",
    "l": [
     1,
-    47
+    61
    ],
    "f": {
     "notice": [
-     13,
-     16
+     15,
+     18
     ],
     "orientation": [
-     19,
-     19
-    ],
-    "title": [
-     20,
-     20
-    ],
-    "subtitle": [
      21,
      21
     ],
-    "certifies": [
+    "title": [
      22,
      22
     ],
-    "statement": [
+    "subtitle": [
      23,
-     26
+     23
     ],
-    "microtext": [
-     28,
+    "certifies": [
+     24,
+     24
+    ],
+    "statement": [
+     25,
      28
     ],
+    "microtext": [
+     30,
+     30
+    ],
     "seal": [
-     31,
-     31
+     33,
+     33
     ],
-    "signatories": [
-     35,
-     41
-    ],
-    "verify": [
+    "logos": [
      42,
      47
+    ],
+    "signatories": [
+     48,
+     54
+    ],
+    "verify": [
+     55,
+     61
     ]
    }
   }
