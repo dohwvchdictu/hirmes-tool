@@ -225,7 +225,7 @@ The web scorecard prints the Certificate of Validation from Output › Certifica
 
 | Part | Source |
 | --- | --- |
-| Title, subtitle, statement, microtext, signatories and their designations, verification address and its label, proof-of-concept notice, default orientation | `criteria/certificate.yaml` |
+| Title, subtitle, statement, microtext, signatories and their designations, verification address and its label, proof-of-concept notice, default orientation; the DOH seal and any further logos printed after it (e.g. the government advocacy logo or this system's logo) | `criteria/certificate.yaml` (image files under `tool/img/`) |
 | Certificate fields (number, dates, signatory, supersedes, orientation, conditions) and the HL7 FHIR release | `criteria/profile.yaml` (System Profile) |
 | Issued, revoked and superseded certificates, with their validation records | `criteria/certificates-issued.yaml` (register of issued certificates) |
 | Generation, security emblem, verification page | `tool/cert.js` (fingerprint also in `scripts/common.py`) |
@@ -238,7 +238,7 @@ The web scorecard prints the Certificate of Validation from Output › Certifica
 4. **Record the certificate.** The page computes the certificate fingerprint and shows the register entry to add, with the full validation record. The Administrator adds it to the register of issued certificates in one commit (or asks for it through a *Certificate record* issue). Until then the Verify page answers *Not found*.
 5. **Print and sign.** Print / save as PDF prints the certificate edge to edge on white. It is valid only with the signature of the signatory (the Head of KMITS or the DOH CHD Regional Director) and the official seal.
 
-The certificate shows: certificate number, date of issuance and expiry date; the product name and exact version / build; the statement; a ruled table with the developer and applicant category, the versions validated against (HL7 FHIR release, PH Core and PHeReF IG) and the result of each sheet of Levels 2 to 4 (the score when passed, "--" when not yet passed); the security emblem with the verification site and the certificate fingerprint; the signatory; and, in the foot line, the testing criteria version, its commit and the level achieved.
+The certificate shows: the certificate number in the upper right corner; the product name and exact version / build; the statement; a ruled table with the certificate number, date of issuance and validity, the developer and applicant category, the versions validated against (HL7 FHIR release, PH Core and PHeReF IG) and the result of each sheet of Levels 2 to 4 (the score when passed, "--" when not yet passed); the security emblem with the verification site and the certificate fingerprint; the signatory; and, in the foot line, the testing criteria version, its commit and the level achieved.
 
 ## 7.6 Security features
 
@@ -256,7 +256,7 @@ The fingerprint is not a digital signature: the method is public, so anyone can 
 
 ## 7.7 Verifying a certificate
 
-1. **Open the Verify page.** Scan the QR code (check that the address is the verification site printed on the certificate), or open Output › Verify a certificate on the official site you know and type the certificate number and the certificate fingerprint.
+1. **Open the Verify page.** Scan the QR code (check that the address is the verification site printed on the certificate; a certificate printed from a release points to the draft scorecard, where the register keeps growing, and one printed from a draft or branch preview points to that build), or open Output › Verify a certificate on the official site you know and type the certificate number and the certificate fingerprint.
 2. **Read the answer.** *Valid* (recorded and within its validity period), *Expired*, *Superseded* (replaced by a later certificate, which is named), *Revoked* (with the reason), *Not found* (not in the register: issued after this version of the page, or not genuine), *Fingerprint does not match* (the paper or the code was altered, or the fingerprint mistyped) or *Register entry inconsistent*.
 3. **Compare every detail** shown with the paper: product, exact version / build, vendor, dates, versions validated against, results, signatory. A difference means the paper was altered.
 4. **Compare the security emblem** with the one the page redraws: scan the code; the ticks clockwise from the ▼ mark; the number of lobes; the slant of the faint lines.

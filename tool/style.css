@@ -633,14 +633,22 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 .cg-qr { fill: #10182b; }
 .cert-body { position: absolute; inset: 19mm 21mm 17mm; display: flex; flex-direction: column; }
 .ce-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; }
-.ce-mark { display: flex; align-items: center; gap: 3.5mm; min-width: 0; }
-.ce-seal { height: 17mm; width: auto; }
+.ce-head .ce-mark { flex: 1 1 auto; }
+.ce-head .ce-no { flex: none; }
+.ce-mark { display: flex; flex-wrap: wrap; align-items: center; gap: 2mm 3.5mm; min-width: 0; }   /* with further logos, the agency name may drop below them */
+.ce-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 2mm 3mm; }
+.ce-seal { height: calc(17mm * var(--lh, 1)); width: auto; }
+.ce-logo { max-width: 42mm; object-fit: contain; }
 .ce-word { display: flex; flex-direction: column; line-height: 1.2; }
 .ce-word span { font-size: calc(8pt * var(--k)); }
-.ce-word b { font-size: calc(15pt * var(--k)); font-weight: 700; color: var(--navy); }
+.ce-word b { font-size: calc(15pt * var(--k)); font-weight: 700; color: var(--navy); white-space: nowrap; }
 .ce-no { margin: 0; text-align: right; display: grid; grid-template-columns: auto auto; column-gap: 3mm; align-items: baseline; }
 .ce-no dt { font-size: calc(7.5pt * var(--k)); color: var(--soft); white-space: nowrap; }
-.ce-no dd { margin: 0; font-size: calc(9.5pt * var(--k)); font-weight: 600; color: var(--navy); }
+.ce-no dd { margin: 0; font-size: calc(9.5pt * var(--k)); font-weight: 600; color: var(--navy); white-space: nowrap; }
+/* compact details (set by Cert.fit when the letterhead is crowded): each label above its value */
+.ce-no.compact { grid-template-columns: auto; row-gap: 0; }
+.ce-no.compact dt:not(:first-child) { margin-top: .9mm; }
+.ce-no.compact dd.ce-num { font-size: calc(11.5pt * var(--k)); }
 .ce-no dd.ce-num { font-size: calc(13pt * var(--k)); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* a number never breaks at its hyphens */
 /* Spare height is shared equally above the title, the product, the table and the footer (auto
    margins); the padding and margins in mm below are the least space each gap keeps. */
@@ -748,6 +756,7 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 .cert.portrait { width: 210mm; height: 297mm; }
 .cert.portrait .cert-body { inset: 20mm 20mm 18mm; }
 .cert.portrait .ce-head { gap: 6mm; }
+.cert.portrait .ce-seal { height: calc(15mm * var(--lh, 1)); }
 .cert.portrait .ce-title { padding-top: calc(10mm * var(--ks)); }
 .cert.portrait .ce-lead { padding-top: calc(10mm * var(--ks)); }
 .cert.portrait .ce-statement { max-width: none; margin: calc(6mm * var(--ks)) 0 calc(8mm * var(--ks)); }

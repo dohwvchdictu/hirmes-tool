@@ -107,11 +107,11 @@ The web scorecard prints a Certificate of Validation (Output › Certificate, on
 or portrait, white background to save ink). Its details come from the System Profile: certificate number and date of
 issuance, vendor / developer and applicant category, product name and exact version / build, PH Core
 and PHeReF IG versions, expiry date, and the signatory (Head of KMITS or DOH CHD Regional Director).
-Below the statement one ruled table holds the developer and applicant category, the versions validated
-against (HL7 FHIR release, PH Core and PHeReF IG) and the score of each sheet of Levels 2–4 (2A–2D, 3
-and 4; "--" for a sheet not passed yet, while the register keeps every score and status). The
-certificate number, date of issuance and expiry date sit together in the header; the level achieved is
-in the line at the foot. An optional `validity_note` prints boxed under the table as the scope of validity.
+Below the statement one ruled table holds the certificate number, date of issuance and validity; the
+developer and applicant category; the versions validated against (HL7 FHIR release, PH Core and PHeReF
+IG); and the score of each sheet of Levels 2–4 (2A–2D, 3 and 4; "--" for a sheet not passed yet, while
+the register keeps every score and status). The certificate number also stands alone in the upper
+right corner; the level achieved is in the line at the foot. An optional `validity_note` prints boxed under the table as the scope of validity.
 The page lists what is still open; until everything is in order (details filled in, Levels 0–3
 passed, thresholds approved, a released criteria version) it prints as a SPECIMEN. Long details stay
 on the page: the title and product name shrink first, then all the text, and the page warns when even
@@ -123,6 +123,7 @@ the smallest size does not fit.
 | Orientation of one certificate | The *Orientation* choice on the Certificate page, or *Certificate orientation* in the System Profile (not part of the fingerprint) |
 | Certificate fields in the System Profile | `criteria/profile.yaml`, section *Certificate* (the signatory choices must match `certificate.yaml`) |
 | The DOH seal on the letterhead | Add the official file at `tool/img/doh-seal.png` (full colour or grayscale, per the DOH Brand Book) |
+| Further logos next to the seal (government advocacy logo, this system's logo) | Add the image under `tool/img/` and list it under `logos` in `criteria/certificate.yaml` (file and alt text); they print after the seal in that order |
 
 **Integrity.** Each certificate has a fingerprint: the first 16 hex digits of SHA-256 over its
 details, its FHIR release and its Level 2–4 results (a register entry without `results`, recorded

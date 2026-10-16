@@ -119,6 +119,9 @@ def check_certificates(profile_doc, err):
     """certificate.yaml wording, the signatory choices, and every entry of the register of issued certificates."""
     cert = load_yaml(CERTIFICATE_FILE)
     validate(validator("certificate.schema.json"), cert, "criteria/certificate.yaml")
+    for x in cert.get("logos") or []:
+        if isinstance(x, dict) and x.get("file") and not (ROOT / "tool" / x["file"]).is_file():
+            warn(f"criteria/certificate.yaml: logo tool/{x['file']} is listed but not in the repository; the certificate prints without it")
     labels = [s.get("label") for s in cert.get("signatories") or []]
     field = next((f for s in profile_doc.get("sections") or [] for f in s.get("fields") or [] if f.get("key") == "signatory"), None)
     if field and sorted(field.get("options") or []) != sorted(labels):

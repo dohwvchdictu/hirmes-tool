@@ -454,14 +454,19 @@
   }
   function signatoryOf(role) { return (C().signatories || []).filter(function (s) { return s.label === role; })[0] || null; }
 
-  /** Address the QR code opens. The register grows on the default branch, so a published page
-   *  points at the draft (main) build; certificate.yaml verify.url overrides it. */
+  /** Address the QR code opens: certificate.yaml verify.url when set; otherwise this very build
+   *  (a draft or branch preview has the Verify page and the register of its own commit), except a
+   *  release or release candidate, which points at the draft (main) build, where the register keeps
+   *  growing after the release. */
   function verifyBase() {
     var v = (C().verify || {}).url;
     if (v) return v.replace(/#.*$/, "");
     if (typeof location === "undefined") return "";
-    if (D.meta.home) { try { return new URL(D.meta.home + "draft/", location.href).href; } catch (e) { /* old browser */ } }
-    return location.href.replace(/[?#].*$/, "");
+    var kind = D.meta.kind || (D.meta.is_release ? "release" : "");
+    if ((kind === "release" || kind === "candidate") && D.meta.home) {
+      try { return new URL(D.meta.home + "draft/", location.href).href; } catch (e) { /* old browser: stay on this build */ }
+    }
+    return location.href.replace(/[?#].*$/, "").replace(/index\.html$/, "");
   }
   /** The verification site as printed: the address without protocol, page name or the certificate part. */
   function verifySite() { return verifyBase().replace(/^https?:\/\//, "").replace(/index\.html$/, "").replace(/\/$/, ""); }
@@ -523,6 +528,7 @@
     var missing = [["certificate_no", "Certificate no."], ["certificate_date", "Date of issuance"], ["vendor", "Vendor / developer"],
       ["category", "Applicant category"], ["system_name", "Product name"], ["version", "Version / build"], ["fhir_release", "HL7 FHIR release"], ["ph_core", "PH Core IG version"],
       ["pheref", "PHeReF IG version"], ["signatory", "Signatory"], ["signatory_name", "Signatory's name"]]
+      .concat(/\{office\}/.test(C().statement || "") ? [["office", "Conducting office (System Profile section 2)"]] : [])
       .filter(function (f) { return !norm(p[f[0]]); }).map(function (f) { return f[1]; });
     var dates = isoDate(rec.issued) && isoDate(rec.expires) && rec.expires > rec.issued;
     return [
@@ -539,28 +545,32 @@
   function paper(ctx, rec, fp, specimen) {
     var c = C(), p = ctx.profile, sig = signatoryOf(p.signatory) || {};
     var office = norm(p.office);
-    var seal = c.seal_url ? '<img class="ce-seal" src="' + esc(c.seal_url) + '" alt="Seal of the Department of Health">' : "";
+    var seal = (c.seal_url ? '<img class="ce-seal" src="' + esc(c.seal_url) + '" alt="Seal of the Department of Health">' : "") +
+      (c.logo_list || []).filter(function (x) { return x.present; }).map(function (x) {
+        return '<img class="ce-seal ce-logo" src="' + esc(x.url) + '" alt="' + esc(x.alt) + '">';
+      }).join("");
     var url = fp ? verifyUrl(rec.number, fp) : "";
     var shown = verifySite();
     var sup = given(p.supersedes) ? " · Supersedes certificate no. " + esc(given(p.supersedes)) : "";
     var fill = function (t) {
-      return esc(t).replace(/\{level\}/g, esc(rec.level)).replace(/\{criteria\}/g, esc(rec.criteria));
+      return esc(t).replace(/\{level\}/g, esc(rec.level)).replace(/\{criteria\}/g, esc(rec.criteria))
+        .replace(/\{office\}/g, blank(office, "Conducting office"));
     };
     var cond = given(p.conditions) ? '<p class="ce-cond"><b>Conditions:</b> ' + esc(p.conditions) + "</p>" : "";
     var orient = orientation(p), poc = norm(c.notice) ? "PROOF OF CONCEPT — NOT AN OFFICIAL DOH CERTIFICATE · " : "";
     return '<div class="cert-wrap" id="cert-wrap"><article class="cert ' + orient + '" id="cert" aria-label="Certificate">' +
       frameSvg(fp, c.microtext + (norm(rec.number) ? " · " + norm(rec.number) : ""), orient) +
       '<div class="cert-body">' +
-      '<header class="ce-head"><div class="ce-mark">' + seal + '<div class="ce-word"><span>Republic of the Philippines</span><b>Department of Health</b>' +
-        (office ? "<span>" + esc(office) + "</span>" : "") + "</div></div>" +
-        '<dl class="ce-no"><dt>Certificate no.</dt><dd class="ce-num">' + blank(rec.number, "Certificate no.") + "</dd>" +
-        "<dt>Date of issuance</dt><dd>" + blank(longDate(rec.issued), "Date of issuance") + "</dd>" +
-        "<dt>Valid until</dt><dd>" + blank(longDate(rec.expires), "Expiry date") + "</dd></dl></header>" +
+      '<header class="ce-head"><div class="ce-mark"><div class="ce-logos">' + seal + '</div><div class="ce-word"><span>Republic of the Philippines</span><b>Department of Health</b>' +
+        "</div></div>" +
+        '<dl class="ce-no"><dt>Certificate no.</dt><dd class="ce-num">' + blank(rec.number, "Certificate no.") + "</dd></dl></header>" +
       '<div class="ce-title"><h1>' + esc(c.title) + "</h1><p>" + esc(c.subtitle) + "</p></div>" +
       '<p class="ce-lead">' + esc(c.certifies) + '</p><p class="ce-product">' + blank(rec.product, "Product name") + "</p>" +
       '<p class="ce-build">Version / build <b>' + blank(rec.version, "Version / build") + "</b></p>" +
       '<p class="ce-statement">' + fill(c.statement) + "</p>" +
       '<div class="ce-table">' +
+        tableRow("Certificate", "r-cert", cell("Certificate no.", "", blank(rec.number, "Certificate no.")) +
+          cell("Date of issuance", "", blank(longDate(rec.issued), "Date of issuance")) + cell("Valid until", "", blank(longDate(rec.expires), "Expiry date"))) +
         tableRow("Developer", "r-dev", cell("Vendor / developer", "", blank(rec.vendor, "Vendor / developer")) + cell("Applicant category", "", blank(rec.category, "Applicant category"))) +
         tableRow("Validated against", "r-ver", cell("HL7 FHIR", "release", blank(rec.fhir_release, "FHIR release")) +
           cell("PH Core", "implementation guide", blank(rec.ph_core, "version")) + cell("PHeReF", "implementation guide", blank(rec.pheref, "version"))) +
@@ -675,7 +685,7 @@
   function certSrc() {
     var c = C(), s = c.src;
     var rows = [["title", "Title"], ["subtitle", "Subtitle"], ["certifies", "Opening line"], ["statement", "Statement"], ["validity_note", "Validity note"],
-      ["microtext", "Microtext"], ["signatories", "Signatories"], ["verify", "Verification"], ["seal", "Seal file"]]
+      ["microtext", "Microtext"], ["signatories", "Signatories"], ["verify", "Verification"], ["seal", "Seal file"], ["logos", "Further logos"]]
       .filter(function (f) { return s.f[f[0]]; }).map(function (f) { return { label: f[1], l: s.f[f[0]], text: typeof c[f[0]] === "string" ? c[f[0]] : "" }; });
     return { title: "Certificate wording", id: "certificate", p: s.p, l: s.l, text: c.title, rows: rows };
   }
@@ -703,8 +713,34 @@
       "<div><h3>Register of issued certificates</h3>" + registerPanel(rec, fp, ctx) + "</div></div>" +
       (C().seal_url ? "" : '<p class="ce-reg-msg">No seal file in this build: the letterhead prints the agency name only. Add the official DOH seal at <code>tool/' + esc(C().seal || "img/doh-seal.png") +
         "</code> (full colour or grayscale, as the DOH Brand Book allows) to print it.</p>") +
+      (function (miss) {
+        return miss.length ? '<p class="ce-reg-msg">Logos listed in <code>' + esc(C().src.p) + "</code> but not in this build, so they do not print: " +
+          miss.map(function (x) { return "<code>tool/" + esc(x.url) + "</code>"; }).join(", ") + ".</p>" : "";
+      })((C().logo_list || []).filter(function (x) { return !x.present; })) +
       '<p class="ce-reg-msg bad" id="ce-fit" hidden>The details are too long to fit on the page even at the smallest text size: shorten the product name, the conditions or the designation.</p>' +
       "</section>" + paper(ctx, rec, fp, specimen ? "SPECIMEN — NOT VALID" : "");
+  }
+
+  /** The letterhead keeps the seal and logos in one row beside the agency name, with the
+   *  certificate details on the right. When they crowd each other (logos wrapping to a second row,
+   *  or the agency name pushed under them), the details make room first, each label above its
+   *  value; then the seal and logos shrink a little, down to about three quarters. */
+  function fitHead(cert) {
+    var head = cert.querySelector(".ce-head"), no = cert.querySelector(".ce-no"), logos = cert.querySelector(".ce-logos"), word = cert.querySelector(".ce-word");
+    if (!head || !no) return;
+    var lh = 1;
+    no.classList.remove("compact");
+    cert.style.setProperty("--lh", "1");
+    var crowded = function () {
+      var imgs = logos ? logos.querySelectorAll("img") : [], first = Infinity, last = -Infinity;
+      for (var i = 0; i < imgs.length; i++) { var t = imgs[i].getBoundingClientRect().top; first = Math.min(first, t); last = Math.max(last, t); }
+      var wrapped = imgs.length > 1 && last - first > 1;
+      var nameBelow = !!(word && imgs.length && word.getBoundingClientRect().top >= logos.getBoundingClientRect().bottom - 1);
+      return wrapped || nameBelow || head.scrollWidth > head.clientWidth + 1;
+    };
+    if (!crowded()) return;
+    no.classList.add("compact");
+    while (crowded() && lh > 0.75) { lh -= 0.05; cert.style.setProperty("--lh", lh.toFixed(2)); }
   }
 
   /** Long details (a long product name, several lines of conditions) must stay on the one page:
@@ -715,6 +751,7 @@
     var set = function () { cert.style.setProperty("--ks", ks.toFixed(2)); cert.style.setProperty("--kp", kp.toFixed(2)); cert.style.setProperty("--k", k.toFixed(2)); };
     var over = function () { return body.scrollHeight > body.clientHeight + 1 || body.scrollWidth > body.clientWidth + 1; };
     set();
+    fitHead(cert);
     while (over() && ks > 0.25) { ks -= 0.075; set(); }
     while (over() && kp > 0.63) { kp -= 0.04; set(); }
     while (over() && k > 0.66) { k -= 0.03; set(); }
@@ -727,6 +764,10 @@
     var wrap = typeof document !== "undefined" && document.getElementById("cert-wrap"), cert = wrap && document.getElementById("cert");
     if (!cert) return;
     cert.style.transform = "";
+    // the seal and logos load after the page is drawn: fit again once each has its size
+    Array.prototype.forEach.call(cert.querySelectorAll(".ce-logos img"), function (img) {
+      if (!img.complete && !img.dataset.fitWait) { img.dataset.fitWait = "1"; img.addEventListener("load", fit, { once: true }); }
+    });
     shrink(cert);
     var s = Math.min(1, wrap.clientWidth / cert.offsetWidth);
     cert.style.transform = "scale(" + s + ")";

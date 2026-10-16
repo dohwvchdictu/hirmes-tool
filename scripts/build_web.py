@@ -77,11 +77,13 @@ def profile_form() -> dict:
 
 
 def certificate_form() -> dict:
-    """Certificate wording and settings, with the line of each part for the edit links. The seal prints
-    only when its file is present in tool/ (it is supplied by the DOH, not kept in the repository)."""
+    """Certificate wording and settings, with the line of each part for the edit links. The seal and
+    the further logos print only when their files are present in tool/ (they are supplied by the DOH,
+    not written by this tool)."""
     doc, lines = load_yaml(CERTIFICATE_FILE), yaml_lines(CERTIFICATE_FILE)
     seal = doc.get("seal") or ""
-    return doc | {"seal_url": seal if seal and (ROOT / "tool" / seal).is_file() else "",
+    logos = [{"url": x["file"], "alt": x.get("alt") or "", "present": (ROOT / "tool" / x["file"]).is_file()} for x in doc.get("logos") or []]
+    return doc | {"seal_url": seal if seal and (ROOT / "tool" / seal).is_file() else "", "logo_list": logos,
                   "src": {"p": CERTIFICATE_FILE.relative_to(ROOT).as_posix(), "l": lines.get(()),
                           "f": {k: lines[(k,)] for k in doc if (k,) in lines}}}
 
