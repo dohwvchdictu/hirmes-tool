@@ -4,10 +4,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="build" content="232c17df63b3">
+  <meta name="build" content="47e0b89c901d">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria Scorecard</title>
-  <link rel="stylesheet" href="style.css?v=232c17df63b3">
+  <link rel="stylesheet" href="style.css?v=47e0b89c901d">
 </head>
 <body>
   <header class="top" id="top">
@@ -33,6 +33,7 @@
           <label class="button" for="file-load" role="menuitem"><b>Load evaluation…</b><span>Continue from a saved .json file</span></label>
           <input id="file-load" type="file" accept="application/json,.json" hidden>
           <button id="btn-print" type="button" role="menuitem"><b>Print report</b><span>Printed evaluation report / PDF</span></button>
+          <button id="btn-print-cert-menu" type="button" role="menuitem"><b>Print certificate</b><span>Certificate of validation, A4 / PDF (proof of concept)</span></button>
           <button id="btn-reset" type="button" role="menuitem" class="danger"><b>Clear answers</b><span>Remove everything saved in this browser</span></button>
           <div class="menu-h">Excel workbook</div>
           <a id="dl-blank" class="button" role="menuitem" href="#" download><b>Blank workbook (.xlsx)</b><span id="dl-blank-note">Scorecard workbook of this version, to fill in offline</span></a>
@@ -46,8 +47,9 @@
   <div id="scrim" class="scrim" hidden></div>
   <main id="main" tabindex="-1"><p class="loading">Loading criteria…</p></main>
   <footer class="foot" id="foot"></footer>
-  <script src="scoring.js?v=232c17df63b3"></script>
-  <script src="reference.js?v=232c17df63b3"></script>
-  <script src="app.js?v=232c17df63b3"></script>
+  <script src="scoring.js?v=47e0b89c901d"></script>
+  <script src="reference.js?v=47e0b89c901d"></script>
+  <script src="cert.js?v=47e0b89c901d"></script>
+  <script src="app.js?v=47e0b89c901d"></script>
 </body>
 </html>

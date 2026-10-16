@@ -2,18 +2,18 @@
  "meta": {
   "version": "unreleased draft",
   "branch": "main",
-  "commit": "232c17d",
-  "built": "2026-10-15 16:51 PHT",
-  "built_iso": "2026-10-15T08:51:40+00:00",
+  "commit": "47e0b89",
+  "built": "2026-10-16 13:14 PHT",
+  "built_iso": "2026-10-16T05:14:57+00:00",
   "is_release": false,
-  "label": "unreleased draft · branch main · commit 232c17d",
+  "label": "unreleased draft · branch main · commit 47e0b89",
   "repository": "https://github.com/dohwvchdictu/hirmes-tool",
   "owner": "Department of Health – Western Visayas Center for Health Development",
   "content_license": "CC BY 4.0",
   "code_license": "GPL-3.0-or-later",
   "credit": "Healthcare Interoperability Readiness Matrix for EMR Systems, Department of Health – Western Visayas Center for Health Development, licensed under CC BY 4.0",
   "title": "Healthcare Interoperability Readiness Matrix for EMR Systems",
-  "sha": "232c17df63b3f9358c301d998c37902f94f5b0b3",
+  "sha": "47e0b89c901d540549f7a25f7de1c53e2cd89c9c",
   "default_branch": "main",
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
   "show_license": false,
@@ -631,13 +631,18 @@
     "team": null,
     "fields": [
      {
-      "key": "ph_core",
-      "label": "PH Core IG version",
-      "help": "PH Core IG version tested, e.g. 0.2.0.",
+      "key": "fhir_release",
+      "label": "HL7 FHIR release",
+      "help": "FHIR release of the implementation guides tested against, e.g. R4. Printed on the certificate.",
+      "options": [
+       "R4",
+       "R4B",
+       "R5"
+      ],
       "src": {
        "l": [
         117,
-        119
+        123
        ],
        "f": {
         "label": [
@@ -647,6 +652,31 @@
         "help": [
          119,
          119
+        ],
+        "options": [
+         120,
+         123
+        ]
+       }
+      }
+     },
+     {
+      "key": "ph_core",
+      "label": "PH Core IG version",
+      "help": "PH Core IG version tested, e.g. 0.2.0.",
+      "src": {
+       "l": [
+        124,
+        126
+       ],
+       "f": {
+        "label": [
+         125,
+         125
+        ],
+        "help": [
+         126,
+         126
         ]
        }
       }
@@ -657,17 +687,17 @@
       "help": "PHeReF IG version tested, e.g. 0.1.0.",
       "src": {
        "l": [
-        120,
-        122
+        127,
+        129
        ],
        "f": {
         "label": [
-         121,
-         121
+         128,
+         128
         ],
         "help": [
-         122,
-         122
+         129,
+         129
         ]
        }
       }
@@ -678,17 +708,17 @@
       "help": "Terminology / PSGC release used on the sandbox.",
       "src": {
        "l": [
-        123,
-        125
+        130,
+        132
        ],
        "f": {
         "label": [
-         124,
-         124
+         131,
+         131
         ],
         "help": [
-         125,
-         125
+         132,
+         132
         ]
        }
       }
@@ -697,7 +727,7 @@
     "src": {
      "l": [
       115,
-      125
+      132
      ],
      "f": {
       "title": [
@@ -709,56 +739,13 @@
    },
    {
     "title": "Certificate",
-    "note": "Filled in by the Regional Validation Team on approval.",
+    "note": "Filled in by the Regional Validation Team on approval. Printed on the Certificate (Output › Certificate) with the application details and the IG versions above.",
     "team": null,
     "fields": [
      {
       "key": "certificate_no",
       "label": "Certificate no.",
-      "help": "Assigned on approval.",
-      "src": {
-       "l": [
-        129,
-        131
-       ],
-       "f": {
-        "label": [
-         130,
-         130
-        ],
-        "help": [
-         131,
-         131
-        ]
-       }
-      }
-     },
-     {
-      "key": "certificate_date",
-      "label": "Certificate date",
-      "type": "date",
-      "help": "Date of approval.",
-      "src": {
-       "l": [
-        132,
-        135
-       ],
-       "f": {
-        "label": [
-         133,
-         133
-        ],
-        "help": [
-         135,
-         135
-        ]
-       }
-      }
-     },
-     {
-      "key": "valid_until",
-      "label": "Valid until",
-      "help": "2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the certificate date.",
+      "help": "Assigned on approval. Printed on the certificate and used to verify it; never reused.",
       "src": {
        "l": [
         136,
@@ -777,10 +764,10 @@
       }
      },
      {
-      "key": "conditions",
-      "label": "Conditions",
-      "type": "long",
-      "help": "Conditions attached to the result, if any.",
+      "key": "certificate_date",
+      "label": "Date of issuance",
+      "type": "date",
+      "help": "Date of approval, printed as the date of issuance.",
       "src": {
        "l": [
         139,
@@ -797,21 +784,191 @@
         ]
        }
       }
+     },
+     {
+      "key": "valid_until",
+      "label": "Expiry date",
+      "type": "date",
+      "help": "2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the date of issuance.",
+      "src": {
+       "l": [
+        143,
+        146
+       ],
+       "f": {
+        "label": [
+         144,
+         144
+        ],
+        "help": [
+         146,
+         146
+        ]
+       }
+      }
+     },
+     {
+      "key": "supersedes",
+      "label": "Supersedes certificate no.",
+      "help": "For a re-evaluation or revalidation, the earlier certificate this one replaces. Leave blank for a first certificate.",
+      "src": {
+       "l": [
+        147,
+        149
+       ],
+       "f": {
+        "label": [
+         148,
+         148
+        ],
+        "help": [
+         149,
+         149
+        ]
+       }
+      }
+     },
+     {
+      "key": "signatory",
+      "label": "Signatory",
+      "help": "Who signs the certificate. The choices and their printed designation are kept in criteria/certificate.yaml.",
+      "options": [
+       "Head of KMITS",
+       "DOH CHD Regional Director"
+      ],
+      "src": {
+       "l": [
+        150,
+        155
+       ],
+       "f": {
+        "label": [
+         151,
+         151
+        ],
+        "help": [
+         152,
+         152
+        ],
+        "options": [
+         153,
+         155
+        ]
+       }
+      }
+     },
+     {
+      "key": "signatory_name",
+      "label": "Signatory's name",
+      "help": "Full name as it is to be printed under the signature.",
+      "src": {
+       "l": [
+        156,
+        158
+       ],
+       "f": {
+        "label": [
+         157,
+         157
+        ],
+        "help": [
+         158,
+         158
+        ]
+       }
+      }
+     },
+     {
+      "key": "signatory_designation",
+      "label": "Signatory's designation",
+      "placeholder": "Leave blank for the designation of the chosen signatory",
+      "help": "Printed under the name. Leave blank to print the designation from criteria/certificate.yaml.",
+      "src": {
+       "l": [
+        159,
+        162
+       ],
+       "f": {
+        "label": [
+         160,
+         160
+        ],
+        "help": [
+         162,
+         162
+        ],
+        "placeholder": [
+         161,
+         161
+        ]
+       }
+      }
+     },
+     {
+      "key": "certificate_orientation",
+      "label": "Certificate orientation",
+      "help": "Page orientation of the printed certificate. Leave blank for the default in criteria/certificate.yaml. Not part of the fingerprint.",
+      "options": [
+       "Landscape",
+       "Portrait"
+      ],
+      "src": {
+       "l": [
+        163,
+        168
+       ],
+       "f": {
+        "label": [
+         164,
+         164
+        ],
+        "help": [
+         165,
+         165
+        ],
+        "options": [
+         166,
+         168
+        ]
+       }
+      }
+     },
+     {
+      "key": "conditions",
+      "label": "Conditions",
+      "type": "long",
+      "help": "Conditions attached to the result, if any. Printed on the Printed Report and the certificate.",
+      "src": {
+       "l": [
+        169,
+        172
+       ],
+       "f": {
+        "label": [
+         170,
+         170
+        ],
+        "help": [
+         172,
+         172
+        ]
+       }
+      }
      }
     ],
     "src": {
      "l": [
-      126,
-      142
+      133,
+      172
      ],
      "f": {
       "title": [
-       126,
-       126
+       133,
+       133
       ],
       "note": [
-       127,
-       127
+       134,
+       134
       ]
      }
     }
@@ -821,7 +978,7 @@
    "p": "criteria/profile.yaml",
    "l": [
     1,
-    142
+    172
    ],
    "f": {
     "title": [
@@ -834,6 +991,277 @@
     ]
    }
   }
+ },
+ "certificate": {
+  "notice": "This certificate feature is a proof of concept for discussion. Its design, wording, signatories, integrity features and verification process do not represent the actual DOH certificate or its implementation, and a certificate printed from it has no official standing.",
+  "orientation": "landscape",
+  "title": "Certificate of Validation",
+  "subtitle": "Healthcare Interoperability Readiness Matrix for EMR Systems",
+  "certifies": "This certifies that the electronic medical record system",
+  "statement": "has been validated by the Regional Validation Team of the {office}, in compliance with the Standards Conformance and Interoperability Validation guidelines under DOH MC 2021-0045, against the testing criteria {criteria} and the implementation guides and resources indicated below, pursuant to DOH-PhilHealth-DICT JAO 2021-0001.",
+  "microtext": "REPUBLIC OF THE PHILIPPINES · DEPARTMENT OF HEALTH · CERTIFICATE OF VALIDATION",
+  "seal": "img/doh-seal.png",
+  "logos": [
+   {
+    "file": "img/bagongpilipinas.png",
+    "alt": "Bagong Pilipinas"
+   }
+  ],
+  "signatories": [
+   {
+    "label": "Head of KMITS",
+    "designation": "Head, Knowledge Management and Information Technology Service",
+    "office": "Department of Health – Central Office"
+   },
+   {
+    "label": "DOH CHD Regional Director",
+    "designation": "Regional Director",
+    "office": "conducting office"
+   }
+  ],
+  "verify": {
+   "url": "",
+   "label": "Verify this certificate at"
+  },
+  "seal_url": "img/doh-seal.png",
+  "logo_list": [
+   {
+    "url": "img/bagongpilipinas.png",
+    "alt": "Bagong Pilipinas",
+    "present": true
+   }
+  ],
+  "src": {
+   "p": "criteria/certificate.yaml",
+   "l": [
+    1,
+    61
+   ],
+   "f": {
+    "notice": [
+     15,
+     18
+    ],
+    "orientation": [
+     21,
+     21
+    ],
+    "title": [
+     22,
+     22
+    ],
+    "subtitle": [
+     23,
+     23
+    ],
+    "certifies": [
+     24,
+     24
+    ],
+    "statement": [
+     25,
+     28
+    ],
+    "microtext": [
+     30,
+     30
+    ],
+    "seal": [
+     33,
+     33
+    ],
+    "logos": [
+     42,
+     47
+    ],
+    "signatories": [
+     48,
+     54
+    ],
+    "verify": [
+     55,
+     61
+    ]
+   }
+  }
+ },
+ "issued": [
+  {
+   "number": "SAMPLE-2026-0001",
+   "issued": "2026-10-16",
+   "expires": "2028-10-16",
+   "vendor": "Sample Health Systems, Inc. (sample data)",
+   "category": "Third-party EMR provider",
+   "product": "Sample EMR (sample data)",
+   "version": "1.0.0 (build 2026.10.01)",
+   "ph_core": "0.2.0",
+   "pheref": "0.1.0",
+   "level": "Level 3",
+   "criteria": "v1.0.0-rc1+dev",
+   "signatory": "DOH CHD Regional Director",
+   "signatory_name": "Sample Signatory",
+   "fhir_release": "R4",
+   "results": {
+    "L2A": "100.0% PASSED",
+    "L2B": "100.0% PASSED",
+    "L2C": "100.0% PASSED",
+    "L2D": "100.0% PASSED",
+    "L3": "100.0% PASSED",
+    "L4": "70.0% NOT PASSED"
+   },
+   "fingerprint": "195436CE47F06F41",
+   "status": "valid",
+   "sample": true,
+   "validation": {
+    "application_no": "SAMPLE-APP-0001",
+    "evaluation_type": "Initial",
+    "test_dates": "2026-10-12 to 2026-10-14",
+    "deployment": "Cloud",
+    "terminology": "Sample terminology release",
+    "office": "Western Visayas Center for Health Development",
+    "conditions": "Sample data for reviewers: not an issued certificate.",
+    "levels": {
+     "L0": "PASSED",
+     "L1": "PASSED",
+     "L2": "PASSED",
+     "L3": "PASSED",
+     "L4": "NOT PASSED"
+    },
+    "sheets": {
+     "L0": {
+      "score": "100.0%",
+      "threshold": "90%",
+      "status": "PASSED",
+      "criteria": 6,
+      "met": 6,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 0,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L1": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 6,
+      "met": 6,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 0,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L2A": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 8,
+      "met": 7,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 1,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L2B": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 20,
+      "met": 18,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 2,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L2C": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 13,
+      "met": 13,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 0,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L2D": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 22,
+      "met": 22,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 0,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L3": {
+      "score": "100.0%",
+      "threshold": "85%",
+      "status": "PASSED",
+      "criteria": 21,
+      "met": 20,
+      "partial": 0,
+      "not_met": 0,
+      "na": 0,
+      "not_tested": 0,
+      "info": 1,
+      "critical_not_met": 0,
+      "needs_compliance": []
+     },
+     "L4": {
+      "score": "70.0%",
+      "threshold": "75%",
+      "status": "NOT PASSED",
+      "criteria": 7,
+      "met": 4,
+      "partial": 0,
+      "not_met": 3,
+      "na": 0,
+      "not_tested": 0,
+      "info": 0,
+      "critical_not_met": 0,
+      "needs_compliance": [
+       "L4-05",
+       "L4-10",
+       "L4-11"
+      ]
+     }
+    }
+   },
+   "src_l": [
+    14,
+    55
+   ],
+   "src_status": [
+    36,
+    36
+   ]
+  }
+ ],
+ "issued_src": {
+  "p": "criteria/certificates-issued.yaml",
+  "l": [
+   12,
+   55
+  ]
  },
  "sheets": [
   {
