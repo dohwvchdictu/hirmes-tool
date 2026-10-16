@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "branch",
  "path": "preview/certificate-demo",
- "commit": "34ac789",
- "commit_date": "2026-10-16T09:34:34+08:00",
- "subject": "- Implement Certificate Generation and Security as Proof of Concept (Demo)",
- "built": "2026-10-16 09:35 PHT",
- "built_iso": "2026-10-16T01:35:05+00:00",
+ "commit": "e9c2d50",
+ "commit_date": "2026-10-16T09:44:32+08:00",
+ "subject": "chore: remove outdated DOH branding guidelines presentation",
+ "built": "2026-10-16 09:44 PHT",
+ "built_iso": "2026-10-16T01:44:55+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch certificate-demo \u00b7 commit 34ac789",
+ "label": "unreleased draft \u00b7 branch certificate-demo \u00b7 commit e9c2d50",
  "counts": {
   "criteria": 103,
   "sub_items": 272
