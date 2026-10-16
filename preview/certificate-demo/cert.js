@@ -9,8 +9,11 @@
  *   - The fingerprint is the first 16 hex digits of SHA-256 over the certificate's details
  *     (FIELDS below, normalised). scripts/common.py computes the same value, and check.py
  *     refuses a register entry whose fingerprint does not match its details.
- *   - The guilloche rosette and border are drawn from the fingerprint, so every certificate has
- *     its own pattern and the Verify page can redraw it for comparison with the paper.
+ *   - The guilloche border and the security rosette are drawn from the fingerprint, so every
+ *     certificate has its own pattern and the Verify page can redraw it for comparison with the
+ *     paper. The rosette is built from features a person can check by eye: a ring of 64 ticks that
+ *     spells the fingerprint's bits, the number of lobes of its outer ring, and "DOH" formed by the
+ *     phase of its centre lines.
  *   - The QR code opens the Verify page with the certificate number and fingerprint. Only
  *     certificates recorded in the register (a reviewed commit) verify as issued.
  * The fingerprint is not a signature: anyone can compute one. Authenticity comes from the register.
@@ -22,6 +25,10 @@
   var FIELDS = ["number", "issued", "expires", "vendor", "category", "product", "version", "ph_core", "pheref",
     "level", "criteria", "signatory", "signatory_name"];
   var FP_PREFIX = "HIE-CERT-1";
+  // Sheets whose results are printed on the certificate and recorded in the register (Levels 2–4).
+  // A certificate with results has a version-2 fingerprint that covers them and the FHIR release too
+  // (keep in step with RESULT_KEYS in scripts/common.py).
+  var RESULT_KEYS = ["L2A", "L2B", "L2C", "L2D", "L3", "L4"];
 
   // ------------------------------------------------------------------ SHA-256
   var K = [
@@ -69,18 +76,31 @@
   function norm(v) { return String(v == null ? "" : v).normalize("NFC").replace(/\s+/g, " ").trim(); }
   /** An optional field typed as "N/A", "none" or "-" counts as empty. */
   function given(v) { var t = norm(v); return /^(n\/?a|none|-+|—)$/i.test(t) ? "" : t; }
-  function canonical(rec) { return FP_PREFIX + "\n" + FIELDS.map(function (k) { return k + "=" + norm(rec[k]); }).join("\n"); }
-  /** 16 uppercase hex digits, or "" while a detail is missing. */
+  function canonical(rec) {
+    var lines = FIELDS.map(function (k) { return k + "=" + norm(rec[k]); });
+    if (!rec.results) return FP_PREFIX + "\n" + lines.join("\n");
+    return "HIE-CERT-2\n" + lines.concat(["fhir_release=" + norm(rec.fhir_release)],
+      RESULT_KEYS.map(function (k) { return "results." + k + "=" + norm(rec.results[k]); })).join("\n");
+  }
+  /** 16 uppercase hex digits, or "" while a detail (or, with results, a result) is missing. */
   function fingerprint(rec) {
     if (FIELDS.some(function (k) { return !norm(rec[k]); })) return "";
+    if (rec.results && (!norm(rec.fhir_release) || RESULT_KEYS.some(function (k) { return !norm(rec.results[k]); }))) return "";
     return sha256(canonical(rec)).slice(0, 16).toUpperCase();
   }
   function fpGroups(fp) { return fp ? fp.match(/.{4}/g).join(" ") : ""; }
 
-  // ------------------------------------------------------------------ QR code (byte mode, level M, versions 1–10)
+  // ------------------------------------------------------------------ QR code (byte mode, levels L, M and Q, versions 1–10)
   // [EC codewords per block, blocks in group 1, data codewords each, blocks in group 2, data codewords each]
   var EC_M = [null, [10, 1, 16, 0, 0], [16, 1, 28, 0, 0], [26, 1, 44, 0, 0], [18, 2, 32, 0, 0], [24, 2, 43, 0, 0],
     [16, 4, 27, 0, 0], [18, 4, 31, 0, 0], [22, 2, 38, 2, 39], [22, 3, 36, 2, 37], [26, 4, 43, 1, 44]];
+  var EC_L = [null, [7, 1, 19, 0, 0], [10, 1, 34, 0, 0], [15, 1, 55, 0, 0], [20, 1, 80, 0, 0], [26, 1, 108, 0, 0],
+    [18, 2, 68, 0, 0], [20, 2, 78, 0, 0], [24, 2, 97, 0, 0], [30, 2, 116, 0, 0], [18, 2, 68, 2, 69]];
+  var EC_Q = [null, [13, 1, 13, 0, 0], [22, 1, 22, 0, 0], [18, 2, 17, 0, 0], [26, 2, 24, 0, 0], [18, 2, 15, 2, 16],
+    [24, 4, 19, 0, 0], [18, 2, 14, 4, 15], [22, 4, 18, 2, 19], [20, 4, 16, 4, 17], [24, 6, 19, 2, 20]];
+  // Recovery: L about 7%, M 15%, Q 25%. The certificate uses L: the smallest code for its URL, so the
+  // modules print large; the rosette behind it is kept faint so it does not need the extra recovery.
+  var LEVELS = { L: { bits: 1, ec: EC_L }, M: { bits: 0, ec: EC_M }, Q: { bits: 3, ec: EC_Q } };
   var ALIGN = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]];
 
   function gmul(x, y) {
@@ -137,11 +157,12 @@
     return p + 10 * Math.floor(Math.abs(dark * 100 / (n * n) - 50) / 5);
   }
 
-  /** QR matrix for text: rows of booleans (true = dark). forceMask is for tests. */
-  function qrMatrix(text, forceMask) {
-    var bytes = utf8(text), ver, e, cap;
+  /** QR matrix for text at error-correction level "L", "M" (default) or "Q": rows of booleans (true = dark).
+   *  forceMask is for tests. */
+  function qrMatrix(text, forceMask, level) {
+    var L = LEVELS[level] || LEVELS.M, bytes = utf8(text), ver, e, cap;
     for (ver = 1; ver <= 10; ver++) {
-      e = EC_M[ver]; cap = e[1] * e[2] + e[3] * e[4];
+      e = L.ec[ver]; cap = e[1] * e[2] + e[3] * e[4];
       if (4 + (ver < 10 ? 8 : 16) + 8 * bytes.length <= cap * 8) break;
     }
     if (ver > 10) throw new Error("Text too long for the certificate QR code (" + bytes.length + " bytes)");
@@ -183,7 +204,7 @@
       });
     });
     var drawFormat = function (G, mask) {
-      var d = mask, rem = d;   // level M has format bits 00
+      var d = (L.bits << 3) | mask, rem = d;
       for (var k = 0; k < 10; k++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
       var fb = ((d << 10) | rem) ^ 0x5412, bit = function (k) { return ((fb >>> k) & 1) === 1; };
       var s = function (x, y, v) { G[y][x] = v; F[y][x] = true; };
@@ -241,8 +262,10 @@
   }
 
   // ------------------------------------------------------------------ guilloche
+  /** Pseudo-random numbers seeded from SHA-256 of the fingerprint, so changing any one character of
+   *  it gives a wholly different pattern (a difference that shows at a glance). */
   function rng(fp) {
-    var s = (parseInt((fp || "0").slice(0, 8), 16) ^ parseInt((fp || "0").slice(8, 16) || "0", 16)) | 0;
+    var s = parseInt(sha256("guilloche:" + (fp || "")).slice(0, 8), 16) | 0;
     return function () {
       s = (s + 0x6d2b79f5) | 0;
       var t = Math.imul(s ^ (s >>> 15), 1 | s);
@@ -289,9 +312,9 @@
   // A4 sheet (mm) per orientation, with the frame inset and the width of the guilloche band.
   var PAGES = { landscape: { w: 297, h: 210, o: 8, b: 5.2 }, portrait: { w: 210, h: 297, o: 8, b: 5.2 } };
 
-  /** Frame of the certificate: rules, guilloche bands, corner rosettes, microtext, and the specimen mark. */
-  function frameSvg(fp, micro, specimen, orient) {
-    var P = PAGES[orient] || PAGES.landscape, rand = rng(fp || "5EC1AE05EC1AE05E"), o = P.o, b = P.b, W = P.w, H = P.h;
+  /** Frame of the certificate: rules, guilloche bands, corner rosettes and microtext. */
+  function frameSvg(fp, micro, orient) {
+    var P = PAGES[orient] || PAGES.landscape, rand = rng(fp || BLANK_FP), o = P.o, b = P.b, W = P.w, H = P.h;
     var inner = o + b, L = W - 2 * inner, Hh = H - 2 * inner;
     var bands = band(inner, o, L, b, false, rand) + band(inner, H - o - b, L, b, false, rand) +
       band(o, inner, Hh, b, true, rand) + band(W - o - b, inner, Hh, b, true, rand);
@@ -308,18 +331,97 @@
       '<rect class="cg-hair" x="' + inner + '" y="' + inner + '" width="' + L + '" height="' + Hh + '"/>' +
       '<path class="cg-band" d="' + bands + '"/><path class="cg-corner" d="' + corners + '"/>' +
       text(inner + 2.1) + text(H - inner - 1.1) +
-      (specimen ? '<text class="cg-specimen" x="' + W / 2 + '" y="' + (H / 2 + 7) + '" transform="rotate(' + (W > H ? -18 : -54) + " " + W / 2 + " " + H / 2 + ')"' +
-        (W > H ? "" : ' style="font-size:19px"') + ">SPECIMEN — NOT VALID</text>" : "") +
+
       "</svg>";
   }
-  /** The certificate's own security rosette; the Verify page redraws it from the fingerprint. */
-  function rosetteSvg(fp, cls) {
-    var rand = rng(fp || "5EC1AE05EC1AE05E");
-    return '<svg class="' + (cls || "ce-rosette") + '" viewBox="0 0 60 60" aria-hidden="true">' +
-      '<path class="cg-ros1" d="' + rosette(30, 30, 29, rand, 9, 0.42) + '"/>' +
-      '<path class="cg-ros2" d="' + rosette(30, 30, 16, rand, 4, 0.5) + '"/>' +
-      '<circle class="cg-hair" cx="30" cy="30" r="6.4"/></svg>';
+  /** The watermark over a certificate that is not an original (specimen, register copy, sample):
+   *  "WORD — reason" in two lines, the word large, laid over the middle of the page at a gentle
+   *  slant so it stays clear of the emblem and the signature. Drawn above the content as a navy
+   *  outline over a faint tint: readable on screen, on paper and on copies, at little ink. */
+  function markSvg(mark, orient) {
+    if (!mark) return "";
+    var P = PAGES[orient] || PAGES.landscape, W = P.w, H = P.h, land = W > H;
+    var parts = String(mark).split(/\s+—\s+/), big = parts[0], small = parts.slice(1).join(" — ");
+    var room = land ? 205 : 165, cx = W / 2, cy = H * (land ? 0.47 : 0.44), angle = land ? -13 : -38;
+    var s1 = Math.min(land ? 34 : 30, room / (big.length * 0.66)), s2 = small ? Math.min(11, room / (small.length * 0.6)) : 0;
+    var y1 = cy - (small ? s2 * 0.55 : -s1 * 0.35), y2 = y1 + s2 * 1.35 + 1;
+    return '<svg class="cert-mark" viewBox="0 0 ' + W + " " + H + '" aria-hidden="true"><g transform="rotate(' + angle + " " + f2(cx) + " " + f2(cy) + ')">' +
+      '<text class="cg-mark1" x="' + f2(cx) + '" y="' + f2(y1) + '" style="font-size:' + f2(s1) + 'px">' + esc(big) + "</text>" +
+      (small ? '<text class="cg-mark2" x="' + f2(cx) + '" y="' + f2(y2) + '" style="font-size:' + f2(s2) + 'px">' + esc(small) + "</text>" : "") + "</g></svg>";
   }
+
+  var BLANK_FP = "5EC1AE05EC1AE05E";   // seeds the pattern of a specimen that has no fingerprint yet
+
+  /** What a certificate's security emblem is drawn from, all taken from its fingerprint. */
+  function rosetteParams(fp) {
+    var hex = fp || BLANK_FP, rand = rng(hex), bits = [];
+    hex.split("").forEach(function (h) { var v = parseInt(h, 16); for (var i = 3; i >= 0; i--) bits.push((v >> i) & 1); });
+    return { bits: bits, lobes: 6 + Math.floor(rand() * 9), m: 2 + Math.floor(rand() * 4), phi: rand() * 2 * Math.PI,
+      shape: 0.6 + rand() * 0.3, turn: rand(), wave: 2.8 + rand() * 1.8, wphase: rand() * 2 * Math.PI, tilt: (rand() - 0.5) * 0.5 };
+  }
+
+  /** How to compare a printed emblem with the one on the Verify page, most telling check first. */
+  function rosetteGuide(fp) {
+    var P = rosetteParams(fp);
+    return Ref.link("Compare with the printed security emblem:", new Set()) + " <b>1.</b> scan the QR code: it must open this page for this certificate; <b>2.</b> the ring of long and short ticks, clockwise from the ▼ mark (" +
+      P.bits.filter(Boolean).length + " long of 64); <b>3.</b> the guilloche ring has <b>" + P.lobes + " lobes</b>, and the faint lines behind the code run at the same slant. " +
+      "Any difference means the paper does not belong to this certificate.";
+  }
+
+  /** The certificate's security emblem (100 × 100 units): the QR code in front, the security rosette
+   *  behind it, both from the same certificate. Outside in: a ring of 64 ticks spelling the
+   *  fingerprint's bits (long = 1) clockwise from the ▼ mark; a guilloche ring with a countable
+   *  number of lobes; faint slanted waves behind the code; the QR code (level L) on a 3-module margin.
+   *  Without a URL (details incomplete) the centre stays empty. */
+  function emblemSvg(url, fp, cls) {
+    var P = rosetteParams(fp), C0 = 50, i;
+    var gap = 0.09, span = 2 * Math.PI - 2 * gap, ticks = "";
+    P.bits.forEach(function (bit, k) {
+      var a = -Math.PI / 2 + gap + span * k / (P.bits.length - 1), r0 = 45.9, r1 = bit ? 49.1 : 47.3;
+      ticks += "M" + f2(C0 + r0 * Math.cos(a)) + " " + f2(C0 + r0 * Math.sin(a)) + "L" + f2(C0 + r1 * Math.cos(a)) + " " + f2(C0 + r1 * Math.sin(a));
+    });
+    var mark = "M50 4.5L48.7 0.8L51.3 0.8Z";
+    // guilloche ring between r 34.3 and 44.6: r(t) = R·(a + b·cos(n·t) + c·cos(m·n·t + φ)), copies turned a little
+    var R = 44.6, dp = 0.23, b = dp / 2 * P.shape, c = dp / 2 - b, a0 = 1 - dp / 2, n = P.lobes, copies = 6;
+    var steps = Math.max(600, n * P.m * 10), ring = [];
+    for (var k = 0; k < copies; k++) {
+      var turn = (P.turn + k / copies) * 2 * Math.PI / n, pts = [];
+      for (i = 0; i < steps; i++) {
+        var t = i * 2 * Math.PI / steps, r = R * (a0 + b * Math.cos(n * t) + c * Math.cos(P.m * n * t + P.phi));
+        pts.push([C0 + r * Math.cos(t + turn), C0 + r * Math.sin(t + turn)]);
+      }
+      ring.push(poly(pts));
+    }
+    // faint waves across the centre disc, slanted by the fingerprint; light enough not to disturb the code
+    var rd = 33.6, sp = 1.05, amp = 0.35, waves = "", ct = Math.cos(P.tilt), st = Math.sin(P.tilt);
+    for (var v = -rd + sp / 2; v < rd; v += sp) {
+      var half = Math.sqrt(rd * rd - v * v), pts2 = [];
+      for (var u = -half; u <= half + 0.001; u += 0.5) {
+        var w = v + amp * Math.sin(2 * Math.PI * u / P.wave + P.wphase);
+        pts2.push(f2(C0 + u * ct - w * st) + " " + f2(C0 + u * st + w * ct));
+      }
+      waves += "M" + pts2.join("L");
+    }
+    var code = "";
+    if (url) {
+      var M = qrMatrix(url, null, "L"), nm = M.length, side = 46, mod = side / (nm + 6), x0 = C0 - side / 2 + 3 * mod, d = "";
+      M.forEach(function (row, y) {
+        for (var x = 0; x < nm; x++) {
+          if (!row[x]) continue;
+          var s0 = x; while (x + 1 < nm && row[x + 1]) x++;
+          d += "M" + f2(x0 + s0 * mod) + " " + f2(x0 + y * mod) + "h" + f2((x - s0 + 1) * mod) + "v" + f2(mod) + "h" + f2(-(x - s0 + 1) * mod) + "z";
+        }
+      });
+      code = '<path class="cg-qr" shape-rendering="crispEdges" d="' + d + '"/>';
+    }
+    return '<svg class="' + (cls || "ce-emblem") + '" viewBox="0 0 100 100" role="img" aria-label="' + (url ? "QR code and security rosette: " + esc(url) : "Security rosette") + '">' +
+      '<circle cx="50" cy="50" r="50" fill="#fff"/>' +   // paper-white disc: nothing on the sheet (specimen mark, frame) shows through the code
+      '<circle class="cg-hair" cx="50" cy="50" r="45.3"/><circle class="cg-hair" cx="50" cy="50" r="49.7"/>' +
+      '<path class="cg-tick" d="' + ticks + '"/><path class="cg-idx" d="' + mark + '"/>' +
+      '<path class="cg-ros1" d="' + ring.join("") + '"/><circle class="cg-hair" cx="50" cy="50" r="33.9"/>' +
+      '<path class="cg-wave" d="' + waves + '"/>' + code + "</svg>";
+  }
+
 
   // ------------------------------------------------------------------ helpers
   var D = null;
@@ -361,6 +463,8 @@
     if (D.meta.home) { try { return new URL(D.meta.home + "draft/", location.href).href; } catch (e) { /* old browser */ } }
     return location.href.replace(/[?#].*$/, "");
   }
+  /** The verification site as printed: the address without protocol, page name or the certificate part. */
+  function verifySite() { return verifyBase().replace(/^https?:\/\//, "").replace(/index\.html$/, "").replace(/\/$/, ""); }
   function verifyUrl(no, fp) { return verifyBase() + "#verify/" + encodeURIComponent(no) + "/" + fp; }
 
   /** Register entry for a certificate number, with its derived status. */
@@ -380,14 +484,44 @@
     var p = ctx.profile;
     return { number: p.certificate_no, issued: p.certificate_date, expires: ctx.validUntil, vendor: p.vendor, category: p.category,
       product: p.system_name, version: p.version, ph_core: p.ph_core, pheref: p.pheref, level: ctx.result.highest,
-      criteria: D.meta.version, signatory: p.signatory, signatory_name: p.signatory_name };
+      criteria: D.meta.version, signatory: p.signatory, signatory_name: p.signatory_name, fhir_release: p.fhir_release, results: results(ctx.result) };
+  }
+  /** "96.2% PASSED" for each sheet of Levels 2–4, as printed and recorded. */
+  function results(r) {
+    var out = {};
+    RESULT_KEYS.forEach(function (k) {
+      var x = r.sheets && r.sheets[k];
+      out[k] = x ? (x.score * 100).toFixed(1) + "% " + x.status : "";
+    });
+    return out;
+  }
+  /** Code and name of a results sheet from its tab, e.g. ["L2-A", "TS0-Terminology"]. */
+  function sheetName(k) {
+    var sh = (D.sheets || []).filter(function (x) { return x.key === k; })[0], m = sh && /^(\S+)\s+(.*)$/.exec(sh.tab);
+    return m ? [m[1], m[2]] : [k, ""];
+  }
+  /** One row of the certificate's ruled table: its label, then its cells. */
+  function tableRow(label, cls, cells) {
+    return '<div class="ce-row ' + cls + '"><div class="ce-rl">' + esc(label) + '</div><dl class="ce-cells">' + cells + "</dl></div>";
+  }
+  /** One cell of the table: code and name above, the value below. */
+  function cell(code, name, value, cls) {
+    return '<div' + (cls ? ' class="' + cls + '"' : "") + "><dt><b>" + esc(code) + "</b> " + esc(name) + "</dt><dd><b>" + value + "</b></dd></div>";
+  }
+  /** Result cells of Levels 2–4: the score of a sheet that passed, "--" for one not passed yet
+   *  (the register keeps the score and status of every sheet). */
+  function resultCells(res) {
+    return RESULT_KEYS.map(function (k) {
+      var nm = sheetName(k), m = /^([\d.]+%)\s+(.*)$/.exec(norm(res && res[k])), passed = !!m && m[2] === "PASSED";
+      return cell(nm[0], nm[1], passed ? esc(m[1]) : "--", passed ? "" : "open");
+    }).join("");
   }
 
   /** What stands between this page and a valid certificate; any open item prints the specimen mark. */
   function checks(ctx, rec) {
     var p = ctx.profile, r = ctx.result, pol = D.scoring.policy;
     var missing = [["certificate_no", "Certificate no."], ["certificate_date", "Date of issuance"], ["vendor", "Vendor / developer"],
-      ["category", "Applicant category"], ["system_name", "Product name"], ["version", "Version / build"], ["ph_core", "PH Core IG version"],
+      ["category", "Applicant category"], ["system_name", "Product name"], ["version", "Version / build"], ["fhir_release", "HL7 FHIR release"], ["ph_core", "PH Core IG version"],
       ["pheref", "PHeReF IG version"], ["signatory", "Signatory"], ["signatory_name", "Signatory's name"]]
       .filter(function (f) { return !norm(p[f[0]]); }).map(function (f) { return f[1]; });
     var dates = isoDate(rec.issued) && isoDate(rec.expires) && rec.expires > rec.issued;
@@ -407,7 +541,7 @@
     var office = norm(p.office);
     var seal = c.seal_url ? '<img class="ce-seal" src="' + esc(c.seal_url) + '" alt="Seal of the Department of Health">' : "";
     var url = fp ? verifyUrl(rec.number, fp) : "";
-    var qr = url ? qrSvg(url, "ce-qr") : '<div class="ce-qr ce-qr-none">QR code appears when every detail is filled in</div>';
+    var shown = verifySite();
     var sup = given(p.supersedes) ? " · Supersedes certificate no. " + esc(given(p.supersedes)) : "";
     var fill = function (t) {
       return esc(t).replace(/\{level\}/g, esc(rec.level)).replace(/\{criteria\}/g, esc(rec.criteria));
@@ -415,41 +549,95 @@
     var cond = given(p.conditions) ? '<p class="ce-cond"><b>Conditions:</b> ' + esc(p.conditions) + "</p>" : "";
     var orient = orientation(p), poc = norm(c.notice) ? "PROOF OF CONCEPT — NOT AN OFFICIAL DOH CERTIFICATE · " : "";
     return '<div class="cert-wrap" id="cert-wrap"><article class="cert ' + orient + '" id="cert" aria-label="Certificate">' +
-      frameSvg(fp, c.microtext + (norm(rec.number) ? " · " + norm(rec.number) : ""), specimen, orient) +
+      frameSvg(fp, c.microtext + (norm(rec.number) ? " · " + norm(rec.number) : ""), orient) +
       '<div class="cert-body">' +
       '<header class="ce-head"><div class="ce-mark">' + seal + '<div class="ce-word"><span>Republic of the Philippines</span><b>Department of Health</b>' +
         (office ? "<span>" + esc(office) + "</span>" : "") + "</div></div>" +
         '<dl class="ce-no"><dt>Certificate no.</dt><dd class="ce-num">' + blank(rec.number, "Certificate no.") + "</dd>" +
-        "<dt>Date of issuance</dt><dd>" + blank(longDate(rec.issued), "Date of issuance") + "</dd></dl></header>" +
+        "<dt>Date of issuance</dt><dd>" + blank(longDate(rec.issued), "Date of issuance") + "</dd>" +
+        "<dt>Valid until</dt><dd>" + blank(longDate(rec.expires), "Expiry date") + "</dd></dl></header>" +
       '<div class="ce-title"><h1>' + esc(c.title) + "</h1><p>" + esc(c.subtitle) + "</p></div>" +
       '<p class="ce-lead">' + esc(c.certifies) + '</p><p class="ce-product">' + blank(rec.product, "Product name") + "</p>" +
       '<p class="ce-build">Version / build <b>' + blank(rec.version, "Version / build") + "</b></p>" +
       '<p class="ce-statement">' + fill(c.statement) + "</p>" +
-      '<dl class="ce-facts">' +
-        "<div><dt>Vendor / developer</dt><dd><b>" + blank(rec.vendor, "Vendor / developer") + "</b><span>" + blank(rec.category, "Applicant category") + "</span></dd></div>" +
-        "<div><dt>Product validated</dt><dd><b>" + blank(rec.product, "Product name") + "</b><span>Version / build " + blank(rec.version, "Version / build") + "</span></dd></div>" +
-        "<div><dt>Validated against</dt><dd><b>PH Core IG " + blank(rec.ph_core, "version") + "</b><span>PHeReF IG " + blank(rec.pheref, "version") + "</span></dd></div>" +
-        "<div><dt>Validity</dt><dd><b>Until " + blank(longDate(rec.expires), "Expiry date") + "</b><span>from " + blank(longDate(rec.issued), "Date of issuance") + "</span></dd></div>" +
-      "</dl>" + cond +
+      '<div class="ce-table">' +
+        tableRow("Developer", "r-dev", cell("Vendor / developer", "", blank(rec.vendor, "Vendor / developer")) + cell("Applicant category", "", blank(rec.category, "Applicant category"))) +
+        tableRow("Validated against", "r-ver", cell("HL7 FHIR", "release", blank(rec.fhir_release, "FHIR release")) +
+          cell("PH Core", "implementation guide", blank(rec.ph_core, "version")) + cell("PHeReF", "implementation guide", blank(rec.pheref, "version"))) +
+        tableRow("Validation results", "r-res", resultCells(rec.results)) +
+      "</div>" + (norm(c.validity_note) ? '<p class="ce-scope"><b>Scope of validity.</b> ' + esc(c.validity_note) + "</p>" : "") + cond +
       '<footer class="ce-foot">' +
-        '<div class="ce-verify">' + qr + '<div><b>Verify this certificate</b><span>' + esc((c.verify || {}).note || "") + "</span>" +
+        '<div class="ce-verify">' + emblemSvg(url, fp) + '<div class="ce-vtext"><b>' + esc((c.verify || {}).label || "Verify this certificate at") + "</b>" +
+          (url ? '<a class="ce-link" href="' + esc(url) + '">' + esc(shown) + "</a>" : '<span class="ce-blank">[link appears when every detail is filled in]</span>') +
           '<span class="ce-fpl">Fingerprint</span><code class="ce-fp">' + (fp ? fpGroups(fp) : "—") + "</code></div></div>" +
-        '<div class="ce-ros">' + rosetteSvg(fp) + "</div>" +
         '<div class="ce-sign"><div class="ce-sigline"></div><b>' + blank(p.signatory_name, "Name of signatory") + "</b>" +
           "<span>" + (norm(p.signatory_designation) ? esc(p.signatory_designation) : esc(sig.designation || "")) + "</span>" +
           "<span>" + esc(sig.office === "conducting office" ? office : sig.office || "") + "</span></div>" +
       "</footer>" +
-      '<p class="ce-validity">' + esc(c.validity_note) + "</p>" +
+      (ctx.note ? '<p class="ce-copynote">' + esc(ctx.note) + "</p>" : "") +
       '<p class="ce-trace">' + poc + "Testing criteria " + esc(rec.criteria) + " · commit " + esc(D.meta.commit) + " · level achieved " + esc(rec.level) + sup + "</p>" +
-      "</div></article></div>";
+      "</div>" + markSvg(specimen, orient) + "</article></div>";
   }
 
-  function yamlEntry(rec, fp, p) {
+  var NOT_TESTED = "Not Tested";   // Scoring.NOT_TESTED (tool/scoring.js)
+  var COUNTS = ["met", "partial", "not_met", "na", "not_tested", "info"];
+  var COUNT_NAMES = { met: "Met", partial: "Partial", not_met: "Not met", na: "N/A", not_tested: "Not tested", info: "Info only" };
+  // Evaluation details kept with the validation record (no personal names besides the signatory's).
+  var VALIDATION_INFO = [["application_no", "Application no."], ["evaluation_type", "Evaluation type"], ["test_dates", "Date(s) of testing"],
+    ["deployment", "Deployment model"], ["terminology", "Terminology release"], ["office", "Conducting office"],
+    ["signatory_designation", "Signatory's designation"], ["conditions", "Conditions"]];
+
+  /** The precise record of the validation, kept in the register beside the printed results (it is
+   *  not printed and not part of the fingerprint; check.py ties it to the printed results): the
+   *  evaluation details, the status of each level, and for every sheet its score, pass threshold,
+   *  status, criterion counts, critical items not met and the criteria still needing compliance. */
+  function validationOf(ctx) {
+    var r = ctx.result, p = ctx.profile, v = {}, sheets = {}, levels = {};
+    VALIDATION_INFO.forEach(function (f) { if (given(p[f[0]])) v[f[0]] = given(p[f[0]]); });
+    (r.levels || []).forEach(function (l) { levels[l.key] = l.gated; });
+    (D.sheets || []).forEach(function (sh) {
+      var x = r.sheets[sh.key];
+      if (!x) return;
+      var c = { met: 0, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 0 };
+      sh.criteria.forEach(function (cr, i) {
+        var y = x.rows[i];
+        if (cr.weight === 0) c.info++;
+        else if (y.M === NOT_TESTED) c.not_tested++;
+        else if (y.N === "") c.na++;
+        else if (y.S === 1 || y.N === 0) c.not_met++;
+        else if (y.N >= 1) c.met++;
+        else c.partial++;
+      });
+      sheets[sh.key] = { score: (x.score * 100).toFixed(1) + "%", threshold: Math.round(x.threshold * 100) + "%", status: x.status,
+        criteria: x.total, met: c.met, partial: c.partial, not_met: c.not_met, na: c.na, not_tested: c.not_tested, info: c.info,
+        critical_not_met: x.criticalNotMet, needs_compliance: x.needs.slice() };
+    });
+    v.levels = levels;
+    v.sheets = sheets;
+    return v;
+  }
+
+  function yamlEntry(rec, fp, ctx) {
+    var p = ctx.profile, val = validationOf(ctx);
     var q = function (v) { return '"' + norm(v).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; };
     var lines = ["- number: " + q(rec.number)];
     FIELDS.slice(1).forEach(function (k) { lines.push("  " + k + ": " + q(rec[k])); });
+    if (rec.results) {
+      lines.push("  fhir_release: " + q(rec.fhir_release), "  results:");
+      RESULT_KEYS.forEach(function (k) { lines.push("    " + k + ": " + q(rec.results[k])); });
+    }
     lines.push("  fingerprint: " + q(fp), "  status: valid");
     if (given(p.supersedes)) lines.push("  supersedes: " + q(given(p.supersedes)));
+    // one line per sheet keeps the record readable and its history easy to compare in git
+    lines.push("  validation:");
+    VALIDATION_INFO.forEach(function (f) { if (val[f[0]]) lines.push("    " + f[0] + ": " + q(val[f[0]])); });
+    lines.push("    levels: {" + Object.keys(val.levels).map(function (k) { return k + ": " + q(val.levels[k]); }).join(", ") + "}", "    sheets:");
+    Object.keys(val.sheets).forEach(function (k) {
+      var x = val.sheets[k];
+      lines.push("      " + k + ": {score: " + q(x.score) + ", threshold: " + q(x.threshold) + ", status: " + q(x.status) + ", criteria: " + x.criteria + ", " +
+        COUNTS.map(function (c) { return c + ": " + x[c]; }).join(", ") + ", critical_not_met: " + x.critical_not_met +
+        ", needs_compliance: [" + x.needs_compliance.map(q).join(", ") + "]}");
+    });
     return lines.join("\n");
   }
   function issueUrl(title, body) {
@@ -465,7 +653,7 @@
   }
 
   /** Where this certificate stands in the register, and how to record it when it is not there yet. */
-  function registerPanel(rec, fp, p) {
+  function registerPanel(rec, fp, ctx) {
     if (!fp) return '<p class="ce-reg-msg">The fingerprint and QR code appear when every detail is filled in. The certificate can then be recorded in the register.</p>';
     var hit = lookup(rec.number), file = (D.issued_src || {}).p || "criteria/certificates-issued.yaml";
     if (hit && hit.entry.fingerprint === fp) {
@@ -476,8 +664,8 @@
       return '<p class="ce-reg-msg bad">The register already holds certificate ' + esc(rec.number) + " with different details (fingerprint " + esc(fpGroups(hit.entry.fingerprint)) +
         "). A certificate printed from this page would fail verification. Correct the details, or issue a new number that supersedes it." + Ref.src(registerSrc(hit.entry)) + "</p>";
     }
-    var y = yamlEntry(rec, fp, p), edit = Ref.editUrl && Ref.editUrl(file), iss = issueUrl("Record certificate " + norm(rec.number), y);
-    return '<p class="ce-reg-msg">Not in the register yet, so the QR code will answer “not found”. Once the signatory approves, add this entry to <code>' + esc(file) + "</code> (one commit):</p>" +
+    var y = yamlEntry(rec, fp, ctx), edit = Ref.editUrl && Ref.editUrl(file), iss = issueUrl("Record certificate " + norm(rec.number), y);
+    return '<p class="ce-reg-msg">Not in the register yet, so the QR code will answer “not found”. Once the signatory approves, add this entry to <code>' + esc(file) + "</code> (one commit). It includes the full validation record under <code>validation</code>:</p>" +
       '<pre class="ce-yaml" id="ce-yaml">' + esc(y) + "</pre>" +
       '<div class="ce-acts"><button type="button" data-copy="ce-yaml">Copy entry</button>' +
       (edit ? '<a class="button" href="' + esc(edit) + '" target="_blank" rel="noopener">✎ Add it on GitHub</a>' : "") +
@@ -498,6 +686,8 @@
     var url = fp ? verifyUrl(rec.number, fp) : "";
     var orient = orientation(ctx.profile), opt = function (v, label) { return "<option value=\"" + label + "\"" + (orient === v ? " selected" : "") + ">" + label + "</option>"; };
     return '<section class="panel ce-panel noprint"><h2>Certificate' + Ref.src(certSrc()) + "</h2>" + notice() +
+      '<p class="intro">' + Ref.link("The Certificate of Validation and its security emblem are generated from the System Profile and the evaluation result; " +
+        "each certificate counts as issued only once recorded in the register of issued certificates.", new Set()) + " " + guideLinks() + "</p>" +
       '<p class="intro">Printed on one A4 page from the System Profile (section ' + ctx.certSection + ") and the result. Wording, signatories and the verification address come from <code>" +
       esc(C().src.p) + "</code>; issued certificates are recorded in <code>" + esc((D.issued_src || {}).p || "") + "</code>.</p>" +
       '<div class="ce-grid"><div><h3>' + (specimen ? "Prints as a specimen: " + open + " item" + (open === 1 ? "" : "s") + " open" : "Ready to issue") + "</h3>" +
@@ -510,11 +700,11 @@
       '<button type="button" id="btn-print-cert" class="primary">Print / save as PDF</button>' +
       (url ? '<button type="button" data-copy-text="' + esc(url) + '">Copy verification link</button><a class="button" href="' + esc(url) + '" target="_blank" rel="noopener">Open verification page</a>' : "") +
       "</div></div>" +
-      "<div><h3>Register of issued certificates</h3>" + registerPanel(rec, fp, ctx.profile) + "</div></div>" +
+      "<div><h3>Register of issued certificates</h3>" + registerPanel(rec, fp, ctx) + "</div></div>" +
       (C().seal_url ? "" : '<p class="ce-reg-msg">No seal file in this build: the letterhead prints the agency name only. Add the official DOH seal at <code>tool/' + esc(C().seal || "img/doh-seal.png") +
         "</code> (full colour or grayscale, as the DOH Brand Book allows) to print it.</p>") +
       '<p class="ce-reg-msg bad" id="ce-fit" hidden>The details are too long to fit on the page even at the smallest text size: shorten the product name, the conditions or the designation.</p>' +
-      "</section>" + paper(ctx, rec, fp, specimen);
+      "</section>" + paper(ctx, rec, fp, specimen ? "SPECIMEN — NOT VALID" : "");
   }
 
   /** Long details (a long product name, several lines of conditions) must stay on the one page:
@@ -554,14 +744,15 @@
   function viewVerify(rest) {
     var i = rest.lastIndexOf("/"), no = i >= 0 ? rest.slice(0, i) : rest, fp = i >= 0 ? rest.slice(i + 1).replace(/[\s-]/g, "").toUpperCase() : "";
     var form = '<form class="ce-vform" id="verify-form"><label>Certificate no.<input id="v-no" value="' + esc(no) + '" autocomplete="off" required></label>' +
-      '<label>Fingerprint <span class="muted">(16 characters, printed under the QR code)</span><input id="v-fp" value="' + esc(fpGroups(fp) || fp) + '" autocomplete="off" spellcheck="false"></label>' +
+      '<label>Fingerprint <span class="muted">(16 characters, printed beside the emblem)</span><input id="v-fp" value="' + esc(fpGroups(fp) || fp) + '" autocomplete="off" spellcheck="false"></label>' +
       '<button type="submit" class="primary">Verify</button></form>';
     var reg = D.issued_src ? " The register on this page is <code>" + esc(D.issued_src.p) + "</code> at commit " + esc(D.meta.commit) + "." : "";
     var head = '<section class="panel"><h2>Verify a certificate' + Ref.src(registerSrc(null)) + "</h2>" +
-      notice() + '<p class="intro">Scan the QR code on a certificate, or type its number and fingerprint. The answer comes from the DOH register of issued certificates; ' +
-      "compare every detail below with the paper, since a difference means the paper was altered." + reg + "</p>" + form + "</section>";
+      notice() + '<p class="intro">' + Ref.link("Scan the QR code of the security emblem, or type the certificate number and certificate fingerprint. " +
+        "The answer comes from the register of issued certificates; compare every detail below with the paper, since a difference means the paper was altered.", new Set()) +
+      reg + " " + guideLinks() + "</p>" + form + sampleHint() + "</section>";
     if (!no) return head;
-    var hit = lookup(no), out;
+    var hit = lookup(no), out, copy = "";
     if (!hit) {
       out = '<div class="ce-verdict bad"><b>Not found</b><span>No certificate numbered ' + esc(no) + " is recorded in this register. It may have been issued after commit " +
         esc(D.meta.commit) + ", or it may not be genuine. Ask the issuing DOH office to confirm.</span></div>";
@@ -573,24 +764,95 @@
         : st;
       var row = function (k, v) { return "<tr><th>" + esc(k) + "</th><td>" + v + "</td></tr>"; };
       var why = verdict === STATUS.superseded && hit.by ? "Replaced by certificate " + hit.by.number + ", issued " + longDate(hit.by.issued) + "." : verdict[2];
-      out = '<div class="ce-verdict ' + verdict[0] + '"><b>' + esc(verdict[1]) + "</b><span>" + esc(why) +
+      if (verdict === STATUS.valid) copy = registerCopy(e);
+      out = (isSample(e) ? '<p class="ce-poc"><b>Sample certificate.</b> ' + esc("Fictional data for reviewers to try this page. It was never issued.") + "</p>" : "") +
+        '<div class="ce-verdict ' + verdict[0] + '"><b>' + esc(verdict[1]) + "</b><span>" + esc(why) +
         (e.reason ? " Reason: " + esc(e.reason) : "") + "</span></div>" +
         '<div class="ce-vgrid"><table class="ce-vtab"><tbody>' +
         row("Certificate no.", "<b>" + esc(e.number) + "</b>") + row("Date of issuance", esc(longDate(e.issued))) + row("Valid until", esc(longDate(e.expires))) +
         row("Vendor / developer", esc(e.vendor)) + row("Applicant category", esc(e.category)) + row("Product", "<b>" + esc(e.product) + "</b>") +
-        row("Version / build", "<b>" + esc(e.version) + "</b>") + row("Validated against", "PH Core IG " + esc(e.ph_core) + " · PHeReF IG " + esc(e.pheref)) +
-        row("Level achieved", esc(e.level)) + row("Testing criteria", esc(e.criteria)) + row("Signed by", esc(e.signatory_name) + " — " + esc(e.signatory)) +
+        row("Version / build", "<b>" + esc(e.version) + "</b>") + row("Validated against", (e.fhir_release ? "HL7 FHIR " + esc(e.fhir_release) + " · " : "") + "PH Core IG " + esc(e.ph_core) + " · PHeReF IG " + esc(e.pheref)) +
+        row("Level achieved", "<b>" + esc(e.level) + "</b>") +
+        (e.results ? RESULT_KEYS.map(function (k) { var nm = sheetName(k); return row(nm[0] + " " + nm[1], esc(e.results[k])); }).join("") : "") +
+        row("Testing criteria", esc(e.criteria)) + row("Signed by", esc(e.signatory_name) + " — " + esc(e.signatory)) +
         (e.supersedes ? row("Supersedes", esc(e.supersedes)) : "") + row("Fingerprint", "<code>" + esc(fpGroups(e.fingerprint)) + "</code>") +
         "</tbody></table>" +
-        '<figure class="ce-vros">' + rosetteSvg(e.fingerprint, "ce-rosette big") + "<figcaption>The security rosette printed on this certificate must match this one, line for line.</figcaption></figure></div>" +
-        (function (btn) { return btn ? '<p class="muted">Register entry ' + btn + "</p>" : ""; })(Ref.src(registerSrc(e)));
+        '<figure class="ce-vros">' + emblemSvg(verifyUrl(e.number, e.fingerprint), e.fingerprint, "ce-emblem big") + "<figcaption>" + rosetteGuide(e.fingerprint) + "</figcaption></figure></div>" +
+        (function (btn) { return btn ? '<p class="muted">Register entry ' + btn + "</p>" : ""; })(Ref.src(registerSrc(e))) +
+        validationDetails(e.validation);
     }
-    return head + '<section class="panel">' + out + "</section>";
+    return head + '<section class="panel ce-vres">' + out + "</section>" + copy;
+  }
+
+  /** Links to the guide's sections on the certificate (Reference, Chapter 7). */
+  function guideLinks() {
+    return 'How it works: <a href="#ref/ch7/sec-7-5-generating-a-certificate">generating</a> · <a href="#ref/ch7/sec-7-6-security-features">security features</a> · ' +
+      '<a href="#ref/ch7/sec-7-7-verifying-a-certificate">verifying</a> · <a href="#ref/ch7/sec-7-8-register-of-issued-certificates">the register</a>.';
+  }
+
+  /** A fictional register entry for reviewers (sample: true). */
+  function isSample(e) { return e.sample === true || String(e.sample).toLowerCase() === "true"; }
+  /** Verify page: the sample certificate(s) of the register, for reviewers to try. */
+  function sampleHint() {
+    var s = (D.issued || []).filter(isSample);
+    if (!s.length) return "";
+    return '<p class="ce-sample">To try this page, use the sample certificate ' + s.map(function (e) {
+      return "<b>" + esc(e.number) + "</b> with fingerprint <code>" + esc(fpGroups(e.fingerprint)) + '</code> (<a href="#verify/' + encodeURIComponent(e.number) + "/" + esc(e.fingerprint) + '">verify it</a>)';
+    }).join("; ") + ". It is fictional data, never issued.</p>";
+  }
+
+  var copyOrient = null;   // orientation chosen for register copies on the Verify page
+  function copyOrientation() { return copyOrient || orientation({}); }
+
+  /** Verify page: the certificate printed again from its register entry, marked as a copy that is
+   *  not valid without the signatory's signature and the official seal. */
+  function registerCopy(e) {
+    var v = e.validation || {}, orient = copyOrientation(), sample = isSample(e);
+    var rec = {};
+    FIELDS.concat(["fhir_release"]).forEach(function (k) { rec[k] = e[k]; });
+    if (e.results) rec.results = e.results;
+    var ctx = { profile: { office: v.office || "", signatory: e.signatory, signatory_name: e.signatory_name, signatory_designation: v.signatory_designation || "",
+      conditions: v.conditions || "", supersedes: e.supersedes || "", certificate_orientation: orient },
+      note: (sample ? "SAMPLE CERTIFICATE — fictional data for reviewers. " : "") + "Register copy printed on " + longDate(today()) +
+        " from the verification page: not valid without the signature of the signatory and the official seal." };
+    var opt = function (v2, label) { return "<option value=\"" + v2 + "\"" + (orient === v2 ? " selected" : "") + ">" + label + "</option>"; };
+    return '<section class="panel ce-copy"><div class="noprint"><h3>Printable copy from the register</h3>' +
+      '<p class="intro">' + Ref.link("A register copy is the certificate generated again from its entry in the register of issued certificates, with the same certificate fingerprint and security emblem. " +
+        "It is marked as a copy: it is not valid without the signature of the signatory and the official seal.", new Set()) + "</p>" +
+      (v.conditions ? "" : (e.results ? "" : '<p class="muted">This entry was recorded before results were kept, so the copy shows no results.</p>')) +
+      '<div class="ce-acts"><label class="ce-orient">Orientation <select data-copy-orient aria-label="Orientation of the copy">' + opt("landscape", "Landscape") + opt("portrait", "Portrait") +
+      '</select></label><button type="button" id="btn-print-copy" class="primary">Print / save the copy as PDF</button></div></div>' +
+      paper(ctx, rec, e.fingerprint, sample ? "SAMPLE — NOT A REAL CERTIFICATE" : "REGISTER COPY — NOT VALID WITHOUT SIGNATURE AND SEAL") + "</section>";
+  }
+
+  /** Verify page: the validation record of a certificate, sheet by sheet. */
+  function validationDetails(v) {
+    if (!v || !v.sheets) return "";
+    var info = VALIDATION_INFO.filter(function (f) { return v[f[0]]; }).map(function (f) {
+      return "<div><dt>" + esc(f[1]) + "</dt><dd>" + esc(v[f[0]]) + "</dd></div>";
+    }).join("");
+    var lv = Object.keys(v.levels || {}).map(function (k) {
+      var st = String(v.levels[k]);
+      return '<span class="ce-lv ' + (st === "PASSED" ? "ok" : "no") + '"><b>Level ' + esc(k.replace(/^L/, "")) + "</b> " + esc(st) + "</span>";
+    }).join("");
+    var rows = Object.keys(v.sheets).map(function (k) {
+      var x = v.sheets[k], nm = sheetName(k), needs = x.needs_compliance || [];
+      return "<tr><th><b>" + esc(nm[0]) + "</b> " + esc(nm[1]) + '</th><td class="n">' + esc(x.score) + '</td><td class="n">' + esc(x.threshold) + "</td><td>" + esc(x.status) +
+        '</td><td class="n">' + esc(x.criteria) + "</td>" + COUNTS.map(function (c) { return '<td class="n">' + esc(x[c]) + "</td>"; }).join("") +
+        '<td class="n">' + esc(x.critical_not_met) + "</td><td>" + (needs.length ? needs.map(function (id) { return "<code>" + esc(id) + "</code>"; }).join(" ") : "—") + "</td></tr>";
+    }).join("");
+    return '<h3 class="ce-vh">Validation record</h3><p class="muted">As recorded in the register when the certificate was issued: the evaluation, the status of each level, and the result of every sheet. ' +
+      "Criteria counted under Partial were met only in part (for compliance); Info only criteria are not scored.</p>" +
+      (info ? '<dl class="ce-vinfo">' + info + "</dl>" : "") + (lv ? '<div class="ce-lvs">' + lv + "</div>" : "") +
+      '<div class="ce-vscroll"><table class="ce-vdet"><thead><tr><th>Sheet</th><th class="n">Score</th><th class="n">Pass mark</th><th>Status</th><th class="n">Criteria</th>' +
+      COUNTS.map(function (c) { return '<th class="n">' + esc(COUNT_NAMES[c]) + "</th>"; }).join("") +
+      '<th class="n">Critical not met</th><th>Needing compliance</th></tr></thead><tbody>' + rows + "</tbody></table></div>";
   }
 
   var api = {
-    FIELDS: FIELDS, sha256: sha256, canonical: canonical, fingerprint: fingerprint, qrMatrix: qrMatrix, qrSvg: qrSvg,
-    init: function (data) { D = data; }, record: record, orientation: function (p) { return orientation(p); }, view: view, viewVerify: viewVerify, fit: fit, lookup: lookup
+    FIELDS: FIELDS, RESULT_KEYS: RESULT_KEYS, sha256: sha256, canonical: canonical, fingerprint: fingerprint, qrMatrix: qrMatrix, qrSvg: qrSvg, emblemSvg: emblemSvg, rosetteParams: rosetteParams,
+    init: function (data) { D = data; }, record: record, copyOrientation: copyOrientation,
+    setCopyOrientation: function (v) { copyOrient = String(v).toLowerCase() === "portrait" ? "portrait" : "landscape"; }, validationOf: validationOf, yamlEntry: yamlEntry, orientation: function (p) { return orientation(p); }, view: view, viewVerify: viewVerify, fit: fit, lookup: lookup
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.Cert = api;

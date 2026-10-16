@@ -535,6 +535,12 @@
     var g = guide(), list = chapters(), i = list.indexOf(ch), prev = list[i - 1], next = list[i + 1];
     var srcE = { title: g.title + ": " + ch.title, id: ch.title, p: g.source, l: ch.l, text: "" };
     var html = ch.html.replace(/<!--\s*register:\s*([\w-]+)\s*-->/g, function (_, key) { return registerBlock(key); });
+    // each section heading gets its own ✎, pointing to that section's lines
+    ch.sections.forEach(function (sc) {
+      if (!sc.l) return;
+      var btn = srcBtn({ title: g.title + ": " + sc.title, id: sc.title, p: g.source, l: sc.l, text: "" }, "hov");
+      html = html.replace(new RegExp('(<h\\d[^>]*id="' + sc.id + '"[^>]*>)([\\s\\S]*?)(</h\\d>)'), function (_, open, inner, close) { return open + inner + btn + close; });
+    });
     var filter = ch.registers.length ? '<div class="ref-tools"><input type="search" id="ref-filter" placeholder="Filter the ' +
       esc(ch.registers.map(function (k) { return (REG_LABEL[k] || k).toLowerCase(); }).join(", ")) + '" value="' + esc(refFilter) + '"></div>' : "";
     return '<div class="xp-kind">' + esc(g.title) + " · Chapter " + esc(ch.num) + '</div><h2 class="ch-title">' + esc(ch.short) + srcBtn(srcE) + "</h2>" +
