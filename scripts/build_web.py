@@ -18,7 +18,7 @@ from pathlib import Path
 
 from build_reference import build_reference
 from build_xlsx import retired_list
-from common import (SHOW_LICENSE_NOTICE, CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
+from common import (CERTIFICATE_FILE, ISSUED_FILE, SHOW_LICENSE_NOTICE, CODE_LICENSE, CONTENT_LICENSE, CREDIT, OWNER, ROOT, SHEETS_FILE, TEMPLATE_XLSX, TITLE, _git, active,
                     active_subs, load_criteria, load_scoring, load_sheets, load_yaml, version_info, workbook_name, yaml_lines)
 
 
@@ -76,6 +76,35 @@ def profile_form() -> dict:
             "src": {"p": PROFILE_FILE, "l": lines.get(()), "f": parts((), ("title", "intro"))}}
 
 
+def certificate_form() -> dict:
+    """Certificate wording and settings, with the line of each part for the edit links. The seal and
+    the further logos print only when their files are present in tool/ (they are supplied by the DOH,
+    not written by this tool)."""
+    doc, lines = load_yaml(CERTIFICATE_FILE), yaml_lines(CERTIFICATE_FILE)
+    seal = doc.get("seal") or ""
+    logos = [{"url": x["file"], "alt": x.get("alt") or "", "present": (ROOT / "tool" / x["file"]).is_file()} for x in doc.get("logos") or []]
+    return doc | {"seal_url": seal if seal and (ROOT / "tool" / seal).is_file() else "", "logo_list": logos,
+                  "src": {"p": CERTIFICATE_FILE.relative_to(ROOT).as_posix(), "l": lines.get(()),
+                          "f": {k: lines[(k,)] for k in doc if (k,) in lines}}}
+
+
+def _plain(v):
+    """A register value as JSON: mappings and lists kept, counts and yes/no values kept as they are, the rest as text."""
+    if isinstance(v, dict):
+        return {str(k): _plain(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_plain(x) for x in v]
+    return v if isinstance(v, (bool, int)) else str(v)
+
+
+def issued_register() -> list[dict]:
+    """Register of issued certificates, each entry with its lines (and the line of its status) for the edit links."""
+    doc, lines = load_yaml(ISSUED_FILE) or {}, yaml_lines(ISSUED_FILE)
+    return [{k: _plain(v) for k, v in e.items()}
+            | {"src_l": lines.get(("certificates", i)), "src_status": lines.get(("certificates", i, "status"))}
+            for i, e in enumerate(doc.get("certificates") or [])]
+
+
 def stamp_assets(out: Path, meta: dict) -> None:
     """Make every build fetch its own scripts and styles.
 
@@ -109,6 +138,9 @@ def export(out: Path) -> Path:
         "report": report_text(),
         "scoring": scoring,
         "profile": profile_form(),
+        "certificate": certificate_form(),
+        "issued": issued_register(),
+        "issued_src": {"p": ISSUED_FILE.relative_to(ROOT).as_posix(), "l": yaml_lines(ISSUED_FILE).get(("certificates",))},
         "sheets": [
             {
                 "key": s["key"], "tab": s["tab"], "title": s["title"], "intro": s["intro"], "note": s.get("note") or "",

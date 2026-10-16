@@ -1,0 +1,29 @@
+name: Certificate record
+description: Record, revoke or supersede a certificate in the register of issued certificates
+labels: ["certificate"]
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action
+      options:
+        - Record a new certificate
+        - Revoke a certificate
+        - Record a certificate that supersedes an earlier one
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Register entry
+      description: For a new certificate, the entry shown on Output › Certificate of the web scorecard. For a revocation, the certificate number.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Approval
+      description: Who approved the issue or revocation, and the reference (memo, resolution or signed evaluation report).
+    validations:
+      required: true

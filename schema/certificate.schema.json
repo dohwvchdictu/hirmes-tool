@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "certificate.schema.json",
+  "title": "Certificate wording and settings",
+  "type": "object",
+  "required": ["title", "subtitle", "certifies", "statement", "microtext", "signatories", "verify"],
+  "additionalProperties": false,
+  "properties": {
+    "notice": {"type": ["string", "null"], "description": "Proof-of-concept notice; blank once the feature is adopted."},
+    "orientation": {"enum": ["landscape", "portrait"]},
+    "title": {"type": "string"},
+    "subtitle": {"type": "string"},
+    "certifies": {"type": "string"},
+    "statement": {"type": "string", "description": "May use {level}, {criteria} and {office}."},
+    "validity_note": {"type": ["string", "null"], "description": "Optional; printed boxed as the scope of validity."},
+    "microtext": {"type": "string"},
+    "seal": {"type": ["string", "null"], "description": "Seal image, relative to tool/."},
+    "logos": {
+      "type": ["array", "null"],
+      "description": "Further logos printed after the DOH seal, in order.",
+      "items": {
+        "type": "object",
+        "required": ["file", "alt"],
+        "additionalProperties": false,
+        "properties": {
+          "file": {"type": "string", "description": "Image file, relative to tool/ (PNG, JPG, SVG or WebP)."},
+          "alt": {"type": "string", "description": "What the logo is, for screen readers, e.g. Bagong Pilipinas."}
+        }
+      }
+    },
+    "signatories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label", "designation", "office"],
+        "additionalProperties": false,
+        "properties": {
+          "label": {"type": "string"},
+          "designation": {"type": "string"},
+          "office": {"type": "string"}
+        }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "required": ["label"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {"type": ["string", "null"]},
+        "label": {"type": "string", "description": "Printed above the verification link."}
+      }
+    }
+  }
+}

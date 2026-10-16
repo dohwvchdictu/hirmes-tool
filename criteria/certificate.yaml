@@ -1,0 +1,61 @@
+# Wording and settings of the Certificate (web scorecard: Output › Certificate).
+# The details on the certificate come from the System Profile (criteria/profile.yaml, section
+# "Certificate" and the application fields) and from the result. Issued certificates are recorded
+# in criteria/certificates-issued.yaml.
+#
+# statement may use {level} (highest level achieved), {criteria} (testing criteria version) and
+# {office} (the conducting office from System Profile section 2; it is not printed on the letterhead).
+# The certificate number and dates, the developer, the versions validated against and the Level 2-4
+# results print in one ruled table below the statement (the number also stands in the upper right
+# corner); the level achieved prints in the line at the foot. validity_note (optional)
+# prints boxed under the table as the scope of validity.
+#
+# Shown on the Certificate and Verify pages and printed on every certificate while the feature is a
+# proof of concept. Make it blank ("") when the DOH adopts the feature.
+notice: >-
+  This certificate feature is a proof of concept for discussion. Its design, wording, signatories,
+  integrity features and verification process do not represent the actual DOH certificate or its
+  implementation, and a certificate printed from it has no official standing.
+# Default page orientation: landscape or portrait. The System Profile field "Certificate orientation"
+# (or the choice on the Certificate page) overrides it per evaluation.
+orientation: landscape
+title: Certificate of Validation
+subtitle: Healthcare Interoperability Readiness Matrix for EMR Systems
+certifies: This certifies that the electronic medical record system
+statement: >-
+  has been validated by the Regional Validation Team of the {office}, in compliance with the Standards Conformance and
+  Interoperability Validation guidelines under DOH MC 2021-0045, against the testing criteria {criteria}
+  and the implementation guides and resources indicated below, pursuant to DOH-PhilHealth-DICT JAO 2021-0001.
+# Repeated in very small print along the frame (photocopies blur it); the certificate number is added.
+microtext: REPUBLIC OF THE PHILIPPINES · DEPARTMENT OF HEALTH · CERTIFICATE OF VALIDATION
+# Official DOH seal, relative to tool/. Not in the repository: add the file supplied by the DOH
+# (full colour or grayscale, per the DOH Brand Book). Without it the letterhead prints the agency name only.
+seal: img/doh-seal.png
+# Further logos printed in a row right after the DOH seal, at the seal's height, in this order: for
+# example the government advocacy logo (Bagong Pilipinas) or this system's logo. Each file is
+# relative to tool/ and, like the seal, is added to the repository by the maintainers; a listed file
+# that is missing is skipped (the Certificate page says which). Per the DOH Brand Book, only the
+# official marks of the DOH and its attached agencies belong in the main sequence next to the seal.
+#   logos:
+#   - file: img/bagong-pilipinas.png
+#     alt: Bagong Pilipinas
+logos:
+# The choices of the System Profile field "Signatory" (the labels must match its options).
+# designation and office print under the name unless the profile gives a designation.
+# office "conducting office" prints the System Profile's Conducting office.
+- file: img/bagongpilipinas.png
+  alt: Bagong Pilipinas
+signatories:
+- label: Head of KMITS
+  designation: Head, Knowledge Management and Information Technology Service
+  office: Department of Health – Central Office
+- label: DOH CHD Regional Director
+  designation: Regional Director
+  office: conducting office
+verify:
+  # Address the QR code opens. Blank: the scorecard build the certificate was printed from (a branch
+  # preview or the draft verifies on itself); from a release or release candidate, the draft (main)
+  # build, where the register keeps growing. Set it to fix one address, e.g. once the feature is merged.
+  url: ""
+  # Printed above the verification link, beside the QR code.
+  label: Verify this certificate at

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "certificates-issued.schema.json",
+  "title": "Register of issued certificates",
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sheet": {
+      "type": "object",
+      "required": ["score", "threshold", "status", "criteria", "met", "partial", "not_met", "na", "not_tested", "info", "critical_not_met", "needs_compliance"],
+      "additionalProperties": false,
+      "properties": {
+        "score": {"type": "string", "pattern": "^\\d{1,3}\\.\\d%$"}, "threshold": {"type": "string", "pattern": "^\\d{1,3}%$"},
+        "status": {"enum": ["PASSED", "NOT PASSED", "INCOMPLETE"]}, "criteria": {"$ref": "#/$defs/count"},
+        "met": {"$ref": "#/$defs/count"}, "partial": {"$ref": "#/$defs/count"}, "not_met": {"$ref": "#/$defs/count"}, "na": {"$ref": "#/$defs/count"},
+        "not_tested": {"$ref": "#/$defs/count"}, "info": {"$ref": "#/$defs/count"}, "critical_not_met": {"$ref": "#/$defs/count"},
+        "needs_compliance": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "result": {"type": "string", "pattern": "^\\d{1,3}\\.\\d% (PASSED|NOT PASSED|INCOMPLETE)$"}
+  },
+  "type": "object",
+  "required": ["certificates"],
+  "additionalProperties": false,
+  "properties": {
+    "certificates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["number", "issued", "expires", "vendor", "category", "product", "version", "ph_core", "pheref",
+                     "level", "criteria", "signatory", "signatory_name", "fingerprint", "status"],
+        "additionalProperties": false,
+        "dependentRequired": {"results": ["fhir_release"]},
+        "properties": {
+          "number": {"type": "string", "minLength": 1},
+          "issued": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "expires": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "vendor": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "product": {"type": "string", "minLength": 1},
+          "version": {"type": "string", "minLength": 1},
+          "ph_core": {"type": "string", "minLength": 1},
+          "pheref": {"type": "string", "minLength": 1},
+          "level": {"type": "string", "minLength": 1},
+          "criteria": {"type": "string", "minLength": 1},
+          "signatory": {"type": "string", "minLength": 1},
+          "signatory_name": {"type": "string", "minLength": 1},
+          "fingerprint": {"type": "string", "pattern": "^[0-9A-F]{16}$"},
+          "status": {"enum": ["valid", "revoked"], "description": "Superseded and expired are derived, not recorded."},
+          "fhir_release": {"type": "string", "minLength": 1, "description": "HL7 FHIR release validated against, e.g. R4."},
+          "results": {
+            "type": "object",
+            "description": "Score and status of each sheet of Levels 2-4, as printed, e.g. \"96.2% PASSED\".",
+            "required": ["L2A", "L2B", "L2C", "L2D", "L3", "L4"],
+            "additionalProperties": false,
+            "properties": {
+              "L2A": {"$ref": "#/$defs/result"}, "L2B": {"$ref": "#/$defs/result"}, "L2C": {"$ref": "#/$defs/result"},
+              "L2D": {"$ref": "#/$defs/result"}, "L3": {"$ref": "#/$defs/result"}, "L4": {"$ref": "#/$defs/result"}
+            }
+          },
+          "validation": {
+            "type": "object",
+            "description": "The validation record: evaluation details, level statuses and every sheet's result. Not printed and not part of the fingerprint.",
+            "required": ["levels", "sheets"],
+            "additionalProperties": false,
+            "properties": {
+              "application_no": {"type": "string"}, "evaluation_type": {"type": "string"}, "test_dates": {"type": "string"},
+              "deployment": {"type": "string"}, "terminology": {"type": "string"}, "office": {"type": "string"},
+              "signatory_designation": {"type": "string"}, "conditions": {"type": "string"},
+              "levels": {"type": "object", "additionalProperties": {"enum": ["PASSED", "NOT PASSED", "INCOMPLETE", "LOCKED"]}},
+              "sheets": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/sheet"}}
+            }
+          },
+          "sample": {"type": "boolean", "description": "A fictional entry for reviewers to try the Verify page; never an issued certificate."},
+          "supersedes": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

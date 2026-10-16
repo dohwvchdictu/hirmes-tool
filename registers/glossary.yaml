@@ -22,7 +22,7 @@ sections:
   - term: Observer
     meaning: A representative of an LGU, hospital, academic or research institution or other agency who witnesses the validation to ensure unbiased processing. Observers do not score.
   - term: Conducting office
-    meaning: The DOH office or region that conducts the validation (System Profile C.14); printed on the report letterhead.
+    meaning: The DOH office or region that conducts the validation (System Profile C.14); printed on the report letterhead and named in the statement of the certificate.
   - term: Application No.
     meaning: The reference number the Administrator assigns when the application is registered (System Profile A.0).
   - term: Letter of application
@@ -41,8 +41,43 @@ sections:
     meaning: The signature section of the Printed Evaluation Report; names come from System Profile section C.
   - term: Conforme
     meaning: Signature of the vendor's authorized signatory acknowledging the evaluation result.
-  - term: Certificate of conformance
-    meaning: The document issued after approval stating that a specific product version passed Levels 0 to 3 (see Chapter 7).
+  - term: Certificate of Validation
+    aliases: [Certificate of conformance]
+    meaning: 'The document issued after approval stating that a specific product version was validated, with its Level 2 to 4 results and the versions it was validated against. Printed from Output › Certificate on one A4 page (landscape or portrait). PROOF OF CONCEPT: the design and process in this tool are for discussion and do not represent the actual DOH certificate (Chapter 7.4).'
+  - term: Certificate fingerprint
+    meaning: 'A 16-character code (first 16 hexadecimal digits of SHA-256) computed from the certificate''s details, its FHIR release and its Level 2 to 4 results. Printed beside the security emblem; any change to a printed detail gives a different fingerprint. It is not a signature: anyone can compute it, so authenticity comes from the register of issued certificates (Chapter 7.6).'
+  - term: Register of issued certificates
+    aliases: [certificate register]
+    meaning: 'The list of every issued certificate, kept in criteria/certificates-issued.yaml and changed only by reviewed commits. A certificate counts as issued only once its entry is recorded; the Verify page answers from it. Each entry also keeps the validation record (Chapter 7.8).'
+  - term: Validation record
+    meaning: 'The part of a register entry that keeps the full result of the validation: evaluation details, the status of each level and, for every sheet, the score, pass mark, status, criterion counts and the criteria still needing compliance. Not printed; shown on the Verify page (Chapter 7.8).'
+  - term: Security emblem
+    meaning: 'The round mark at the foot of the certificate: the QR code in front and the security rosette behind it, both drawn from the certificate fingerprint (Chapter 7.6).'
+  - term: Security rosette
+    meaning: 'The pattern behind and around the QR code: a ring of 64 long and short ticks that spells the fingerprint, a guilloche ring with 6 to 14 lobes, and faint slanted lines behind the code. Each certificate has its own; the Verify page redraws it for comparison with the paper (Chapter 7.6).'
+  - term: Tick ring
+    meaning: 'The 64 radial ticks around the security emblem, read clockwise from the ▼ mark: a long tick is a 1 and a short tick a 0 of the certificate fingerprint''s 64 bits.'
+  - term: Guilloche
+    aliases: [guilloche]
+    meaning: 'Fine, interlaced line patterns (the border band, the corner rosettes and the ring of the security emblem) that are hard to redraw by hand and blur when copied. On the certificate they are drawn from the certificate fingerprint.'
+  - term: Microtext
+    aliases: [microtext]
+    meaning: 'Very small repeated text along the frame of the certificate, including the certificate number. Readable with a magnifier on the original; it blurs on photocopies and scans.'
+  - term: QR error correction level
+    meaning: 'How much of a QR code can be damaged and still read: L about 7 %, M 15 %, Q 25 %. The certificate uses level L, the smallest code for its address, so each module prints large (Chapter 7.6).'
+  - term: Verify page
+    aliases: [Verify a certificate, verification page]
+    meaning: 'Output › Verify a certificate: answers from the register of issued certificates whether a certificate is Valid, Expired, Superseded, Revoked or Not found, shows its details and validation record, and redraws its security emblem (Chapter 7.7).'
+  - term: Specimen (certificate)
+    meaning: 'A certificate printed while an item is still open (a detail missing, levels not passed, thresholds not approved, or a criteria version not released). It carries SPECIMEN — NOT VALID across the page.'
+  - term: Register copy
+    meaning: 'The certificate printed again from its register entry on the Verify page, with the same fingerprint and security emblem. Marked as a copy: not valid without the signature of the signatory and the official seal (Chapter 7.7).'
+  - term: Sample certificate
+    meaning: 'A fictional entry in the register of issued certificates (marked sample) for reviewers to try the Verify page and the register copy. It was never issued (Chapter 7.9).'
+  - term: Superseded certificate
+    meaning: 'A certificate replaced by a later one, recorded with supersedes: <old number> in the new entry; the Verify page then answers Superseded for the old number.'
+  - term: Signatory (certificate)
+    meaning: 'The officer who signs the certificate: the Head of KMITS or the DOH CHD Regional Director (System Profile, Certificate section).'
   - term: Conformance / conformant
     meaning: Meeting the rules of the standard. A system is conformant for use in the HIE when Levels 0 to 3 are PASSED and no critical item is Not Met.
   - term: Revalidation

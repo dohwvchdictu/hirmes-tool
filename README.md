@@ -20,6 +20,8 @@ and every file stays in sync.
 ```
 criteria/            one YAML file per criterion, in a folder per sheet (L0, L1, L2A–L2D, L3, L4)
 criteria/sheets.yaml sheet titles, introductions and the display order of criteria
+criteria/certificate.yaml          wording and signatories of the Certificate of Validation (proof of concept)
+criteria/certificates-issued.yaml  register of issued certificates (what the QR code verifies against)
 criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
 scoring.yaml         pass thresholds, level gating and the TWG approval record
 registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-),
@@ -38,6 +40,7 @@ docs/                Technical Reference Guide (prose; its tables come from regi
 | --- | --- | --- |
 | Scorecard workbook (`.xlsx`) | `scripts/build_xlsx.py` | Every push (download from the workflow run) and every release |
 | Web scorecard and landing page | `scripts/build_web.py`, `scripts/publish.py` | Every push to any branch or tag (GitHub Pages, `gh-pages` branch) |
+| Printed report and certificate (PDF) | The web scorecard: Output › Printed report, Output › Certificate (the certificate is a proof of concept, see [CONTRIBUTING.md](CONTRIBUTING.md#certificates)) | On demand, from an evaluation |
 | Change summary | `scripts/change_summary.py` | Every release (compared with the previous release) |
 | Change log | git-cliff, from commit messages | Every release |
 

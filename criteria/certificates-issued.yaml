@@ -1,0 +1,55 @@
+# Register of issued certificates. The Verify page (and the QR code on each certificate) answers
+# from this file, so a certificate counts as issued only once its entry is committed here.
+#
+# Record:     paste the entry shown on Output › Certificate (commit: "cert: record <number>").
+# Revoke:     set status: revoked and add reason (commit: "cert: revoke <number> (<reference>)").
+# Supersede:  record the new certificate with supersedes: <old number>; the old one then shows as
+#             superseded. Never delete or edit the details of an entry: the fingerprint is computed
+#             from them, and scripts/check.py fails when they no longer match.
+#
+# Fields: number, issued, expires, vendor, category, product, version, ph_core, pheref, level,
+# criteria, signatory, signatory_name, fingerprint, status (valid | revoked), supersedes, reason.
+certificates:
+# Sample certificate for reviewers: fictional data, never issued (Reference, Chapter 7.9).
+- number: "SAMPLE-2026-0001"
+  issued: "2026-10-16"
+  expires: "2028-10-16"
+  vendor: "Sample Health Systems, Inc. (sample data)"
+  category: "Third-party EMR provider"
+  product: "Sample EMR (sample data)"
+  version: "1.0.0 (build 2026.10.01)"
+  ph_core: "0.2.0"
+  pheref: "0.1.0"
+  level: "Level 3"
+  criteria: "v1.0.0-rc1+dev"
+  signatory: "DOH CHD Regional Director"
+  signatory_name: "Sample Signatory"
+  fhir_release: "R4"
+  results:
+    L2A: "100.0% PASSED"
+    L2B: "100.0% PASSED"
+    L2C: "100.0% PASSED"
+    L2D: "100.0% PASSED"
+    L3: "100.0% PASSED"
+    L4: "70.0% NOT PASSED"
+  fingerprint: "195436CE47F06F41"
+  status: valid
+  sample: true
+  validation:
+    application_no: "SAMPLE-APP-0001"
+    evaluation_type: "Initial"
+    test_dates: "2026-10-12 to 2026-10-14"
+    deployment: "Cloud"
+    terminology: "Sample terminology release"
+    office: "Western Visayas Center for Health Development"
+    conditions: "Sample data for reviewers: not an issued certificate."
+    levels: {L0: "PASSED", L1: "PASSED", L2: "PASSED", L3: "PASSED", L4: "NOT PASSED"}
+    sheets:
+      L0: {score: "100.0%", threshold: "90%", status: "PASSED", criteria: 6, met: 6, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 0, critical_not_met: 0, needs_compliance: []}
+      L1: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 6, met: 6, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 0, critical_not_met: 0, needs_compliance: []}
+      L2A: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 8, met: 7, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 1, critical_not_met: 0, needs_compliance: []}
+      L2B: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 20, met: 18, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 2, critical_not_met: 0, needs_compliance: []}
+      L2C: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 13, met: 13, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 0, critical_not_met: 0, needs_compliance: []}
+      L2D: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 22, met: 22, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 0, critical_not_met: 0, needs_compliance: []}
+      L3: {score: "100.0%", threshold: "85%", status: "PASSED", criteria: 21, met: 20, partial: 0, not_met: 0, na: 0, not_tested: 0, info: 1, critical_not_met: 0, needs_compliance: []}
+      L4: {score: "70.0%", threshold: "75%", status: "NOT PASSED", criteria: 7, met: 4, partial: 0, not_met: 3, na: 0, not_tested: 0, info: 0, critical_not_met: 0, needs_compliance: ["L4-05", "L4-10", "L4-11"]}
