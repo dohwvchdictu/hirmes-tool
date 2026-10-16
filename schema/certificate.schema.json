@@ -3,7 +3,7 @@
   "$id": "certificate.schema.json",
   "title": "Certificate wording and settings",
   "type": "object",
-  "required": ["title", "subtitle", "certifies", "statement", "validity_note", "microtext", "signatories", "verify"],
+  "required": ["title", "subtitle", "certifies", "statement", "microtext", "signatories", "verify"],
   "additionalProperties": false,
   "properties": {
     "notice": {"type": ["string", "null"], "description": "Proof-of-concept notice; blank once the feature is adopted."},
@@ -12,7 +12,7 @@
     "subtitle": {"type": "string"},
     "certifies": {"type": "string"},
     "statement": {"type": "string", "description": "May use {level} and {criteria}."},
-    "validity_note": {"type": "string"},
+    "validity_note": {"type": ["string", "null"], "description": "Optional; printed boxed as the scope of validity."},
     "microtext": {"type": "string"},
     "seal": {"type": ["string", "null"], "description": "Seal image, relative to tool/."},
     "signatories": {
@@ -31,11 +31,11 @@
     },
     "verify": {
       "type": "object",
-      "required": ["note"],
+      "required": ["label"],
       "additionalProperties": false,
       "properties": {
         "url": {"type": ["string", "null"]},
-        "note": {"type": "string"}
+        "label": {"type": "string", "description": "Printed above the verification link."}
       }
     }
   }

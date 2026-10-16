@@ -20,7 +20,7 @@ and every file stays in sync.
 ```
 criteria/            one YAML file per criterion, in a folder per sheet (L0, L1, L2A–L2D, L3, L4)
 criteria/sheets.yaml sheet titles, introductions and the display order of criteria
-criteria/certificate.yaml          wording and signatories of the Certificate of Conformance
+criteria/certificate.yaml          wording and signatories of the Certificate of Validation (proof of concept)
 criteria/certificates-issued.yaml  register of issued certificates (what the QR code verifies against)
 criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
 scoring.yaml         pass thresholds, level gating and the TWG approval record

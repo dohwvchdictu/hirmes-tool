@@ -19,7 +19,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from common import (CERTIFICATE_FILE, ISSUED_FILE, ROOT, active, active_subs, certificate_fingerprint, load_criteria, load_legacy_retired,
+from common import (CERTIFICATE_FILE, ISSUED_FILE, RESULT_KEYS, ROOT, active, active_subs, certificate_fingerprint, load_criteria, load_legacy_retired,
                     load_scoring, load_sheets, load_yaml)
 
 errors: list[str] = []
@@ -112,7 +112,7 @@ def check_reference(err, warn):
 PROFILE_KEYS_USED = ("application_no", "date_received", "vendor", "system_name", "version", "category", "deployment",
                      "evaluation_type", "technical_lead", "administrator", "office", "test_dates",
                      "ph_core", "pheref", "terminology", "certificate_no", "certificate_date", "valid_until", "conditions",
-                     "supersedes", "signatory", "signatory_name", "signatory_designation", "certificate_orientation")
+                     "supersedes", "signatory", "signatory_name", "signatory_designation", "certificate_orientation", "fhir_release")
 
 
 def check_certificates(profile_doc, err):
@@ -127,6 +127,10 @@ def check_certificates(profile_doc, err):
     orient = next((f for s in profile_doc.get("sections") or [] for f in s.get("fields") or [] if f.get("key") == "certificate_orientation"), None)
     if orient and sorted(o.lower() for o in orient.get("options") or []) != ["landscape", "portrait"]:
         err("criteria/profile.yaml: the options of 'certificate_orientation' must be Landscape and Portrait (tool/cert.js reads them)")
+    sheet_keys = [s.get("key") for s in (load_yaml(ROOT / "criteria" / "sheets.yaml") or {}).get("sheets") or []]
+    for k in RESULT_KEYS:
+        if k not in sheet_keys:
+            err(f"scripts/common.py: RESULT_KEYS names sheet '{k}', which is not in criteria/sheets.yaml (the certificate prints its result)")
     issued = load_yaml(ISSUED_FILE) or {}
     validate(validator("certificates-issued.schema.json"), issued, "criteria/certificates-issued.yaml")
     entries = issued.get("certificates") or []
@@ -147,6 +151,21 @@ def check_certificates(profile_doc, err):
             err(f"criteria/certificates-issued.yaml: certificate {n} supersedes {e['supersedes']}, which is not in the register")
         if e.get("supersedes") == n:
             err(f"criteria/certificates-issued.yaml: certificate {n} supersedes itself")
+        val = e.get("validation") or {}
+        for k, x in (val.get("sheets") or {}).items():
+            if not isinstance(x, dict):
+                continue
+            if k not in sheet_keys:
+                err(f"criteria/certificates-issued.yaml: certificate {n} has a validation record for unknown sheet {k}")
+            counts = [x.get(c) for c in ("met", "partial", "not_met", "na", "not_tested", "info")]
+            if all(isinstance(c, int) for c in counts) and isinstance(x.get("criteria"), int) and sum(counts) != x["criteria"]:
+                err(f"criteria/certificates-issued.yaml: certificate {n}, sheet {k}: the counts add up to {sum(counts)}, not {x['criteria']} criteria")
+            printed = (e.get("results") or {}).get(k)
+            if printed and printed != f"{x.get('score')} {x.get('status')}":
+                err(f"criteria/certificates-issued.yaml: certificate {n}, sheet {k}: the validation record says {x.get('score')} {x.get('status')}, "
+                    f"the printed result {printed}")
+        if e.get("results") and val and set(RESULT_KEYS) - set(val.get("sheets") or {}):
+            err(f"criteria/certificates-issued.yaml: certificate {n}: the validation record lacks sheets {', '.join(sorted(set(RESULT_KEYS) - set(val.get('sheets') or {})))}")
         if e.get("status") == "revoked" and not e.get("reason"):
             err(f"criteria/certificates-issued.yaml: certificate {n} is revoked without a reason")
 

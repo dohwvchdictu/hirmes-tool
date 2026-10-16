@@ -86,10 +86,20 @@ def certificate_form() -> dict:
                           "f": {k: lines[(k,)] for k in doc if (k,) in lines}}}
 
 
+def _plain(v):
+    """A register value as JSON: mappings and lists kept, counts and yes/no values kept as they are, the rest as text."""
+    if isinstance(v, dict):
+        return {str(k): _plain(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_plain(x) for x in v]
+    return v if isinstance(v, (bool, int)) else str(v)
+
+
 def issued_register() -> list[dict]:
     """Register of issued certificates, each entry with its lines (and the line of its status) for the edit links."""
     doc, lines = load_yaml(ISSUED_FILE) or {}, yaml_lines(ISSUED_FILE)
-    return [{k: str(v) for k, v in e.items()} | {"src_l": lines.get(("certificates", i)), "src_status": lines.get(("certificates", i, "status"))}
+    return [{k: _plain(v) for k, v in e.items()}
+            | {"src_l": lines.get(("certificates", i)), "src_status": lines.get(("certificates", i, "status"))}
             for i, e in enumerate(doc.get("certificates") or [])]
 
 

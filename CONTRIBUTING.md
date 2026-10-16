@@ -99,10 +99,19 @@ After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
 > certificate carries "PROOF OF CONCEPT — NOT AN OFFICIAL DOH CERTIFICATE". The notice comes from
 > `notice` in `criteria/certificate.yaml`; blank it only when the DOH adopts the feature.
 
-The web scorecard prints a Certificate of Conformance (Output › Certificate, one A4 page in landscape
+How a certificate is generated, secured and verified, and the sample certificate for reviewers, are
+explained in the Technical Reference Guide, Chapter 7.4–7.9 (`docs/reference-guide/reference-guide.md`, shown under
+Reference with ✎ Edit on every section); its terms are in the glossary (`registers/glossary.yaml`, section 2.1).
+
+The web scorecard prints a Certificate of Validation (Output › Certificate, one A4 page in landscape
 or portrait, white background to save ink). Its details come from the System Profile: certificate number and date of
 issuance, vendor / developer and applicant category, product name and exact version / build, PH Core
 and PHeReF IG versions, expiry date, and the signatory (Head of KMITS or DOH CHD Regional Director).
+Below the statement one ruled table holds the developer and applicant category, the versions validated
+against (HL7 FHIR release, PH Core and PHeReF IG) and the score of each sheet of Levels 2–4 (2A–2D, 3
+and 4; "--" for a sheet not passed yet, while the register keeps every score and status). The
+certificate number, date of issuance and expiry date sit together in the header; the level achieved is
+in the line at the foot. An optional `validity_note` prints boxed under the table as the scope of validity.
 The page lists what is still open; until everything is in order (details filled in, Levels 0–3
 passed, thresholds approved, a released criteria version) it prints as a SPECIMEN. Long details stay
 on the page: the title and product name shrink first, then all the text, and the page warns when even
@@ -110,18 +119,25 @@ the smallest size does not fit.
 
 | To change | Edit |
 | --- | --- |
-| Title, statement, validity note, microtext, signatory designations, verification address, proof-of-concept notice, default orientation | `criteria/certificate.yaml` (✎ Edit on the Certificate page) |
+| Title, subtitle, statement, validity note, microtext, signatory designations, verification address and its label, proof-of-concept notice, default orientation | `criteria/certificate.yaml` (✎ Edit on the Certificate page) |
 | Orientation of one certificate | The *Orientation* choice on the Certificate page, or *Certificate orientation* in the System Profile (not part of the fingerprint) |
 | Certificate fields in the System Profile | `criteria/profile.yaml`, section *Certificate* (the signatory choices must match `certificate.yaml`) |
 | The DOH seal on the letterhead | Add the official file at `tool/img/doh-seal.png` (full colour or grayscale, per the DOH Brand Book) |
 
 **Integrity.** Each certificate has a fingerprint: the first 16 hex digits of SHA-256 over its
-details, computed the same way by `tool/cert.js` and `scripts/common.py`. The fingerprint is printed
-under the QR code and seeds the guilloche border and security rosette, so every certificate has its
-own pattern. Microtext runs along the frame. The QR code opens *Verify a certificate* on the published
-draft scorecard with the number and fingerprint; that page answers from the register below and
-redraws the rosette for comparison with the paper. The fingerprint is not a signature (anyone can
-compute one): a certificate counts as issued only when its entry is in the register.
+details, its FHIR release and its Level 2–4 results (a register entry without `results`, recorded
+before results were printed, keeps its details-only fingerprint), computed the same way by `tool/cert.js` and
+`scripts/common.py`. The fingerprint seeds the guilloche border and the security emblem, so every
+certificate has its own pattern. Microtext runs along the frame.
+
+The **security emblem** joins the QR code and the security rosette: the code in front (error
+correction level L, the smallest code for the address, so its modules print large), and behind and
+around it a ring of 64 ticks spelling the fingerprint's bits clockwise from a ▼ mark, a guilloche ring
+with 6–14 lobes, and very light slanted lines behind the code. The code opens *Verify a certificate*
+on the published draft scorecard with the number and fingerprint; the verification address is also
+printed beside the emblem. The Verify page answers from the register below, redraws the emblem and
+lists what to compare (the code, the ticks, the lobe count). The fingerprint is not a signature (anyone
+can compute one): a certificate counts as issued only when its entry is in the register.
 
 **Register of issued certificates** (`criteria/certificates-issued.yaml`). Each change is one commit,
 so the history of every certificate is in git:
@@ -131,6 +147,14 @@ so the history of every certificate is in git:
 | Issue | Paste the entry shown on Output › Certificate (or ✉ ask the administrator; it opens a *Certificate record* issue with the entry filled in) | `cert: record HIE-WV-2026-0001` |
 | Revoke | Set `status: revoked` and add `reason` | `cert: revoke HIE-WV-2026-0001 (memo 2027-03)` |
 | Re-issue after a re-evaluation | Record the new certificate with `supersedes: <old number>`; the old one then verifies as *superseded* | `cert: record HIE-WV-2028-0004` |
+
+Each entry generated by the Certificate page also carries the full **validation record** under
+`validation`: application number, evaluation type, date(s) of testing, deployment model, terminology
+release and conducting office; the status of every level; and for every sheet (Levels 0–4) its score,
+pass mark, status, criterion counts (met, partial, not met, N/A, not tested, info only), critical items
+not met and the IDs of the criteria still needing compliance. It is the benchmark of the system and is
+shown on the Verify page. It is not printed and not part of the fingerprint; `check.py` checks that
+each sheet's counts add up and that its score and status match the printed result.
 
 Never edit the details of a recorded entry: `check.py` recomputes every fingerprint and fails when the
 details no longer match, and also checks unique numbers, expiry after issuance, `supersedes`

@@ -216,3 +216,68 @@ A certificate is issued on approval of the Technical Lead when Level 3 is PASSED
 - Validity period / expiry date and the revalidation triggers above
 
 - Signature of the Technical Lead (approval) and reference to the Printed Evaluation Report
+
+## 7.4 Certificate of Validation — proof of concept
+
+> **Proof of concept.** The Certificate of Validation in this tool, its design, wording, signatories, security features and verification process are a proof of concept for discussion. They do not represent the actual DOH certificate or its implementation, and a certificate printed from this tool has no official standing. The notice comes from `notice` in `criteria/certificate.yaml`.
+
+The web scorecard prints the Certificate of Validation from Output › Certificate and checks it from Output › Verify a certificate. Every part of it is kept as text in the repository, so a change is proposed and reviewed like any criterion (✎ Edit on each page):
+
+| Part | Source |
+| --- | --- |
+| Title, subtitle, statement, microtext, signatories and their designations, verification address and its label, proof-of-concept notice, default orientation | `criteria/certificate.yaml` |
+| Certificate fields (number, dates, signatory, supersedes, orientation, conditions) and the HL7 FHIR release | `criteria/profile.yaml` (System Profile) |
+| Issued, revoked and superseded certificates, with their validation records | `criteria/certificates-issued.yaml` (register of issued certificates) |
+| Generation, security emblem, verification page | `tool/cert.js` (fingerprint also in `scripts/common.py`) |
+
+## 7.5 Generating a certificate
+
+1. **Fill in the System Profile.** The application details (vendor / developer, applicant category, product name, exact version / build), the versions tested (HL7 FHIR release, PH Core and PHeReF IG versions) and the Certificate section (certificate number, date of issuance, expiry date, signatory and their name; optionally supersedes, orientation and conditions). If the expiry date is left blank it is 2 years from the date of issuance (PROPOSED).
+2. **Open Output › Certificate.** The page checks what stands between the evaluation and a valid certificate: every detail filled in; valid dates; Levels 0 to 3 PASSED with no critical item open; pass thresholds approved; a released criteria version. While any item is open the certificate prints as a specimen, with SPECIMEN — NOT VALID across the page.
+3. **Choose the orientation** (landscape or portrait). The layout fits one A4 page in both: long details first close up the spacing, then shrink the title and product name, then all the text, and the page warns when even the smallest size does not fit.
+4. **Record the certificate.** The page computes the certificate fingerprint and shows the register entry to add, with the full validation record. The Administrator adds it to the register of issued certificates in one commit (or asks for it through a *Certificate record* issue). Until then the Verify page answers *Not found*.
+5. **Print and sign.** Print / save as PDF prints the certificate edge to edge on white. It is valid only with the signature of the signatory (the Head of KMITS or the DOH CHD Regional Director) and the official seal.
+
+The certificate shows: certificate number, date of issuance and expiry date; the product name and exact version / build; the statement; a ruled table with the developer and applicant category, the versions validated against (HL7 FHIR release, PH Core and PHeReF IG) and the result of each sheet of Levels 2 to 4 (the score when passed, "--" when not yet passed); the security emblem with the verification site and the certificate fingerprint; the signatory; and, in the foot line, the testing criteria version, its commit and the level achieved.
+
+## 7.6 Security features
+
+| Feature | What it does | How to check it |
+| --- | --- | --- |
+| **Certificate fingerprint** | The first 16 hexadecimal digits of SHA-256 over the certificate's details, its FHIR release and its Level 2 to 4 results. Any change to a printed detail gives a different fingerprint. The web scorecard and the check script compute it the same way, and the check fails when a register entry no longer matches its fingerprint. | Type it on the Verify page with the certificate number. |
+| **Security emblem** | The QR code in front and the security rosette behind it, both drawn from the fingerprint, so neither can be moved from one certificate to another unnoticed. | Compare it with the emblem the Verify page redraws. |
+| **QR code** | Opens the Verify page with the certificate number and fingerprint. QR error correction level L, the smallest code for the address, so its modules print large; the rosette behind it is kept faint enough not to disturb reading. | Scan it: the address must be the official verification site printed beside it. |
+| **Tick ring** | 64 long and short ticks around the emblem spell the fingerprint's 64 bits, clockwise from the ▼ mark. | Compare tick for tick with the Verify page. |
+| **Guilloche** | The lobed ring of the emblem (6 to 14 lobes, counted on the Verify page), the interlaced border band and the corner rosettes, all drawn from the fingerprint, so every certificate has its own pattern. | Count the lobes; compare the pattern. |
+| **Microtext** | Very small text along the frame, including the certificate number. | Read it with a magnifier: it blurs on photocopies and scans. |
+| **Register of issued certificates** | The authority for every certificate: an entry is added, revoked or superseded only by a reviewed commit, so the history of each certificate is kept. | The Verify page answers from it. |
+
+The fingerprint is not a digital signature: the method is public, so anyone can compute a fingerprint and draw a matching emblem. What a forger cannot do is add an entry to the register; authenticity therefore comes from the register, and the security features make a paper that does not match its entry easy to spot.
+
+## 7.7 Verifying a certificate
+
+1. **Open the Verify page.** Scan the QR code (check that the address is the verification site printed on the certificate), or open Output › Verify a certificate on the official site you know and type the certificate number and the certificate fingerprint.
+2. **Read the answer.** *Valid* (recorded and within its validity period), *Expired*, *Superseded* (replaced by a later certificate, which is named), *Revoked* (with the reason), *Not found* (not in the register: issued after this version of the page, or not genuine), *Fingerprint does not match* (the paper or the code was altered, or the fingerprint mistyped) or *Register entry inconsistent*.
+3. **Compare every detail** shown with the paper: product, exact version / build, vendor, dates, versions validated against, results, signatory. A difference means the paper was altered.
+4. **Compare the security emblem** with the one the page redraws: scan the code; the ticks clockwise from the ▼ mark; the number of lobes; the slant of the faint lines.
+5. **Check the microtext** with a magnifier.
+
+The page also shows the validation record: the evaluation details, the status of each level and the result of every sheet. For a valid certificate it offers a **register copy**: the certificate printed again from its register entry, in either orientation, marked REGISTER COPY — NOT VALID WITHOUT SIGNATURE AND SEAL. It serves as a reference copy; only the signed and sealed original is the certificate.
+
+## 7.8 Register of issued certificates
+
+`criteria/certificates-issued.yaml` lists every issued certificate. Each change is one commit, so the history of every certificate is kept in the repository:
+
+| Event | Change | Commit message |
+| --- | --- | --- |
+| Issue | Add the entry shown on Output › Certificate (or ask through a *Certificate record* issue) | `cert: record <number>` |
+| Revoke | Set `status: revoked` and add `reason` | `cert: revoke <number> (<reference>)` |
+| Re-issue after a re-evaluation | Record the new certificate with `supersedes: <old number>` | `cert: record <new number>` |
+
+An entry holds the printed details, the FHIR release and the Level 2 to 4 results (covered by the fingerprint), the fingerprint, the status and the validation record: the evaluation details (application number, evaluation type, date(s) of testing, deployment model, terminology release, conducting office, signatory's designation, conditions), the status of every level, and for every sheet of Levels 0 to 4 its score, pass mark, status, criterion counts (met, partial, not met, N/A, not tested, info only), critical items not met and the criteria still needing compliance. The validation record is the benchmark of the system; it is not printed and not part of the fingerprint, and the check script makes sure its counts add up and match the printed results.
+
+Never edit the details of a recorded entry: the check fails when they no longer match the fingerprint. Issue a new certificate that supersedes it instead.
+
+## 7.9 Sample certificate for reviewers
+
+The register holds one sample certificate, **SAMPLE-2026-0001** (marked `sample: true`), with fictional data. It was never issued. Reviewers can use it to try the process end to end: open Output › Verify a certificate, choose *verify it* next to the sample (or type the number and its fingerprint), read the answer and the validation record, compare the security emblem, and print the register copy, which is marked SAMPLE — NOT A REAL CERTIFICATE. The sample is generated by the same code as a real certificate, so its fingerprint and validation record pass the same checks.

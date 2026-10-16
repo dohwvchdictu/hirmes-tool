@@ -114,6 +114,13 @@ sections:
     help: Date(s) of evaluation for each level tested.
 - title: Versions tested
   fields:
+  - key: fhir_release
+    label: HL7 FHIR release
+    help: FHIR release of the implementation guides tested against, e.g. R4. Printed on the certificate.
+    options:
+    - R4
+    - R4B
+    - R5
   - key: ph_core
     label: PH Core IG version
     help: PH Core IG version tested, e.g. 0.2.0.

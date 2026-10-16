@@ -105,7 +105,8 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
     """Split a document into chapters (one page each) at its repeated top heading level.
 
     Each chapter keeps its source line range (for the edit links), its second-level sections
-    (for the sidebar) and the registers its markers insert.
+    (for the sidebar, each with its own line range for its edit link) and the registers its
+    markers insert.
     """
     lines = path.read_text(encoding="utf-8").split("\n")
     levels = [len(m.group(1)) for line in lines if (m := re.match(r"^(#{1,2}) ", line))]
@@ -130,20 +131,26 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
         while end > ch["start"] and not lines[end - 1].strip():
             end -= 1
         sections, body = [], []
-        for line in ch["lines"]:
+        first = ch["start"] + (0 if ch["title"] == "Introduction" and ch["start"] == 1 and not lines[0].startswith("#") else 1)
+        for i, line in enumerate(ch["lines"]):
             m = re.match(r"^(#{%d}) (.*)$" % (split_level + 1), line)
             if m:
                 sid = "sec-" + slug(m.group(2))
-                sections.append({"id": sid, "title": m.group(2).strip()})
+                if sections:
+                    sections[-1]["l"][1] = first + i - 1
+                sections.append({"id": sid, "title": m.group(2).strip(), "l": [first + i, end]})
                 line = f"{line} {{#{sid}}}"
             body.append(line)
+        for sc in sections:   # a section ends at its last non-blank line
+            while sc["l"][1] > sc["l"][0] and not lines[sc["l"][1] - 1].strip():
+                sc["l"][1] -= 1
         text = "\n".join(body)
         num = re.match(r"Chapter (\d+)\s*[—-]\s*(.*)", ch["title"])
         out.append({"id": f"ch{num.group(1)}" if num else (slug(ch["title"]) or "intro"),
                     "num": num.group(1) if num else "", "title": ch["title"], "short": num.group(2) if num else ch["title"],
                     "html": render_md(text), "l": [ch["start"], end], "sections": sections,
                     "registers": MARKER.findall(text)})
-    return {"id": doc_id, "title": title, "source": str(path.relative_to(ROOT)), "chapters": out}
+    return {"id": doc_id, "title": title, "source": path.relative_to(ROOT).as_posix(), "chapters": out}
 
 
 def build_reference() -> dict:

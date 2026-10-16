@@ -84,17 +84,27 @@ def load_yaml(path: Path):
 # changing the list or the order changes every fingerprint.
 CERT_FIELDS = ("number", "issued", "expires", "vendor", "category", "product", "version", "ph_core", "pheref",
                "level", "criteria", "signatory", "signatory_name")
+# Sheets of Levels 2-4 whose results are printed and recorded. A register entry with `results` has a
+# version-2 fingerprint that covers them and `fhir_release` too. Keep in step with RESULT_KEYS in tool/cert.js.
+RESULT_KEYS = ("L2A", "L2B", "L2C", "L2D", "L3", "L4")
 
 
 def certificate_fingerprint(entry: dict) -> str:
-    """First 16 hex digits (uppercase) of SHA-256 over the certificate's details, as tool/cert.js computes it."""
+    """First 16 hex digits (uppercase) of SHA-256 over the certificate's details (and its Level 2-4
+    results, when recorded), as tool/cert.js computes it."""
     import hashlib
     import unicodedata
 
     def norm(v) -> str:
         return " ".join(unicodedata.normalize("NFC", "" if v is None else str(v)).split())
 
-    text = "HIE-CERT-1\n" + "\n".join(f"{k}={norm(entry.get(k))}" for k in CERT_FIELDS)
+    lines = [f"{k}={norm(entry.get(k))}" for k in CERT_FIELDS]
+    results = entry.get("results")
+    if results:
+        text = "HIE-CERT-2\n" + "\n".join(lines + [f"fhir_release={norm(entry.get('fhir_release'))}"]
+                                            + [f"results.{k}={norm(results.get(k))}" for k in RESULT_KEYS])
+    else:
+        text = "HIE-CERT-1\n" + "\n".join(lines)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16].upper()
 
 

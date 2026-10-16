@@ -28,4 +28,5 @@ criteria's Traces — shows the same entry. Criteria content lives in `criteria/
 `scoring.yaml`; the guide explains them but does not repeat them.
 
 Each `# Chapter N — Title` heading starts a page on the web scorecard, and each `##` heading appears
-as a section in the sidebar.
+as a section in the sidebar. Every chapter and every `##` section has its own ✎ (Edit on GitHub, show the lines,
+suggest a change) pointing to its lines in this file.
