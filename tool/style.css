@@ -582,3 +582,143 @@ dl.gl dd { margin: 0; padding: 2px 0; border-bottom: 1px dashed var(--line); }
 .menu-list .soon { opacity: .6; cursor: not-allowed; }
 .menu-list .soon:hover { background: none; }
 .soon-tag { font-style: normal; font-size: 10.5px; font-weight: 700; background: var(--lock-soft); color: var(--muted); border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+
+/* ---- certificate (Output › Certificate) and Verify a certificate
+   A4 landscape on white so it costs little ink: colour only in hairlines, the QR code and the text.
+   Palette from the DOH Brand Book: Deep Navy #1F2A45 for headings and rules, Charcoal #333333 for text,
+   #587CA5 (brand gradient blue) for the guilloche. Type: Montserrat (primary) for text, Lora (secondary,
+   serif) for the title and the product name, the two lines a reader looks for first. */
+.ce-panel h3 { font-size: 14px; margin: 0 0 6px; }
+.ce-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: 10px; }
+.ce-checks { list-style: none; margin: 0 0 10px; padding: 0; font-size: 13px; }
+.ce-checks li { display: flex; gap: 6px; padding: 3px 0; }
+.ce-checks li.ok > span { color: var(--good); font-weight: 700; }
+.ce-checks li.no > span { color: var(--bad); font-weight: 700; }
+.ce-checks a { margin-left: auto; white-space: nowrap; }
+.ce-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ce-acts .button, .ce-acts button { text-decoration: none; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--panel); font-weight: 600; }
+.ce-reg-msg { font-size: 13px; margin: 0 0 8px; padding: 8px 10px; border-radius: 6px; background: var(--lock-soft); }
+.ce-reg-msg.ok { background: var(--good-soft); }
+.ce-reg-msg.bad { background: var(--bad-soft); }
+.ce-yaml { margin: 0; padding: 8px 10px; max-height: 220px; overflow: auto; font: 12px/1.45 ui-monospace, Consolas, monospace;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 6px; white-space: pre; }
+@media (max-width: 860px) { .ce-grid { grid-template-columns: 1fr; } }
+
+.cert-wrap { position: relative; margin: 0 0 14px; overflow: hidden; }
+.cert {
+  --navy: #1f2a45; --char: #333333; --gl: #587ca5; --soft: #5e6773;
+  --k: 1; --kp: 1; --ks: 1;   /* text, title and spacing scale; Cert.fit() lowers them when long details would overflow the page */
+  position: relative; width: 297mm; height: 210mm; background: #fff; color: var(--char); transform-origin: top left;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .18); font: calc(9pt * var(--k))/1.4 Montserrat, Arial, "Helvetica Neue", sans-serif;
+}
+.cert-frame { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cg-rule { fill: none; stroke: #1f2a45; stroke-width: .45; }
+.cg-hair { fill: none; stroke: #1f2a45; stroke-width: .14; }
+.cg-band { fill: none; stroke: #587ca5; stroke-width: .11; }
+.cg-corner { fill: none; stroke: #1f2a45; stroke-width: .08; }
+.cg-micro { font-family: Arial, sans-serif; font-size: 1.05px; fill: #1f2a45; }
+.cg-specimen { font-family: Montserrat, Arial, sans-serif; font-weight: 700; font-size: 21px; text-anchor: middle; fill: none; stroke: #aab4c3; stroke-width: .3; }
+.cg-ros1 { fill: none; stroke: #587ca5; stroke-width: .13; }
+.cg-ros2 { fill: none; stroke: #1f2a45; stroke-width: .11; }
+.cert-body { position: absolute; inset: 19mm 21mm 17mm; display: flex; flex-direction: column; }
+.ce-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; }
+.ce-mark { display: flex; align-items: center; gap: 3.5mm; min-width: 0; }
+.ce-seal { height: 17mm; width: auto; }
+.ce-word { display: flex; flex-direction: column; line-height: 1.2; }
+.ce-word span { font-size: calc(8pt * var(--k)); }
+.ce-word b { font-size: calc(15pt * var(--k)); font-weight: 700; color: var(--navy); }
+.ce-no { margin: 0; text-align: right; display: grid; grid-template-columns: auto auto; column-gap: 3mm; align-items: baseline; }
+.ce-no dt { font-size: calc(7.5pt * var(--k)); color: var(--soft); white-space: nowrap; }
+.ce-no dd { margin: 0; font-size: calc(9.5pt * var(--k)); font-weight: 600; color: var(--navy); }
+.ce-no dd.ce-num { font-size: calc(13pt * var(--k)); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* a number never breaks at its hyphens */
+.ce-title { text-align: center; margin-top: calc(6mm * var(--ks)); }
+.ce-title h1 { font: 600 calc(27pt * var(--kp))/1.15 Lora, Georgia, "Times New Roman", serif; color: var(--navy); margin: 0; }
+.ce-title p { margin: 1mm 0 0; font-size: calc(9.5pt * var(--k)); }
+.ce-lead { text-align: center; margin: calc(8mm * var(--ks)) 0 0; font-size: calc(9.5pt * var(--k)); }
+.ce-product { text-align: center; margin: 1.5mm 0 0; font: 600 calc(24pt * var(--kp))/1.2 Lora, Georgia, "Times New Roman", serif; color: var(--navy); }
+.ce-build { text-align: center; margin: .8mm 0 0; font-size: calc(10pt * var(--k)); }
+.ce-build b { color: var(--navy); }
+.ce-statement { text-align: center; max-width: 215mm; margin: calc(4mm * var(--ks)) auto 0; font-size: calc(8.8pt * var(--k)); line-height: 1.45; }
+.ce-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: calc(7mm * var(--ks)) 0 0; border-top: .3mm solid var(--navy); border-bottom: .3mm solid var(--navy); }
+.ce-facts > div { padding: 2.5mm 3.5mm; border-left: .2mm solid #c3cad5; }
+.ce-facts > div:first-child { border-left: 0; }
+.ce-facts dt { font-size: calc(7.3pt * var(--k)); color: var(--soft); margin-bottom: .6mm; }
+.ce-facts dd { margin: 0; }
+.ce-facts dd b { display: block; font-size: calc(9.5pt * var(--k)); font-weight: 600; color: var(--navy); overflow-wrap: anywhere; }
+.ce-facts dd span { display: block; font-size: calc(8pt * var(--k)); overflow-wrap: anywhere; }
+.ce-cond { text-align: center; font-size: calc(8pt * var(--k)); margin: 3mm 0 0; }
+.ce-foot { margin-top: auto; padding-top: calc(4mm * var(--ks)); display: grid; grid-template-columns: minmax(0, 1.25fr) auto minmax(0, 1fr); gap: 7mm; align-items: end; }
+.ce-verify { display: flex; align-items: center; gap: 3mm; font-size: calc(7.3pt * var(--k)); }
+.ce-verify > div { display: flex; flex-direction: column; gap: .5mm; }
+.ce-verify b { font-size: calc(8.5pt * var(--k)); color: var(--navy); }
+.ce-qr { width: 25mm; height: 25mm; flex: none; }
+.ce-qr-none { display: flex; align-items: center; text-align: center; padding: 2mm; border: .2mm dashed #aab4c3; color: var(--soft); font-size: calc(7pt * var(--k)); }
+.ce-fpl { margin-top: 1mm; color: var(--soft); }
+.ce-fp { font: 600 calc(9.5pt * var(--k)) ui-monospace, Consolas, "Courier New", monospace; color: var(--navy); letter-spacing: calc(.4pt * var(--k)); }
+.ce-ros .ce-rosette { width: calc(36mm * max(.75, var(--ks))); height: calc(36mm * max(.75, var(--ks))); display: block; }
+.ce-sign { text-align: center; display: flex; flex-direction: column; font-size: calc(8pt * var(--k)); }
+.ce-sigline { border-top: .3mm solid var(--char); margin: 0 6mm 1.5mm; height: 0; }
+.ce-sign b { font-size: calc(10.5pt * var(--k)); font-weight: 700; color: var(--navy); }
+.ce-validity { text-align: center; font-size: calc(7pt * var(--k)); color: var(--soft); margin: 2.5mm 12mm 0; }
+.ce-trace { text-align: center; font-size: calc(6.5pt * var(--k)); color: var(--soft); margin: .8mm 0 0; }
+.ce-blank { color: #8a5a00; font-style: italic; font-weight: 400; }
+
+.ce-vform { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto; gap: 10px; align-items: end; margin-top: 10px; font-size: 13px; }
+.ce-vform label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+.ce-vform label .muted { font-weight: 400; color: var(--muted); }
+.ce-vform input { min-height: 36px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.ce-vform input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+#v-fp { font-family: ui-monospace, Consolas, monospace; }
+.ce-verdict { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 6px; margin-bottom: 12px; }
+.ce-verdict b { font-size: 17px; }
+.ce-verdict.ok { background: var(--good-soft); color: var(--good); }
+.ce-verdict.warn { background: var(--warn-soft); color: var(--warn); }
+.ce-verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.ce-verdict span { color: var(--ink); }
+.ce-vgrid { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 18px; align-items: start; }
+.ce-vtab { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ce-vtab th, .ce-vtab td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ce-vtab th { width: 34%; color: var(--muted); font-weight: 600; }
+.ce-vros { margin: 0; padding: 10px; background: #fff; border: 1px solid var(--line); border-radius: 6px; text-align: center; }
+.ce-vros .ce-rosette { width: 100%; max-width: 220px; height: auto; }
+.ce-vros figcaption { font-size: 12px; color: #444; }
+@media (max-width: 767px) {
+  .ce-vform, .ce-vgrid { grid-template-columns: 1fr; }
+  .ce-vros { max-width: 260px; }
+}
+
+@media print {
+  body.print-cert main { padding: 0 !important; margin: 0 !important; }
+  body.print-cert .cert-wrap { height: auto !important; margin: 0; overflow: visible; }
+  body.print-cert .cert { transform: none !important; box-shadow: none; height: 209.5mm; overflow: hidden; break-inside: avoid; }
+  body.print-cert #update-bar { display: none !important; }
+  .cert * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* Proof-of-concept notice (criteria/certificate.yaml notice) on the Certificate and Verify pages */
+.ce-poc { margin: 8px 0; padding: 8px 10px; border-radius: 6px; background: var(--warn-soft); font-size: 13px; }
+.ce-poc b { color: var(--warn); }
+.ce-orient { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.ce-orient select { min-height: 32px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+
+/* Portrait sheet: the same parts, re-flowed for a 168 mm measure. The facts go two by two, and the
+   rosette gets its own row above the QR code and signature; the extra height goes to the spacing. */
+.cert.portrait { width: 210mm; height: 297mm; }
+.cert.portrait .cert-body { inset: 20mm 20mm 18mm; }
+.cert.portrait .ce-head { gap: 6mm; }
+.cert.portrait .ce-title { margin-top: calc(16mm * var(--ks)); }
+.cert.portrait .ce-lead { margin-top: calc(14mm * var(--ks)); }
+.cert.portrait .ce-statement { max-width: none; margin-top: calc(6mm * var(--ks)); }
+.cert.portrait .ce-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: calc(12mm * var(--ks)); }
+.cert.portrait .ce-facts > div:nth-child(odd) { border-left: 0; }
+.cert.portrait .ce-facts > div:nth-child(n+3) { border-top: .2mm solid #c3cad5; }
+.cert.portrait .ce-foot { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "ros ros" "verify sign"; row-gap: calc(9mm * var(--ks)); }
+.cert.portrait .ce-verify { grid-area: verify; }
+.cert.portrait .ce-ros { grid-area: ros; justify-self: center; }
+.cert.portrait .ce-sign { grid-area: sign; }
+.cert.portrait .ce-ros .ce-rosette { width: calc(44mm * max(.7, var(--ks))); height: calc(44mm * max(.7, var(--ks))); }
+.cert.portrait .ce-validity { margin: calc(6mm * var(--ks)) 2mm 0; }
+@media print {
+  body.print-cert .cert.portrait { height: 296.5mm; }
+}

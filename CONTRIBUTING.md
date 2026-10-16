@@ -91,6 +91,51 @@ The release workflow builds the workbook, the change summary (compared with the 
 change log, and publishes them as a GitHub Release. Tags with `-rc` are marked as pre-releases.
 After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
 
+## Certificates
+
+> **Proof of concept.** The certificate feature is a proof of concept for discussion. Its design,
+> wording, signatories, integrity features and verification process do not represent the actual DOH
+> certificate or its implementation. The Certificate and Verify pages say so, and every printed
+> certificate carries "PROOF OF CONCEPT — NOT AN OFFICIAL DOH CERTIFICATE". The notice comes from
+> `notice` in `criteria/certificate.yaml`; blank it only when the DOH adopts the feature.
+
+The web scorecard prints a Certificate of Conformance (Output › Certificate, one A4 page in landscape
+or portrait, white background to save ink). Its details come from the System Profile: certificate number and date of
+issuance, vendor / developer and applicant category, product name and exact version / build, PH Core
+and PHeReF IG versions, expiry date, and the signatory (Head of KMITS or DOH CHD Regional Director).
+The page lists what is still open; until everything is in order (details filled in, Levels 0–3
+passed, thresholds approved, a released criteria version) it prints as a SPECIMEN. Long details stay
+on the page: the title and product name shrink first, then all the text, and the page warns when even
+the smallest size does not fit.
+
+| To change | Edit |
+| --- | --- |
+| Title, statement, validity note, microtext, signatory designations, verification address, proof-of-concept notice, default orientation | `criteria/certificate.yaml` (✎ Edit on the Certificate page) |
+| Orientation of one certificate | The *Orientation* choice on the Certificate page, or *Certificate orientation* in the System Profile (not part of the fingerprint) |
+| Certificate fields in the System Profile | `criteria/profile.yaml`, section *Certificate* (the signatory choices must match `certificate.yaml`) |
+| The DOH seal on the letterhead | Add the official file at `tool/img/doh-seal.png` (full colour or grayscale, per the DOH Brand Book) |
+
+**Integrity.** Each certificate has a fingerprint: the first 16 hex digits of SHA-256 over its
+details, computed the same way by `tool/cert.js` and `scripts/common.py`. The fingerprint is printed
+under the QR code and seeds the guilloche border and security rosette, so every certificate has its
+own pattern. Microtext runs along the frame. The QR code opens *Verify a certificate* on the published
+draft scorecard with the number and fingerprint; that page answers from the register below and
+redraws the rosette for comparison with the paper. The fingerprint is not a signature (anyone can
+compute one): a certificate counts as issued only when its entry is in the register.
+
+**Register of issued certificates** (`criteria/certificates-issued.yaml`). Each change is one commit,
+so the history of every certificate is in git:
+
+| Event | Change | Commit |
+| --- | --- | --- |
+| Issue | Paste the entry shown on Output › Certificate (or ✉ ask the administrator; it opens a *Certificate record* issue with the entry filled in) | `cert: record HIE-WV-2026-0001` |
+| Revoke | Set `status: revoked` and add `reason` | `cert: revoke HIE-WV-2026-0001 (memo 2027-03)` |
+| Re-issue after a re-evaluation | Record the new certificate with `supersedes: <old number>`; the old one then verifies as *superseded* | `cert: record HIE-WV-2028-0004` |
+
+Never edit the details of a recorded entry: `check.py` recomputes every fingerprint and fails when the
+details no longer match, and also checks unique numbers, expiry after issuance, `supersedes`
+pointing to a recorded certificate, and a reason for every revocation.
+
 ## Help, terms and documents in the web scorecard
 
 The web scorecard links every criterion to its terms, registers and guides. Nothing is written by
@@ -144,6 +189,7 @@ the published site (they need the repository address that GitHub Actions provide
 - trace IDs (TR-, TB-, SRC-) exist in the registers
 - every file carries a license: content CC BY 4.0, code GPL-3.0-or-later (`reuse lint`; new folders need an entry in `REUSE.toml`)
 - every sheet has a threshold; an Approved policy has its approval details
+- every entry in `criteria/certificates-issued.yaml` matches its fingerprint, and the certificate checks above hold; `tool/cert.js` and `scripts/common.py` compute the same fingerprints, and the QR codes match the `qrcode` package (`tests/test_certificate.py`)
 - the generated workbook matches the YAML (round trip), and the workbook and web scorecard score the
   same test scenarios identically
 - `see:` entries in `registers/form-help.yaml` and criterion `terms:` resolve to a glossary term, abbreviation, register ID or criterion ID

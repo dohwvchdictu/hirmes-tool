@@ -98,9 +98,10 @@
         '<span class="sd-small">' + done + " of " + all + " criteria evaluated</span></div>" +
       '<div class="tg"><span class="tg-l">Overview</span>' + link("summary", "Summary") + link("profile", "System profile") + "</div>" +
       '<div class="tg tg-levels"><span class="tg-l">Levels</span>' + levels + "</div>" +
-      '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + "</div>" +
+      '<div class="tg"><span class="tg-l">Output</span>' + link("report", "Printed report") + link("certificate", "Certificate") + link("verify", "Verify a certificate") + "</div>" +
       (Ref.ready() ? '<div class="tg tg-ref"><span class="tg-l">Reference</span>' + Ref.navTree(onRef ? current.slice(4) : null) + "</div>" : "");
     var cur = head === "summary" ? "Summary" : head === "profile" ? "System profile" : head === "report" ? "Printed report" : head === "ref" ? "Reference" :
+      head === "certificate" ? "Certificate" : head === "verify" ? "Verify a certificate" :
       (sheetByKey(head) ? sheetByKey(head).tab : "");
     $("#nav-cur").textContent = cur;
   }
@@ -133,6 +134,11 @@
     if (head === "summary") main.innerHTML = viewSummary();
     else if (head === "profile") main.innerHTML = viewProfile();
     else if (head === "report") { Ref.closeDrawer(); main.innerHTML = viewReport(); }
+    else if (head === "certificate") {
+      Ref.closeDrawer(); main.innerHTML = Cert.view(certCtx()); loadCertFonts(); Cert.fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(Cert.fit);   // the brand fonts change the line breaks
+    }
+    else if (head === "verify") { Ref.closeDrawer(); main.innerHTML = Cert.viewVerify(rest); loadCertFonts(); }
     else if (head === "ref" && Ref.ready()) { main.innerHTML = Ref.viewReference(rest); if (moved) window.scrollTo(0, 0); Ref.afterReference(); measureHeader(); return; }
     else if (sheetByKey(head)) {
       if (rest && moved) { filter.text = ""; filter.show = "all"; }
@@ -631,7 +637,8 @@
       (r.criticalOpen === 0 ? '<span class="chip st-met">✓ MET — no critical item open</span>' : '<span class="chip st-fail">✗ NOT MET — certificate cannot be issued</span>') + "</td></tr></tbody></table>" +
       '<h2 class="rp-h">E. Certificate details</h2>' + kv([["Certificate no.", p.certificate_no], ["Certificate date", p.certificate_date], ["Product · version", (p.system_name || "—") + " · " + (p.version || "—")],
         ["IG versions", "PH Core " + (p.ph_core || "—") + " · PHeReF " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest + (data.scoring.policy.status !== "Approved" ? " (thresholds PROPOSED — provisional)" : "")],
-        ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || (validDefault() ? validDefault() + " — 2 years from approval or until a major change / IG major version (PROPOSED)" : "2 years from approval or until a major change / IG major version (PROPOSED)")], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"]]) +
+        ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || (validDefault() ? validDefault() + " — 2 years from approval or until a major change / IG major version (PROPOSED)" : "2 years from approval or until a major change / IG major version (PROPOSED)")], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"],
+        ["Signatory", [p.signatory_name, p.signatory].filter(Boolean).join(" — ")], ["Certificate fingerprint", certFingerprint() || "— (details incomplete; see Output › Certificate)"]]) +
       '<h2 class="rp-h">F. Sign-off</h2>' + signOff(p) +
       '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
       '<table class="rp-table rp-crits"><colgroup><col class="w-ref"><col><col class="w-type"><col class="w-res"><col class="w-score"><col class="w-out"></colgroup>' +
@@ -658,9 +665,45 @@
       "<thead><tr><th>Role</th><th>Name · Designation · Agency</th><th>Signature</th><th>Date</th></tr></thead><tbody>" + rows.join("") + "</tbody></table>";
   }
 
-  function pageStyle() {
+  // ------------------------------------------------------------------ certificate
+  /** What the certificate is printed from: the profile, the result and the default expiry. */
+  function certCtx() {
+    var sec = data.profile.sections.filter(function (g) { return g.fields.some(function (f) { return f.key === "certificate_no"; }); })[0];
+    return { profile: state.profile, result: result, validUntil: state.profile.valid_until || validDefault(), certSection: data.profile.sections.indexOf(sec) + 1 };
+  }
+  function certFingerprint() { var fp = Cert.fingerprint(Cert.record(certCtx())); return fp ? fp.match(/.{4}/g).join(" ") : ""; }
+  /** Montserrat and Lora, the DOH Brand Book typefaces, loaded only for the certificate pages; Arial and Georgia stand in offline. */
+  function loadCertFonts() {
+    if (document.getElementById("cert-fonts")) return;
+    var l = document.createElement("link");
+    l.id = "cert-fonts"; l.rel = "stylesheet";
+    l.href = "https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Montserrat:wght@400;500;600;700&display=swap";
+    document.head.appendChild(l);
+  }
+  function printCert() {
+    pageStyle("certificate");
+    var go = function () { (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { Cert.fit(); window.print(); }); };
+    if (location.hash !== "#certificate") { location.hash = "#certificate"; setTimeout(go, 400); } else go();
+  }
+  function copyText(text, btn) {
+    var done = function () { var t = btn.textContent; btn.textContent = "Copied"; setTimeout(function () { btn.textContent = t; }, 1500); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    else { fallbackCopy(text); done(); }
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) { /* the text stays selectable on the page */ }
+    ta.remove();
+  }
+
+  /** @page for the output being printed: the report on A4 portrait with footers, the certificate edge to edge in its own orientation. */
+  function pageStyle(kind) {
     var m = data.meta, el = document.getElementById("page-style");
     if (!el) { el = document.createElement("style"); el.id = "page-style"; document.head.appendChild(el); }
+    document.body.classList.toggle("print-cert", kind === "certificate");
+    if (kind === "certificate") { el.textContent = "@page { size: A4 " + Cert.orientation(state.profile) + "; margin: 0; }"; return; }
     var q = function (s) { return '"' + String(s).replace(/["\\]/g, "") + '"'; };
     el.textContent = "@page { size: A4; margin: 11mm 9mm 13mm; " +
       "@bottom-left { content: " + q((m.title || "") + " — Evaluation Report · " + m.label) + "; font: 7pt Arial, sans-serif; color: #555; } " +
@@ -714,6 +757,7 @@
     else if (t.dataset.profile) {
       if (t.value) state.profile[t.dataset.profile] = t.value; else delete state.profile[t.dataset.profile];
       save(); refreshProfile();
+      if (t.dataset.profile === "certificate_orientation" && current.split("/")[0] === "certificate") route();
     }
     else if (t.id === "flt-text") {
       filter.text = t.value;
@@ -749,8 +793,14 @@
       var name = (state.profile.system_name || "evaluation").replace(/[^A-Za-z0-9_-]+/g, "-");
       a.href = URL.createObjectURL(blob); a.download = name + "-" + new Date().toISOString().slice(0, 10) + ".json";
       document.body.appendChild(a); a.click(); a.remove();
+    } else if (t.id === "btn-print-cert" || t.id === "btn-print-cert-menu") {
+      printCert();
+    } else if (t.dataset && t.dataset.copy) {
+      var src = document.getElementById(t.dataset.copy); if (src) copyText(src.textContent, t);
+    } else if (t.dataset && t.dataset.copyText) {
+      copyText(t.dataset.copyText, t);
     } else if (t.id === "btn-print" || t.id === "btn-print-report") {
-      pageStyle();
+      pageStyle("report");
       if (location.hash !== "#report") { location.hash = "#report"; setTimeout(function () { window.print(); }, 400); }
       else window.print();
     } else if (t.id === "btn-reset") {
@@ -766,8 +816,17 @@
     }
   });
 
+  document.addEventListener("submit", function (e) {
+    if (e.target.id !== "verify-form") return;
+    e.preventDefault();
+    var no = $("#v-no").value.trim(), fp = $("#v-fp").value.replace(/[\s-]/g, "").toUpperCase();
+    if (no) location.hash = "#verify/" + encodeURIComponent(no) + "/" + fp;
+  });
+  // Ctrl+P on the certificate page prints the certificate layout, elsewhere the report layout.
+  window.addEventListener("beforeprint", function () { pageStyle(current.split("/")[0] === "certificate" ? "certificate" : "report"); });
+
   window.addEventListener("hashchange", route);
-  window.addEventListener("resize", function () { measureHeader(); if (window.innerWidth > PHONE) setNav(false); });
+  window.addEventListener("resize", function () { measureHeader(); Cert.fit(); if (window.innerWidth > PHONE) setNav(false); });
   // phones: tuck the search row and banner away while scrolling down; bring them back on the way up
   var lastY = 0, quietUntil = 0;
   function setMin(on) {
@@ -839,6 +898,7 @@
   Promise.all([getJSON("data.json"), getJSON("reference.json").catch(function () { return null; })]).then(function (res) {
     data = res[0];
     Ref.base(data);
+    Cert.init(data);
     if (res[1]) Ref.init(data, res[1]);
     restore();
     recompute();

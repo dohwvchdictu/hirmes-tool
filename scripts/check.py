@@ -19,7 +19,8 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from common import ROOT, active, active_subs, load_criteria, load_legacy_retired, load_scoring, load_sheets, load_yaml
+from common import (CERTIFICATE_FILE, ISSUED_FILE, ROOT, active, active_subs, certificate_fingerprint, load_criteria, load_legacy_retired,
+                    load_scoring, load_sheets, load_yaml)
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -110,7 +111,44 @@ def check_reference(err, warn):
 # System Profile keys that tool/app.js reads by name (Summary, Printed Report, file name)
 PROFILE_KEYS_USED = ("application_no", "date_received", "vendor", "system_name", "version", "category", "deployment",
                      "evaluation_type", "technical_lead", "administrator", "office", "test_dates",
-                     "ph_core", "pheref", "terminology", "certificate_no", "certificate_date", "valid_until", "conditions")
+                     "ph_core", "pheref", "terminology", "certificate_no", "certificate_date", "valid_until", "conditions",
+                     "supersedes", "signatory", "signatory_name", "signatory_designation", "certificate_orientation")
+
+
+def check_certificates(profile_doc, err):
+    """certificate.yaml wording, the signatory choices, and every entry of the register of issued certificates."""
+    cert = load_yaml(CERTIFICATE_FILE)
+    validate(validator("certificate.schema.json"), cert, "criteria/certificate.yaml")
+    labels = [s.get("label") for s in cert.get("signatories") or []]
+    field = next((f for s in profile_doc.get("sections") or [] for f in s.get("fields") or [] if f.get("key") == "signatory"), None)
+    if field and sorted(field.get("options") or []) != sorted(labels):
+        err("criteria/profile.yaml: the options of 'signatory' must be the signatory labels of criteria/certificate.yaml "
+            f"({', '.join(labels)})")
+    orient = next((f for s in profile_doc.get("sections") or [] for f in s.get("fields") or [] if f.get("key") == "certificate_orientation"), None)
+    if orient and sorted(o.lower() for o in orient.get("options") or []) != ["landscape", "portrait"]:
+        err("criteria/profile.yaml: the options of 'certificate_orientation' must be Landscape and Portrait (tool/cert.js reads them)")
+    issued = load_yaml(ISSUED_FILE) or {}
+    validate(validator("certificates-issued.schema.json"), issued, "criteria/certificates-issued.yaml")
+    entries = issued.get("certificates") or []
+    numbers = [str(e.get("number", "")) for e in entries]
+    for n in sorted({n for n in numbers if numbers.count(n) > 1}):
+        err(f"criteria/certificates-issued.yaml: certificate {n} is recorded more than once")
+    for e in entries:
+        n = e.get("number", "?")
+        if not all(isinstance(e.get(k), str) for k in ("issued", "expires")):
+            continue   # the schema already reported it (quote dates so YAML keeps them as text)
+        if e["expires"] <= e["issued"]:
+            err(f"criteria/certificates-issued.yaml: certificate {n} expires on or before its date of issuance")
+        fp = certificate_fingerprint(e)
+        if e.get("fingerprint") != fp:
+            err(f"criteria/certificates-issued.yaml: certificate {n} has fingerprint {e.get('fingerprint')} but its details give {fp}; "
+                "the details were changed after issue (issue a new certificate that supersedes it instead)")
+        if e.get("supersedes") and e["supersedes"] not in numbers:
+            err(f"criteria/certificates-issued.yaml: certificate {n} supersedes {e['supersedes']}, which is not in the register")
+        if e.get("supersedes") == n:
+            err(f"criteria/certificates-issued.yaml: certificate {n} supersedes itself")
+        if e.get("status") == "revoked" and not e.get("reason"):
+            err(f"criteria/certificates-issued.yaml: certificate {n} is revoked without a reason")
 
 
 def main():
@@ -143,7 +181,8 @@ def main():
         err(f"criteria/profile.yaml: key '{k}' is used more than once (a role key also uses <key>_agency and <key>_designation)")
     for k in PROFILE_KEYS_USED:
         if k not in profile_keys:
-            err(f"criteria/profile.yaml: field key '{k}' is missing; the Summary, Printed Report or team check reads it")
+            err(f"criteria/profile.yaml: field key '{k}' is missing; the Summary, Printed Report, Certificate or team check reads it")
+    check_certificates(profile_doc, err)
     reg_v = validator("register.schema.json")
     for p in sorted((ROOT / "registers").glob("*.yaml")):
         validate(reg_v, load_yaml(p), str(p.relative_to(ROOT)))

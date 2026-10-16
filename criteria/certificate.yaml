@@ -1,0 +1,46 @@
+# Wording and settings of the Certificate (web scorecard: Output › Certificate).
+# The details on the certificate come from the System Profile (criteria/profile.yaml, section
+# "Certificate" and the application fields) and from the result. Issued certificates are recorded
+# in criteria/certificates-issued.yaml.
+#
+# statement may use {level} (highest level achieved) and {criteria} (testing criteria version).
+# Shown on the Certificate and Verify pages and printed on every certificate while the feature is a
+# proof of concept. Make it blank ("") when the DOH adopts the feature.
+notice: >-
+  This certificate feature is a proof of concept for discussion. Its design, wording, signatories,
+  integrity features and verification process do not represent the actual DOH certificate or its
+  implementation, and a certificate printed from it has no official standing.
+# Default page orientation: landscape or portrait. The System Profile field "Certificate orientation"
+# (or the choice on the Certificate page) overrides it per evaluation.
+orientation: landscape
+title: Certificate of Conformance
+subtitle: HL7 FHIR interoperability for the Health Information Exchange (electronic referral)
+certifies: This certifies that the electronic medical record system
+statement: >-
+  has been validated by the Regional Validation Team against the national HL7 FHIR implementation
+  guides named below, using the Healthcare Interoperability Readiness Matrix testing criteria
+  {criteria}, and was found conformant for use in the Health Information Exchange for electronic
+  referral ({level} achieved).
+validity_note: >-
+  This certificate applies only to the version / build named above. It ends on the expiry date, or
+  earlier when the product has a major change or an implementation guide has a new major version.
+# Repeated in very small print along the frame (photocopies blur it); the certificate number is added.
+microtext: REPUBLIC OF THE PHILIPPINES · DEPARTMENT OF HEALTH · HIE CERTIFICATE OF CONFORMANCE
+# Official DOH seal, relative to tool/. Not in the repository: add the file supplied by the DOH
+# (full colour or grayscale, per the DOH Brand Book). Without it the letterhead prints the agency name only.
+seal: img/doh-seal.png
+# The choices of the System Profile field "Signatory" (the labels must match its options).
+# designation and office print under the name unless the profile gives a designation.
+# office "conducting office" prints the System Profile's Conducting office.
+signatories:
+- label: Head of KMITS
+  designation: Head, Knowledge Management and Information Technology Service
+  office: Department of Health – Central Office
+- label: DOH CHD Regional Director
+  designation: Regional Director
+  office: conducting office
+verify:
+  # Address the QR code opens. Blank: the published draft (main) scorecard of this repository,
+  # which always carries the latest register. Set it if the register moves to another address.
+  url: ""
+  note: Scan the code, or open Output › Verify a certificate in the DOH HIE scorecard and enter the number and fingerprint.

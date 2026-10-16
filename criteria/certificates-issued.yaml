@@ -1,0 +1,27 @@
+# Register of issued certificates. The Verify page (and the QR code on each certificate) answers
+# from this file, so a certificate counts as issued only once its entry is committed here.
+#
+# Record:     paste the entry shown on Output › Certificate (commit: "cert: record <number>").
+# Revoke:     set status: revoked and add reason (commit: "cert: revoke <number> (<reference>)").
+# Supersede:  record the new certificate with supersedes: <old number>; the old one then shows as
+#             superseded. Never delete or edit the details of an entry: the fingerprint is computed
+#             from them, and scripts/check.py fails when they no longer match.
+#
+# Fields: number, issued, expires, vendor, category, product, version, ph_core, pheref, level,
+# criteria, signatory, signatory_name, fingerprint, status (valid | revoked), supersedes, reason.
+certificates:
+- number: "DOHWVCHD-261015-A"
+  issued: "2026-10-15"
+  expires: "2028-12-31"
+  vendor: "DOH KIMITS"
+  category: "Third-party EMR provider"
+  product: "Integrated Hospital Operation and Management System Plus (iHOMIS+)"
+  version: "2.0.1"
+  ph_core: "0.2.0"
+  pheref: "0.1.0"
+  level: "Level 4"
+  criteria: "v1.0.0-rc1+dev"
+  signatory: "DOH CHD Regional Director"
+  signatory_name: "MAR WYNN BELLO, MD, MPM"
+  fingerprint: "CA24D37BBF6D53B7"
+  status: valid

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "certificates-issued.schema.json",
+  "title": "Register of issued certificates",
+  "type": "object",
+  "required": ["certificates"],
+  "additionalProperties": false,
+  "properties": {
+    "certificates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["number", "issued", "expires", "vendor", "category", "product", "version", "ph_core", "pheref",
+                     "level", "criteria", "signatory", "signatory_name", "fingerprint", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "number": {"type": "string", "minLength": 1},
+          "issued": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "expires": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "vendor": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "product": {"type": "string", "minLength": 1},
+          "version": {"type": "string", "minLength": 1},
+          "ph_core": {"type": "string", "minLength": 1},
+          "pheref": {"type": "string", "minLength": 1},
+          "level": {"type": "string", "minLength": 1},
+          "criteria": {"type": "string", "minLength": 1},
+          "signatory": {"type": "string", "minLength": 1},
+          "signatory_name": {"type": "string", "minLength": 1},
+          "fingerprint": {"type": "string", "pattern": "^[0-9A-F]{16}$"},
+          "status": {"enum": ["valid", "revoked"], "description": "Superseded and expired are derived, not recorded."},
+          "supersedes": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

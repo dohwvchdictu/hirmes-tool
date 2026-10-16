@@ -22,6 +22,8 @@ LEGACY_RETIRED_FILE = CRITERIA_DIR / "retired-legacy.yaml"
 SCORING_FILE = ROOT / "scoring.yaml"
 REGISTERS_DIR = ROOT / "registers"
 TEMPLATE_XLSX = ROOT / "templates" / "scorecard-template.xlsx"
+CERTIFICATE_FILE = CRITERIA_DIR / "certificate.yaml"
+ISSUED_FILE = CRITERIA_DIR / "certificates-issued.yaml"
 
 TITLE = "Healthcare Interoperability Readiness Matrix for EMR Systems"
 OWNER = "Department of Health – Western Visayas Center for Health Development"
@@ -75,6 +77,25 @@ def dump_yaml(data, path: Path | None = None) -> str:
 def load_yaml(path: Path):
     with open(path, encoding="utf-8") as fh:
         return yaml.safe_load(fh)
+
+
+# --------------------------------------------------------------------------- certificates
+# Details covered by a certificate's fingerprint, in order. Keep in step with FIELDS in tool/cert.js:
+# changing the list or the order changes every fingerprint.
+CERT_FIELDS = ("number", "issued", "expires", "vendor", "category", "product", "version", "ph_core", "pheref",
+               "level", "criteria", "signatory", "signatory_name")
+
+
+def certificate_fingerprint(entry: dict) -> str:
+    """First 16 hex digits (uppercase) of SHA-256 over the certificate's details, as tool/cert.js computes it."""
+    import hashlib
+    import unicodedata
+
+    def norm(v) -> str:
+        return " ".join(unicodedata.normalize("NFC", "" if v is None else str(v)).split())
+
+    text = "HIE-CERT-1\n" + "\n".join(f"{k}={norm(entry.get(k))}" for k in CERT_FIELDS)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16].upper()
 
 
 # --------------------------------------------------------------------------- data

@@ -676,7 +676,7 @@
   }
 
   root.Ref = {
-    base: function (data) { D = data; }, src: srcBtn, srcLine: srcLine, tip: tip, getHelp: function (p) { return R ? getHelp(p) : null; }, critSrc: critSrc, sheetSrc: sheetSrc,
+    base: function (data) { D = data; }, src: srcBtn, srcLine: srcLine, editUrl: function (p) { return D ? editUrl(p) : ""; }, tip: tip, getHelp: function (p) { return R ? getHelp(p) : null; }, critSrc: critSrc, sheetSrc: sheetSrc,
     init: init, link: link, help: help, openDrawer: openDrawer, closeDrawer: closeDrawer, counts: counts,
     viewReference: viewReference, afterReference: afterReference, navTree: navTree, guideFollow: guideFollow, guideId: function () { return drawer && drawer.classList.contains("open") && drawerFor ? drawerFor.c.id : null; }, initSearch: initSearch, ready: function () { return !!R; }
   };

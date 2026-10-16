@@ -124,19 +124,42 @@ sections:
     label: Terminology release
     help: Terminology / PSGC release used on the sandbox.
 - title: Certificate
-  note: Filled in by the Regional Validation Team on approval.
+  note: Filled in by the Regional Validation Team on approval. Printed on the Certificate (Output › Certificate) with the application details and the IG versions above.
   fields:
   - key: certificate_no
     label: Certificate no.
-    help: Assigned on approval.
+    help: Assigned on approval. Printed on the certificate and used to verify it; never reused.
   - key: certificate_date
-    label: Certificate date
+    label: Date of issuance
     type: date
-    help: Date of approval.
+    help: Date of approval, printed as the date of issuance.
   - key: valid_until
-    label: Valid until
-    help: 2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the certificate date.
+    label: Expiry date
+    type: date
+    help: 2 years from approval or until a major change or IG major version (PROPOSED). Leave blank to use 2 years from the date of issuance.
+  - key: supersedes
+    label: Supersedes certificate no.
+    help: For a re-evaluation or revalidation, the earlier certificate this one replaces. Leave blank for a first certificate.
+  - key: signatory
+    label: Signatory
+    help: Who signs the certificate. The choices and their printed designation are kept in criteria/certificate.yaml.
+    options:
+    - Head of KMITS
+    - DOH CHD Regional Director
+  - key: signatory_name
+    label: Signatory's name
+    help: Full name as it is to be printed under the signature.
+  - key: signatory_designation
+    label: Signatory's designation
+    placeholder: Leave blank for the designation of the chosen signatory
+    help: Printed under the name. Leave blank to print the designation from criteria/certificate.yaml.
+  - key: certificate_orientation
+    label: Certificate orientation
+    help: Page orientation of the printed certificate. Leave blank for the default in criteria/certificate.yaml. Not part of the fingerprint.
+    options:
+    - Landscape
+    - Portrait
   - key: conditions
     label: Conditions
     type: long
-    help: Conditions attached to the result, if any.
+    help: Conditions attached to the result, if any. Printed on the Printed Report and the certificate.
