@@ -2,7 +2,7 @@
 
 Level-based testing criteria used to check whether an EMR system conforms to an interoperability standard and for use in the Health Information Exchange (HIE).
 
-Check the [Testing Criteria Changelog from Oct. 1, 2026 to October 19, 2026](#changelog)
+**Changelog:** Check the [recent changes to the testing criteria since Oct. 1, 2026, as of October 19, 2026](#changelog)
 
 **Open the scorecard: <https://dohwvchdictu.github.io/hirmes-tool/>**
 
