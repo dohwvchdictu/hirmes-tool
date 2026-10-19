@@ -187,7 +187,7 @@
         ? "APPROVED by " + esc(pol.approved_by) + " on " + esc(pol.date_approved) + " (" + esc(pol.reference) + ")"
         : "PROPOSED — for DOH approval") + "</p>" +
       '<div class="stats"><div class="stat"><div class="k">Highest level achieved</div><div class="v">' + esc(r.highest) + "</div></div>" +
-      '<div class="stat"><div class="k">Conformant for use in the HIE? ' + Ref.help("summary.conformant", "Conformant") + '</div><div class="v">' + (r.conformant ? "YES" + (pol.status !== "Approved" ? " (provisional)" : "") : "NOT YET") + "</div></div>" +
+      '<div class="stat"><div class="k">Conformant for use in the HIE? ' + Ref.help("summary.conformant", "Conformant") + '</div><div class="v">' + (r.conformant ? "YES (" + esc(passedRange(r)) + ")" : "NOT YET") + "</div></div>" +
       '<div class="stat"><div class="k">Critical items not met</div><div class="v">' + r.criticalOpen + "</div></div></div></section>" +
       '<section class="panel"><table class="grid"><thead><tr><th>Level</th><th class="num">Score</th><th class="num">Pass threshold ' + Ref.help("summary.threshold", "Pass threshold") + '</th>' +
       '<th class="num">Critical not met</th><th class="num">Items not tested</th><th class="num">Progress ' + Ref.help("summary.progress", "Progress") + '</th><th>Sheet status</th><th>Level status (gated) ' + Ref.help("status.LOCKED", "Level status") + '</th></tr></thead><tbody>' +
@@ -542,11 +542,14 @@
     return '<table class="rp-kv">' + rows.join("") + "</table>";
   }
 
+  // "Levels 0–N passed" for a conformant result, N = highest level passed (always ≥ 3 when conformant).
+  function passedRange(r) { return "Levels 0–" + String(r.highest).replace(/^Level\s*/, "") + " passed"; }
+
   function viewReport() {
     var p = state.profile, r = result, m = data.meta, rt = data.report || {};
     var title = m.title || "Healthcare Interoperability Readiness Matrix for EMR Systems";
     var draft = m.is_release ? "" : '<span class="rp-draft">' + esc(m.kind === "candidate" ? "Release candidate" : "Draft") + " — not for official evaluation</span>";
-    var conf = r.conformant ? '<span class="chip st-met">✓ CONFORMANT (Levels 0–3 passed)' + (data.scoring.policy.status !== "Approved" ? " — PROVISIONAL" : "") + "</span>"
+    var conf = r.conformant ? '<span class="chip st-met">✓ CONFORMANT (' + esc(passedRange(r)) + ")</span>"
       : '<span class="chip st-fail">NOT YET CONFORMANT</span>';
 
     // B. summary rows
@@ -652,7 +655,7 @@
       needRows + '<tr class="rp-total"><td><b>Certificate condition: no critical item Not Met</b></td><td class="c">' + r.criticalOpen + "</td><td>" +
       (r.criticalOpen === 0 ? '<span class="chip st-met">✓ MET — no critical item open</span>' : '<span class="chip st-fail">✗ NOT MET — certificate cannot be issued</span>') + "</td></tr></tbody></table>" +
       '<h2 class="rp-h">E. Certificate details</h2>' + kv([["Certificate no.", p.certificate_no], ["Certificate date", p.certificate_date], ["Product · version", (p.system_name || "—") + " · " + (p.version || "—")],
-        ["Versions tested", "FHIR " + (p.fhir_release || "—") + " · PH Core IG " + (p.ph_core || "—") + " · PHeReF IG " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest + (data.scoring.policy.status !== "Approved" ? " (thresholds PROPOSED — provisional)" : "")],
+        ["Versions tested", "FHIR " + (p.fhir_release || "—") + " · PH Core IG " + (p.ph_core || "—") + " · PHeReF IG " + (p.pheref || "—")], ["Terminology release", p.terminology], ["Level achieved", r.highest],
         ["Date(s) of testing", p.test_dates], ["Valid until", p.valid_until || (validDefault() ? validDefault() + " — 2 years from approval or until a major change / IG major version (PROPOSED)" : "2 years from approval or until a major change / IG major version (PROPOSED)")], ["Scope", "Electronic referral — sender (TS1) and receiver (TS2); deployment: " + (p.deployment || "—")], ["Conditions", p.conditions || "None recorded"],
         ["Signatory", [p.signatory_name, p.signatory].filter(Boolean).join(" — ")], ["Certificate fingerprint", certFingerprint() || "— (details incomplete; see Output › Certificate)"]]) +
       '<h2 class="rp-h">F. Sign-off</h2>' + signOff(p) +

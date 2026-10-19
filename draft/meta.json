@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "a02e58b",
- "commit_date": "2026-10-19T11:55:21+08:00",
- "subject": "Refactor certificate and profile documentation for clarity; update glossary definitions and improve certificate layout in styles",
- "built": "2026-10-19 11:55 PHT",
- "built_iso": "2026-10-19T03:55:48+00:00",
+ "commit": "70c4cff",
+ "commit_date": "2026-10-19T12:10:52+08:00",
+ "subject": "Update reference guide and glossary for clarity; enhance conformity result display in app.js",
+ "built": "2026-10-19 12:11 PHT",
+ "built_iso": "2026-10-19T04:11:16+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit a02e58b",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 70c4cff",
  "counts": {
   "criteria": 103,
   "sub_items": 272
