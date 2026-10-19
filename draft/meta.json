@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "70c4cff",
- "commit_date": "2026-10-19T12:10:52+08:00",
- "subject": "Update reference guide and glossary for clarity; enhance conformity result display in app.js",
- "built": "2026-10-19 12:11 PHT",
- "built_iso": "2026-10-19T04:11:16+00:00",
+ "commit": "8353c43",
+ "commit_date": "2026-10-19T13:11:10+08:00",
+ "subject": "Enhance README rendering and layout in landing page; improve styling and responsiveness for better user experience",
+ "built": "2026-10-19 13:11 PHT",
+ "built_iso": "2026-10-19T05:11:45+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit 70c4cff",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 8353c43",
  "counts": {
   "criteria": 103,
   "sub_items": 272
