@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | `reference-guide/reference-guide.md` | Technical Reference Guide — the prose of Chapters 1 to 7 | Current; shown on the web scorecard under Reference |
 | `maintainer-setup.md` | One-time GitHub setup for the repository | Current |
+| `images/site-*.png` | Screenshots of the scorecard site used in the main README | Retake when the site layout changes |
 
 The Technical Reference Guide holds the explanations only. Its tables are not written in the guide:
 they are kept as structured data and inserted where the guide has a marker line such as
