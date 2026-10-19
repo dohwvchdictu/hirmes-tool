@@ -29,8 +29,8 @@ The landing page lists every version of the criteria. Choose **Open scorecard** 
 
 | Label | What it is | Use it to |
 | --- | --- | --- |
-| Release | Approved by the TWG; the official version | Practise and prepare for an evaluation (the released workbook is the official, signed record) |
-| Release candidate | Sent to the TWG for review | Review what the TWG is asked to approve |
+| Release | Approved by the Project Workstreams; the official version | Practise and prepare for an evaluation (the released workbook is the official, signed record) |
+| Release candidate | Sent to the Project Workstreams for review | Review what the Project Workstreams are asked to approve |
 | Draft · main | Latest accepted changes, not yet released | See the current state of the criteria |
 | Branch preview | A proposed change in progress | Check a change before it is accepted |
 
@@ -101,7 +101,7 @@ three actions:
 
 | Action | What it does | Who it suits |
 | --- | --- | --- |
-| ✉ Suggest a change | Opens a change request (a GitHub issue) with the item, its location and its current text filled in. Add what it should say and why | TWG members, workstreams and reviewers (no editing needed) |
+| ✉ Suggest a change | Opens a change request (a GitHub issue) with the item, its location and its current text filled in. Add what it should say and why | Project Workstream members and reviewers (no editing needed) |
 | ⌗ Show the lines | Opens the source file at those lines, in the exact version the page was built from | Anyone checking where a text comes from |
 | ✎ Edit on GitHub | Opens the file in GitHub's editor. Without write access GitHub makes a copy (fork) and a pull request for you | Editors |
 
@@ -118,7 +118,7 @@ register entry lists the criteria that use it, and every section and entry has i
 
 **What happens next.** A maintainer answers the issue. An accepted change is made on a branch, which
 gets its own *Branch preview* on the landing page so you can check it. Once merged it appears in
-*Draft · main*, and it is listed in the change summary of the next release candidate sent to the TWG.
+*Draft · main*, and it is listed in the change summary of the next release candidate sent to the Project Workstreams.
 
 ### 6. Certificate (proof of concept)
 
@@ -144,7 +144,7 @@ criteria/profile.yaml              sections, fields and choices of the System Pr
 criteria/certificate.yaml          wording, signatories and logos of the Certificate of Validation (proof of concept)
 criteria/certificates-issued.yaml  register of issued certificates (what the QR code verifies against)
 criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
-scoring.yaml         pass thresholds, level gating and the TWG approval record
+scoring.yaml         pass thresholds, level gating and the Project Workstreams approval record
 registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-),
                      glossary, abbreviations, ID prefixes, and form-help.yaml (the ⓘ help in the web scorecard)
 schema/              rules every YAML file must follow
@@ -179,7 +179,7 @@ Every file carries its version, branch and commit, so a printed copy can be trac
 
 - The first release from this repository is **Revision 1** (`v1.0.0`). Legacy revisions (Rev 3–9) were
   produced outside the repository; the Rev 9 content was imported as the starting content.
-- Drafts sent to the TWG for review are release candidates: `v1.0.0-rc1`, `v1.0.0-rc2`, …
+- Drafts sent to the Project Workstreams for review are release candidates: `v1.0.0-rc1`, `v1.0.0-rc2`, …
 - Later revisions step the major version (`v2.0.0`); text clarifications without scoring effect step
   the minor version (`v1.1.0`); fixes to a released version step the patch (`v1.0.1`).
 - The released workbook is the official, signed record. The web scorecard is a review and practice tool.

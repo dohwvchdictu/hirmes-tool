@@ -69,7 +69,7 @@ sheet:
 summary:
   threshold:
     label: Pass threshold
-    help: Minimum score for the level, set by DOH policy (scoring.yaml). PROPOSED until approved by the TWG.
+    help: Minimum score for the level, set by DOH policy (scoring.yaml). PROPOSED until approved by the Project Workstreams.
   conformant:
     label: Conformant for use in the HIE
     help: Levels 0 to 3 passed and no critical item Not Met. Level 4 is the maturity target.

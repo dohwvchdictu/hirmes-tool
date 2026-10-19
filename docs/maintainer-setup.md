@@ -9,7 +9,7 @@ Done once by an organization owner. Takes about 15 minutes.
 3. Create the repository **`hirmes-tool`** — **Public**, no README, no .gitignore, no license
    (they are already in this package).
 4. *Settings → Collaborators and teams*: give the maintainer and the backup maintainer **Maintain**
-   access; TWG and workstream members **Triage** (they can comment and label issues); everyone else
+   access; Project Workstream members **Triage** (they can comment and label issues); everyone else
    reads the public repository.
 
 ## 2. First push
@@ -57,11 +57,11 @@ with the ref left empty; to rebuild one version, enter its branch or tag.
 ## 5. First release candidate
 
 ```bash
-git tag v1.0.0-rc1 -m "Revision 1, release candidate 1 for TWG review"
+git tag v1.0.0-rc1 -m "Revision 1, release candidate 1 for Project Workstreams review"
 git push origin v1.0.0-rc1
 ```
 
 The *Release* workflow publishes the workbook, change summary and change log under *Releases*
 (marked pre-release), and *Publish scorecards* adds the version to the landing page.
-After TWG approval: record the decision, update `scoring.yaml` if thresholds were approved, then tag
+After Project Workstreams approval: record the decision, update `scoring.yaml` if thresholds were approved, then tag
 `v1.0.0` on the approved commit.

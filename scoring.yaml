@@ -1,5 +1,5 @@
 # Scoring policy. Thresholds and pass rules are DOH policy: change them only with a recorded
-# TWG decision, and commit with type `policy` citing that decision.
+# Project Workstreams decision, and commit with type `policy` citing that decision.
 policy:
   status: Proposed
   approved_by: ''

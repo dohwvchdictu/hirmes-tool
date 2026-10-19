@@ -142,7 +142,7 @@ def import_workbook(path: Path):
         "tier_scores": {"Fully integrated": 1, "Standalone - manual encoding": 0.5, "Not Met": 0, "Not Tested": 0},
     }
     header = ("# Scoring policy. Thresholds and pass rules are DOH policy: change them only with a recorded\n"
-              "# TWG decision, and commit with type `policy` citing that decision.\n")
+              "# Project Workstreams decision, and commit with type `policy` citing that decision.\n")
     SCORING_FILE.write_text(header + dump_yaml(scoring), encoding="utf-8")
     print(f"Imported {total} criteria from {len(SHEETS)} sheets and {len(retired)} legacy retired IDs.")
 

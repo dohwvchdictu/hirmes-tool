@@ -41,4 +41,4 @@ body:
   - type: input
     id: requester
     attributes:
-      label: Workstream, TWG or organization
+      label: Project Workstream or organization

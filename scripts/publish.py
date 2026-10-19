@@ -304,7 +304,7 @@ def build_landing(pages: Path):
         hero = '<section class="hero"><div class="big">No release yet</div><div class="muted">Use the draft below.</div></section>'
 
     body = (hero
-            + table("Releases", releases, "No final release yet. Final releases are tagged vX.Y.Z after TWG approval.")
+            + table("Releases", releases, "No final release yet. Final releases are tagged vX.Y.Z after Project Workstreams approval.")
             + table("Release candidates", candidates, "No release candidates.")
             + table("Draft (main branch)", drafts, "The main branch has not been published yet.")
             + table("Branch previews", branches, "No other branches. Every pushed branch gets a preview here."))

@@ -10,16 +10,16 @@ Never edit a generated workbook or document by hand; change the source file inst
 2. Run `python scripts/check.py` (optional locally; CI always runs it).
 3. Commit with a structured message (below) and push.
 4. Check the workflow run: it must be green. Download the generated workbook from the run if needed.
-5. When a revision is ready for the TWG, tag a release candidate (see *Releasing*).
+5. When a revision is ready for the Project Workstreams, tag a release candidate (see *Releasing*).
 
 For a larger revision, work on a branch (for example `next-release`) and merge it into `main` when the
-TWG has reviewed it. Every pushed branch gets its own scorecard preview on the landing page, so the TWG
+the Project Workstreams have reviewed it. Every pushed branch gets its own scorecard preview on the landing page, so the Project Workstreams
 can try the changes before they are merged; the preview disappears when the branch is deleted.
 
 ## Commit messages
 
 ```
-type(scope): what changed (reason or TWG reference)
+type(scope): what changed (reason or Project Workstreams reference)
 ```
 
 | type | Use for | Example |
@@ -27,8 +27,8 @@ type(scope): what changed (reason or TWG reference)
 | `feat` | A criterion or sub-item added | `feat(TS2): add TS2-14 status history timestamps` |
 | `fix` | A correction | `fix(TS1-16): correct validator guide reference to TS0-07` |
 | `docs` | Guide or introduction text only, no scoring effect | `docs(L3): clarify reconciliation steps` |
-| `policy` | Thresholds, weights, critical flags, approval record | `policy!: raise Level 2 threshold to 0.90 (TWG res. 2026-14)` |
-| `retire` | A criterion retired, moved or merged | `retire(L4)!: retire L4-12 (TWG decision 2026-09)` |
+| `policy` | Thresholds, weights, critical flags, approval record | `policy!: raise Level 2 threshold to 0.90 (Project Workstreams res. 2026-14)` |
+| `retire` | A criterion retired, moved or merged | `retire(L4)!: retire L4-12 (Project Workstreams decision 2026-09)` |
 | `chore` / `ci` / `build` | Repository housekeeping, workflows, scripts | `ci: cache pip downloads` |
 
 Add `!` after the type when the change affects scoring (weights, critical flags, thresholds, items
@@ -76,20 +76,20 @@ new ID) in the other sheet with a `history` entry pointing to the old ID.
 
 ## Policy changes
 
-Thresholds and pass rules are DOH policy. Change `scoring.yaml` only after the TWG decision, cite the
+Thresholds and pass rules are DOH policy. Change `scoring.yaml` only after the Project Workstreams decision, cite the
 decision in the commit message, and when the thresholds are approved set `policy.status: Approved`
 with `approved_by`, `date_approved` and `reference` filled in (the check fails otherwise).
 
 ## Releasing
 
 ```bash
-git tag v1.0.0-rc1 -m "Release candidate 1 for TWG review"
+git tag v1.0.0-rc1 -m "Release candidate 1 for Project Workstreams review"
 git push origin v1.0.0-rc1
 ```
 
 The release workflow builds the workbook, the change summary (compared with the previous tag) and the
 change log, and publishes them as a GitHub Release. Tags with `-rc` are marked as pre-releases.
-After TWG approval, tag the final version (`v1.0.0`) on the approved commit.
+After Project Workstreams approval, tag the final version (`v1.0.0`) on the approved commit.
 
 ## Certificates
 
@@ -197,7 +197,7 @@ It knows the exact file and lines the item comes from and offers three actions:
 | --- | --- | --- |
 | ✎ Edit on GitHub | Opens the file in GitHub's editor on the branch being viewed (releases open `main`). Without write access GitHub makes a fork and a pull request. | Editors |
 | ⌗ Show the lines | Opens the file at the exact lines, in the exact commit the page was built from. | Anyone checking where text lives |
-| ✉ Suggest a change | Opens a change request (issue) with the item, its location and its current text filled in. | TWG and workstream reviewers |
+| ✉ Suggest a change | Opens a change request (issue) with the item, its location and its current text filled in. | Project Workstream reviewers |
 
 A criterion's ✎ menu also lists every field and sub-item with its own lines and ✉ link, and the
 guide drawer shows the source of the tab you are reading (Developer's guide, Validator's guide…).
