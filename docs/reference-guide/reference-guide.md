@@ -65,7 +65,7 @@ A level is PASSED only when ALL THREE hold: (a) every applicable item has been t
 
 ## 1.6 Design neutrality and the Technical Baseline
 
-- **Outcome, not design:** criteria state WHAT must be achieved and how it is verified. Architecture, language, database, hosting, screen layout and integration method are the vendor's choice and are never scored.
+- **Freedom in design, verified by outcome:** criteria state WHAT must be achieved and how it is verified. Architecture, language, database, hosting, screen layout and integration method are the vendor's choice and are never scored.
 
 - **Specific where it matters:** measurable minimums (encryption, password storage, log-in protection, session time-out, system-to-system authentication, audit log, backup, FHIR format, revocation, logging hygiene, vulnerability management) are in the Technical Baseline (Chapter 3). Meeting or exceeding them with any product is a Met.
 
