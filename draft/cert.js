@@ -527,8 +527,7 @@
     var p = ctx.profile, r = ctx.result, pol = D.scoring.policy;
     var missing = [["certificate_no", "Certificate no."], ["certificate_date", "Date of issuance"], ["vendor", "Vendor / developer"],
       ["category", "Applicant category"], ["system_name", "Product name"], ["version", "Version / build"], ["fhir_release", "HL7 FHIR release"], ["ph_core", "PH Core IG version"],
-      ["pheref", "PHeReF IG version"], ["signatory", "Signatory"], ["signatory_name", "Signatory's name"]]
-      .concat(/\{office\}/.test(C().statement || "") ? [["office", "Conducting office (System Profile section 2)"]] : [])
+      ["pheref", "PHeReF IG version"], ["signatory", "Signatory"], ["signatory_name", "Signatory's name"], ["office", "Conducting office (System Profile section 2)"]]
       .filter(function (f) { return !norm(p[f[0]]); }).map(function (f) { return f[1]; });
     var dates = isoDate(rec.issued) && isoDate(rec.expires) && rec.expires > rec.issued;
     return [
@@ -569,8 +568,9 @@
       '<p class="ce-build">Version / build <b>' + blank(rec.version, "Version / build") + "</b></p>" +
       '<p class="ce-statement">' + fill(c.statement) + "</p>" +
       '<div class="ce-table">' +
-        tableRow("Certificate", "r-cert", cell("Certificate no.", "", blank(rec.number, "Certificate no.")) +
-          cell("Date of issuance", "", blank(longDate(rec.issued), "Date of issuance")) + cell("Valid until", "", blank(longDate(rec.expires), "Expiry date"))) +
+        '<div class="ce-row r-cert"><div class="ce-rl ce-office"><span>Conducting Office:</span> ' + blank(office, "Conducting office") + '</div><dl class="ce-cells">' +
+          cell("Certificate no.", "", blank(rec.number, "Certificate no.")) +
+          cell("Date of issuance", "", blank(longDate(rec.issued), "Date of issuance")) + cell("Valid until", "", blank(longDate(rec.expires), "Expiry date")) + "</dl></div>" +
         tableRow("Developer", "r-dev", cell("Vendor / developer", "", blank(rec.vendor, "Vendor / developer")) + cell("Applicant category", "", blank(rec.category, "Applicant category"))) +
         tableRow("Validated against", "r-ver", cell("HL7 FHIR", "release", blank(rec.fhir_release, "FHIR release")) +
           cell("PH Core", "implementation guide", blank(rec.ph_core, "version")) + cell("PHeReF", "implementation guide", blank(rec.pheref, "version"))) +

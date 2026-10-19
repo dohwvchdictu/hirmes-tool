@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-19T02:13:36+00:00",
+ "generated": "2026-10-19T03:55:55+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -10,11 +10,11 @@
    "ref_type": "branch",
    "kind": "draft",
    "path": "draft",
-   "commit": "ae2eabb",
-   "commit_date": "2026-10-19T10:13:05+08:00",
-   "subject": "Merge branch 'main' of github-hirmes:dohwvchdictu/hirmes-tool",
-   "built": "2026-10-19 10:13 PHT",
-   "built_iso": "2026-10-19T02:13:32+00:00",
+   "commit": "a02e58b",
+   "commit_date": "2026-10-19T11:55:21+08:00",
+   "subject": "Refactor certificate and profile documentation for clarity; update glossary definitions and improve certificate layout in styles",
+   "built": "2026-10-19 11:55 PHT",
+   "built_iso": "2026-10-19T03:55:48+00:00",
    "ok": true,
    "files": {
     "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -22,7 +22,7 @@
     "scorecard": "index.html"
    },
    "version": "unreleased draft",
-   "label": "unreleased draft \u00b7 branch main \u00b7 commit ae2eabb",
+   "label": "unreleased draft \u00b7 branch main \u00b7 commit a02e58b",
    "counts": {
     "criteria": 103,
     "sub_items": 272
