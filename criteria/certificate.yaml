@@ -5,6 +5,7 @@
 #
 # statement may use {level} (highest level achieved), {criteria} (testing criteria version) and
 # {office} (the conducting office from System Profile section 2; it is not printed on the letterhead).
+# The conducting office prints on the first line of the table, above the certificate number and dates.
 # The certificate number and dates, the developer, the versions validated against and the Level 2-4
 # results print in one ruled table below the statement (the number also stands in the upper right
 # corner); the level achieved prints in the line at the foot. validity_note (optional)

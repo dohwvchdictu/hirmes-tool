@@ -612,17 +612,30 @@
 
     var legend = '<div class="rp-legend"><span class="chip st-met">✓ Met / passed</span><span class="chip st-partial">◐ Met – for compliance</span><span class="chip st-incomplete">INCOMPLETE</span><span class="chip st-fail">✗ Not met / critical</span>' +
       '<span class="chip st-nt">○ Not tested</span><span class="chip st-na">— N/A</span><span class="chip st-locked">LOCKED</span><span class="rp-critb">★ Critical</span></div>';
-    var office = p.office ? "<br><b>" + esc(p.office.toUpperCase()) + "</b>" : "";
+    // Letterhead in the layout of the DOH-HIRMES forms (Application Form L0): seal | agency and title | document
+    // control, with the kind of document under the title. The conducting office is not printed here (section A
+    // and the certificate carry it).
+    var seal = (data.certificate || {}).seal_url;
+    var head = '<table class="rp-head"><colgroup><col class="w-logo"><col><col class="w-side"></colgroup><tbody><tr>' +
+      '<td class="rp-logo" rowspan="2">' + (seal ? '<img src="' + esc(seal) + '" alt="Seal of the Department of Health">' : "") + "</td>" +
+      '<td class="rp-agency">Department of Health<b>' + esc(title).replace(/\s+(for EMR Systems)$/i, "<br>$1") + "</b></td>" +
+      '<td class="rp-doc" rowspan="2"><span>Criteria version: <b>' + esc(m.label) + "</b></span><span>Built: " + esc(when(m.built_iso, m.built)) +
+      "</span><span>Printed: " + esc(when(new Date().toISOString())) + "</span>" + draft + "</td></tr>" +
+      '<tr><td class="rp-kind">Evaluation Report</td></tr>' +
+      // identification row: ties every printed page to the one evaluation, so a loose page can be matched to the signed report
+      '<tr class="rp-id"><td colspan="3">' + [["Application no.", p.application_no], ["System · version", [p.system_name, p.version].filter(Boolean).join(" · ")],
+        ["Vendor / developer", p.vendor], ["Certificate no.", p.certificate_no]].map(function (x) {
+          return "<span><i>" + esc(x[0]) + ":</i> <b>" + esc(x[1] || "—") + "</b></span>";
+        }).join("") + "</td></tr></tbody></table>";
 
     var controls = '<div class="rp-controls noprint"><label><input type="checkbox" data-ropt="guides"' + (reportOpts.guides ? " checked" : "") + "> Developer's and validator's guides</label>" +
       '<label><input type="checkbox" data-ropt="subs"' + (reportOpts.subs ? " checked" : "") + "> Sub-item results</label>" +
       '<label><input type="checkbox" data-ropt="attention"' + (reportOpts.attention ? " checked" : "") + "> Only items not met, partial or not tested</label>" +
       '<button type="button" id="btn-print-report">Print / save as PDF</button></div>';
 
-    return controls + '<article id="report" class="paper">' +
-      '<header class="rp-letter">Republic of the Philippines<br>Department of Health' + office + "</header>" +
-      '<h1 class="rp-title">' + esc(title) + "<small>Evaluation Report</small></h1>" +
-      '<p class="rp-ver">Criteria version ' + esc(m.label) + " · built " + esc(when(m.built_iso, m.built)) + " · printed " + esc(when(new Date().toISOString())) + " " + draft + "</p>" +
+    // The letterhead sits in the <thead> of a frame table so that the browser repeats it at the top of every printed page.
+    return controls + '<article id="report" class="paper"><table class="rp-frame"><thead><tr><td>' +
+      '<header class="rp-letter">' + head + "</header></td></tr></thead><tbody><tr><td>" +
       (rt.background ? '<section class="rp-text"><h3>Background</h3><p>' + esc(rt.background).replace(/\n\n/g, "</p><p>") + "</p>" +
         (rt.scope ? "<h3>Scope and coverage</h3><p>" + esc(rt.scope).replace(/\n\n/g, "</p><p>") + "</p>" : "") + "</section>" : "") +
       '<h2 class="rp-h">A. System profile</h2>' + kv([["System name", p.system_name], ["Version / build", p.version], ["Vendor / developer", p.vendor], ["Applicant category", p.category],
@@ -646,7 +659,7 @@
       '<h2 class="rp-h rp-break">G. Testing criteria breakdown</h2>' + legend +
       '<table class="rp-table rp-crits"><colgroup><col class="w-ref"><col><col class="w-type"><col class="w-res"><col class="w-score"><col class="w-out"></colgroup>' +
       "<thead><tr><th>Ref</th><th>Criterion</th><th>Type · W</th><th>Result</th><th>Score</th><th>Outstanding / notes</th></tr></thead>" + breakdown + "</table>" +
-      (m.show_license ? '<p class="rp-credit">' + esc(m.credit || "") + "</p>" : "") + "</article>";
+      (m.show_license ? '<p class="rp-credit">' + esc(m.credit || "") + "</p>" : "") + "</td></tr></tbody></table></article>";
   }
 
   /** F. Sign-off, as in the workbook: one row per person in the sign_off order of profile.yaml, the name

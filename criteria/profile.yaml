@@ -107,7 +107,7 @@ sections:
   fields:
   - key: office
     label: Conducting office
-    help: Conducting DOH office; printed on the report letterhead when filled in.
+    help: Conducting DOH office; printed in the report's system profile and above the certificate number on the certificate (not on the letterhead).
   - key: test_dates
     label: Date(s) of testing
     placeholder: e.g. 2026-10-12 to 2026-10-14

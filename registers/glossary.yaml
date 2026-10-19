@@ -22,7 +22,7 @@ sections:
   - term: Observer
     meaning: A representative of an LGU, hospital, academic or research institution or other agency who witnesses the validation to ensure unbiased processing. Observers do not score.
   - term: Conducting office
-    meaning: The DOH office or region that conducts the validation (System Profile C.14); printed on the report letterhead and named in the statement of the certificate.
+    meaning: The DOH office or region that conducts the validation (System Profile C.14); printed in the report's system profile and on the certificate, above the certificate number (not on the letterhead).
   - term: Application No.
     meaning: The reference number the Administrator assigns when the application is registered (System Profile A.0).
   - term: Letter of application
@@ -199,7 +199,7 @@ sections:
   - term: Printed Evaluation Report
     meaning: The A4 report sheet that collects all results automatically for printing and signing; it has no input cells.
   - term: Letterhead
-    meaning: The heading at the top of each report page (Republic of the Philippines · Department of Health · conducting office).
+    meaning: The header table at the top of the printed report, in the layout of the DOH-HIRMES forms — DOH seal; Department of Health, Healthcare Interoperability Readiness Matrix for EMR Systems and Evaluation Report; criteria version and print date. The conducting office is not printed on it.
   - term: Retired / moved ID
     meaning: A criterion ID no longer used on its sheet; it is never reused (list in section 2.12).
 - section: 2.3 Health care, referral and reporting terms
