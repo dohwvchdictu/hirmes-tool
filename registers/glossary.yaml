@@ -102,8 +102,6 @@ sections:
     meaning: Temporary (suspension) or permanent (revocation) withdrawal of a certificate for the reasons listed in Chapter 7.
   - term: Proposed (policy value)
     meaning: A threshold, default or rule drafted in this tool that takes effect only after DOH approval is recorded on the Summary sheet.
-  - term: Provisional result
-    meaning: A conformance result shown while the pass thresholds are still PROPOSED.
   - term: DOH policy default
     meaning: A value (e.g., idle time-out of 15 minutes) set by the DOH before evaluation and applied equally to all systems; may be adjusted only by the DOH.
   - term: Equivalent control

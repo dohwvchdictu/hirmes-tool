@@ -61,7 +61,7 @@ The workbook decides, level by level, whether an EMR SYSTEM — the product, as 
 
 ## 1.5 Pass rule
 
-A level is PASSED only when ALL THREE hold: (a) every applicable item has been tested, (b) every critical item and every ★ sub-item is Met, and (c) the level score reaches the threshold on the Summary sheet. Level 2 passes only when all four parts (2A–2D) pass. A level shows LOCKED until the level before it passes; its score is still shown so testing can run in parallel. While the thresholds are PROPOSED, a positive result is marked PROVISIONAL.
+A level is PASSED only when ALL THREE hold: (a) every applicable item has been tested, (b) every critical item and every ★ sub-item is Met, and (c) the level score reaches the threshold on the Summary sheet. Level 2 passes only when all four parts (2A–2D) pass. A level shows LOCKED until the level before it passes; its score is still shown so testing can run in parallel. A conformant result is shown with the range of levels passed, e.g. “YES (Levels 0–4 passed)”.
 
 ## 1.6 Design neutrality and the Technical Baseline
 
