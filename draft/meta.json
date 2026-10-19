@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "b02b579",
- "commit_date": "2026-10-19T17:32:44+08:00",
- "subject": "Update terminology to reflect Project Workstreams intead of \"TWG\" in documentation and templates",
- "built": "2026-10-19 17:33 PHT",
- "built_iso": "2026-10-19T09:33:14+00:00",
+ "commit": "54cc0be",
+ "commit_date": "2026-10-19T17:40:09+08:00",
+ "subject": "Clarify changelog reference in README",
+ "built": "2026-10-19 17:40 PHT",
+ "built_iso": "2026-10-19T09:40:26+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit b02b579",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 54cc0be",
  "counts": {
   "criteria": 103,
   "sub_items": 272
