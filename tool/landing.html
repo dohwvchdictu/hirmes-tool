@@ -6,22 +6,24 @@
   <meta name="generated" content="{{GENERATED_ISO}}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Testing Criteria — Published Versions</title>
+  <title>Testing Criteria: Published Versions</title>
   <style>
     :root {
       --bg: #f6f7f9; --panel: #fff; --ink: #1d2733; --muted: #5b6776; --line: #d9dee5;
       --accent: #1f5fa8; --accent-soft: #e6eef8; --good: #1e7a3c; --good-soft: #e3f3e8;
       --warn: #8a5a00; --warn-soft: #fff3d6; --bad: #b3261e; --bad-soft: #fbe6e4; --lock-soft: #eceef1;
+      --on-accent: #fff;
     }
     @media (prefers-color-scheme: dark) {
       :root { --bg: #12161c; --panel: #1b2129; --ink: #e6e9ee; --muted: #a2acb9; --line: #2e3742;
         --accent: #7fb0ec; --accent-soft: #1d2b3d; --good: #79d095; --good-soft: #17301f;
-        --warn: #f2c66b; --warn-soft: #3a2f14; --bad: #f19a92; --bad-soft: #3a1d1b; --lock-soft: #262d36; }
+        --warn: #f2c66b; --warn-soft: #3a2f14; --bad: #f19a92; --bad-soft: #3a1d1b; --lock-soft: #262d36;
+        --on-accent: #12161c; }
     }
     * { box-sizing: border-box; }
     body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); }
     header { background: var(--panel); border-bottom: 1px solid var(--line); }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px 20px; }
+    .wrap { max-width: 1480px; margin: 0 auto; padding: 18px 20px; }
     h1 { font-size: 20px; margin: 0 0 4px; }
     h2 { font-size: 16px; margin: 0 0 10px; }
     a { color: var(--accent); }
@@ -37,7 +39,7 @@
     .actions { display: flex; flex-wrap: wrap; gap: 6px; }
     .btn { display: inline-block; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; text-decoration: none; color: var(--ink); white-space: nowrap; font-size: 13px; background: var(--panel); }
     .btn:hover { border-color: var(--accent); }
-    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
     .btn.subtle { color: var(--muted); }
     .btn.warn { color: var(--bad); border-color: var(--bad); }
     .badge { white-space: nowrap; display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; vertical-align: middle; }
@@ -47,7 +49,41 @@
     .b-branch { background: var(--lock-soft); color: var(--muted); }
     .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 16px; margin-top: 10px; }
     footer { color: var(--muted); font-size: 12px; text-align: center; padding: 10px 20px 30px; }
-    @media (max-width: 760px) { thead { display: none; } tr, td { display: block; border: none; } tr { border-bottom: 1px solid var(--line); padding: 8px 0; } .num { text-align: left; } }
+    /* Version tables turn into stacked rows when their column is narrow (phone, or beside the README). */
+    .versions { container-type: inline-size; min-width: 0; }
+    @container (max-width: 760px) { .versions thead { display: none; } .versions tr, .versions td { display: block; border: none; } .versions tr { border-bottom: 1px solid var(--line); padding: 8px 0; } .versions .num { text-align: left; } }
+    @media (max-width: 760px) { .versions thead { display: none; } .versions tr, .versions td { display: block; border: none; } .versions tr { border-bottom: 1px solid var(--line); padding: 8px 0; } .versions .num { text-align: left; } }
+
+    /* README card: left column on wide screens (scrolls on its own so the versions stay in view),
+       a collapsed bar above the versions on tablets and phones. */
+    .readme { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 14px 0; }
+    .readme summary { display: flex; flex-direction: column; gap: 2px; padding: 12px 40px 12px 16px; cursor: pointer; list-style: none; position: relative; min-height: 44px; }
+    .readme summary::-webkit-details-marker { display: none; }
+    .readme summary::after { content: ""; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px; margin-top: -6px;
+      border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); }
+    .readme[open] summary { border-bottom: 1px solid var(--line); }
+    .readme[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
+    .readme-title { font-size: 16px; font-weight: 700; }
+    .readme summary:focus-visible, .readme-body:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 8px; }
+    .readme-body { padding: 4px 16px 16px; overflow-wrap: break-word; }
+    .readme-body h2 { font-size: 16px; margin: 24px 0 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .readme-body h3 { font-size: 14px; margin: 18px 0 6px; }
+    .readme-body :is(h2, h3, h4) { scroll-margin-top: 8px; }
+    .readme-body p, .readme-body ul, .readme-body ol { margin: 8px 0; }
+    .readme-body ul, .readme-body ol { padding-left: 22px; }
+    .readme-body img { display: block; max-width: 100%; height: auto; margin: 10px 0; border: 1px solid var(--line); border-radius: 6px; }
+    .readme-body table { display: block; overflow-x: auto; font-size: 13px; margin: 10px 0; }
+    .readme-body th, .readme-body td { padding: 6px 8px; }
+    .readme-body code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--lock-soft); padding: 1px 4px; border-radius: 4px; }
+    .readme-body pre { background: var(--lock-soft); padding: 10px 12px; border-radius: 6px; overflow-x: auto; }
+    .readme-body pre code { background: none; padding: 0; font-size: 12px; }
+    @media (min-width: 1100px) {
+      .layout.has-readme { display: grid; grid-template-columns: minmax(340px, 5fr) minmax(0, 8fr); gap: 20px; align-items: start; }
+      .has-readme .readme { position: sticky; top: 14px; }
+      .has-readme .readme summary { cursor: default; padding-right: 16px; }
+      .has-readme .readme summary::after { display: none; }
+      .has-readme .readme-body { max-height: calc(100vh - 100px); overflow-y: auto; }
+    }
   </style>
 </head>
 <body>
@@ -63,8 +99,28 @@
       </div>
     </div>
   </header>
-  <main class="wrap">
+  <main class="wrap {{LAYOUT}}">
+{{README}}
+<script>
+  /* The README is always open beside the versions on wide screens; on tablets and phones it starts
+     collapsed, and opens by itself when a link points inside it (e.g. #changelog). */
+  (function () {
+    var d = document.getElementById("readme"); if (!d) return;
+    var s = d.querySelector("summary"), wide = window.matchMedia("(min-width: 1100px)");
+    var target = function () {
+      var id = ""; try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) {}
+      var t = id && document.getElementById(id); return t && d.contains(t) ? t : null;
+    };
+    var fit = function () { d.open = wide.matches || !!target(); s.tabIndex = wide.matches ? -1 : 0; };
+    fit();
+    if (wide.addEventListener) wide.addEventListener("change", fit); else wide.addListener(fit);
+    s.addEventListener("click", function (ev) { if (wide.matches) ev.preventDefault(); });
+    window.addEventListener("hashchange", function () { var t = target(); if (t) { d.open = true; t.scrollIntoView(); } });
+  })();
+</script>
+    <div class="versions">
 {{BODY}}
+    </div>
   </main>
   <footer>
     Generated {{GENERATED}} by the publishing workflow ·

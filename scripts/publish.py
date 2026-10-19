@@ -182,6 +182,58 @@ def load_metas(pages: Path):
     return metas
 
 
+def github_slug(text: str, sep: str = "-") -> str:
+    """Heading ids as GitHub makes them, so README links like (#changelog) work on the landing page too."""
+    return re.sub(r"[^\w\- ]", "", text.strip().lower()).replace(" ", sep)
+
+
+def render_readme(pages: Path) -> str:
+    """README.md of the default branch as the landing page's left card ("" when it cannot be rendered).
+
+    Relative links point at the repository on GitHub, and the screenshots are copied to readme/."""
+    src = ROOT / "README.md"
+    if not src.exists():
+        return ""
+    try:
+        import markdown  # in requirements.txt
+    except ImportError:
+        print("WARNING  Markdown is not installed (pip install -r requirements.txt); landing page has no README")
+        return ""
+    text = src.read_text(encoding="utf-8")
+    text = re.sub(r"\A\s*# .*\n", "", text)  # the page header already carries the title
+    body = markdown.markdown(text, extensions=["tables", "sane_lists", "attr_list", "fenced_code", "toc"],
+                             extension_configs={"toc": {"slugify": github_slug}}, output_format="html")
+
+    images = pages / "readme"
+    if images.exists():
+        shutil.rmtree(images)
+
+    def relink(m):
+        attr, url = m.group(1), html.unescape(m.group(2))
+        if re.match(r"[a-z][a-z0-9+.-]*:|#|//", url, re.I):
+            return m.group(0)
+        path = url.split("#")[0]
+        if attr == "src" and (ROOT / path).is_file():
+            images.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / path, images / Path(path).name)
+            return f'src="readme/{html.escape(Path(path).name)}" loading="lazy"'
+        if not REPO_URL:
+            return m.group(0)
+        if url.startswith("../../"):  # GitHub-relative (issues, releases, commits)
+            return f'{attr}="{html.escape(REPO_URL + "/" + url[6:])}"'
+        kind = "tree" if (ROOT / path).is_dir() else "blob"
+        return f'{attr}="{html.escape(f"{REPO_URL}/{kind}/{DEFAULT_BRANCH}/{url}")}"'
+
+    body = re.sub(r'\b(href|src)="([^"]*)"', relink, body)
+    source = (f' · <a href="{html.escape(REPO_URL)}/blob/{html.escape(DEFAULT_BRANCH)}/README.md">View on GitHub</a>'
+              if REPO_URL else "")
+    return (f'<details class="readme" id="readme" open>'
+            f'<summary><span class="readme-title">About this tool</span>'
+            f'<span class="muted">README.md on {html.escape(DEFAULT_BRANCH)}{source}</span></summary>'
+            f'<div class="readme-body" tabindex="0" role="region" aria-label="About this tool (README)">{body}</div>'
+            f'</details>')
+
+
 def build_landing(pages: Path):
     metas = load_metas(pages)
     releases = sorted([m for m in metas if m["kind"] == "release"], key=lambda m: version_key(m["ref"]), reverse=True)
@@ -220,7 +272,7 @@ def build_landing(pages: Path):
                 out.append(f'<a class="btn" href="{e(REPO_URL)}/tree/{e(m["ref"])}">Source</a>')
             out.append(f'<a class="btn subtle" href="{e(REPO_URL)}/commit/{e(m["commit"])}">Commit {e(m["commit"])}</a>')
         if not m.get("ok"):
-            out.append(f'<a class="btn warn" href="{e(base)}build-log.txt">Build failed — log</a>')
+            out.append(f'<a class="btn warn" href="{e(base)}build-log.txt">Build failed: view log</a>')
         return " ".join(out)
 
     badge = {"release": ("Release", "b-release"), "candidate": ("Release candidate", "b-candidate"),
@@ -232,7 +284,7 @@ def build_landing(pages: Path):
         return (f'<tr><td><span class="ref">{e(m["ref"])}</span><div class="muted">{e(m.get("subject"))}</div></td>'
                 f'<td><span class="badge {cls}">{name}</span></td>'
                 f'<td>{e(m["commit_date"][:10])}<div class="muted">built {when(m)}</div></td>'
-                f'<td class="num">{e(counts.get("criteria", "—"))} / {e(counts.get("sub_items", "—"))}</td>'
+                f'<td class="num">{e(counts.get("criteria", "n/a"))} / {e(counts.get("sub_items", "n/a"))}</td>'
                 f'<td class="actions">{links(m)}</td></tr>')
 
     def table(title, items, note):
@@ -257,7 +309,9 @@ def build_landing(pages: Path):
             + table("Draft (main branch)", drafts, "The main branch has not been published yet.")
             + table("Branch previews", branches, "No other branches. Every pushed branch gets a preview here."))
     actions = (f'{e(REPO_URL)}/actions/workflows/publish.yml' if REPO_URL else "#")
-    page = (template.replace("{{BODY}}", body).replace("{{REPO_URL}}", e(REPO_URL)).replace("{{ACTIONS_URL}}", actions)
+    readme = render_readme(pages)
+    page = (template.replace("{{BODY}}", body).replace("{{README}}", readme)
+            .replace("{{LAYOUT}}", "layout has-readme" if readme else "layout").replace("{{REPO_URL}}", e(REPO_URL)).replace("{{ACTIONS_URL}}", actions)
             .replace("{{GENERATED}}", when(now_stamp()))
             .replace("{{LICENSE}}", LICENSE_HTML if SHOW_LICENSE_NOTICE else "")
             .replace("{{GENERATED_ISO}}", generated))
