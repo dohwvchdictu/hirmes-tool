@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-16T05:15:13+00:00",
+ "generated": "2026-10-19T01:56:39+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -10,11 +10,11 @@
    "ref_type": "branch",
    "kind": "draft",
    "path": "draft",
-   "commit": "47e0b89",
-   "commit_date": "2026-10-16T13:14:43+08:00",
-   "subject": "Merge pull request #4 from dohwvchdictu/certificate-demo",
-   "built": "2026-10-16 13:14 PHT",
-   "built_iso": "2026-10-16T05:14:55+00:00",
+   "commit": "1eb4564",
+   "commit_date": "2026-10-19T09:56:13+08:00",
+   "subject": "Update design neutrality criteria wording in reference guide",
+   "built": "2026-10-19 09:56 PHT",
+   "built_iso": "2026-10-19T01:56:34+00:00",
    "ok": true,
    "files": {
     "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -22,7 +22,7 @@
     "scorecard": "index.html"
    },
    "version": "unreleased draft",
-   "label": "unreleased draft \u00b7 branch main \u00b7 commit 47e0b89",
+   "label": "unreleased draft \u00b7 branch main \u00b7 commit 1eb4564",
    "counts": {
     "criteria": 103,
     "sub_items": 272
