@@ -3,7 +3,7 @@
      SPDX-License-Identifier: GPL-3.0-or-later -->
 <html lang="en">
 <head>
-  <meta name="generated" content="2026-10-19T05:11:52+00:00">
+  <meta name="generated" content="2026-10-19T09:33:21+00:00">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria: Published Versions</title>
@@ -92,8 +92,8 @@
       <h1>Healthcare Interoperability Readiness Matrix for EMR Systems Evaluation Tool</h1>
       <div class="muted">Every release, release candidate, the main draft and each working branch, published automatically. Open a scorecard to try its scoring in the browser, or download its workbook.</div>
       <div class="legend muted">
-        <div><span class="badge b-release">Release</span> approved by the TWG; the official version</div>
-        <div><span class="badge b-candidate">Release candidate</span> sent to the TWG for review</div>
+        <div><span class="badge b-release">Release</span> approved by the Project Workstreams; the official version</div>
+        <div><span class="badge b-candidate">Release candidate</span> sent to the Project Workstreams for review</div>
         <div><span class="badge b-draft">Draft · main</span> latest accepted changes, not yet released</div>
         <div><span class="badge b-branch">Branch preview</span> work in progress on a branch</div>
       </div>
@@ -155,13 +155,13 @@ installation and no GitHub account. Proposing a change needs a free GitHub accou
 <tbody>
 <tr>
 <td>Release</td>
-<td>Approved by the TWG; the official version</td>
+<td>Approved by the Project Workstreams; the official version</td>
 <td>Practise and prepare for an evaluation (the released workbook is the official, signed record)</td>
 </tr>
 <tr>
 <td>Release candidate</td>
-<td>Sent to the TWG for review</td>
-<td>Review what the TWG is asked to approve</td>
+<td>Sent to the Project Workstreams for review</td>
+<td>Review what the Project Workstreams are asked to approve</td>
 </tr>
 <tr>
 <td>Draft · main</td>
@@ -261,7 +261,7 @@ three actions:</p>
 <tr>
 <td>✉ Suggest a change</td>
 <td>Opens a change request (a GitHub issue) with the item, its location and its current text filled in. Add what it should say and why</td>
-<td>TWG members, workstreams and reviewers (no editing needed)</td>
+<td>Project Workstream members and reviewers (no editing needed)</td>
 </tr>
 <tr>
 <td>⌗ Show the lines</td>
@@ -285,7 +285,7 @@ register entry lists the criteria that use it, and every section and entry has i
 <p><img alt="Technical Baseline chapter in the Reference section" src="readme/site-reference.png" loading="lazy"></p>
 <p><strong>What happens next.</strong> A maintainer answers the issue. An accepted change is made on a branch, which
 gets its own <em>Branch preview</em> on the landing page so you can check it. Once merged it appears in
-<em>Draft · main</em>, and it is listed in the change summary of the next release candidate sent to the TWG.</p>
+<em>Draft · main</em>, and it is listed in the change summary of the next release candidate sent to the Project Workstreams.</p>
 <h3 id="6-certificate-proof-of-concept">6. Certificate (proof of concept)</h3>
 <p><em>Output › Certificate</em> prints a Certificate of Validation from the System Profile and the results.
 The page lists what is still missing; until everything is in order it prints as a SPECIMEN. Its QR
@@ -303,7 +303,7 @@ criteria/profile.yaml              sections, fields and choices of the System Pr
 criteria/certificate.yaml          wording, signatories and logos of the Certificate of Validation (proof of concept)
 criteria/certificates-issued.yaml  register of issued certificates (what the QR code verifies against)
 criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
-scoring.yaml         pass thresholds, level gating and the TWG approval record
+scoring.yaml         pass thresholds, level gating and the Project Workstreams approval record
 registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-),
                      glossary, abbreviations, ID prefixes, and form-help.yaml (the ⓘ help in the web scorecard)
 schema/              rules every YAML file must follow
@@ -362,7 +362,7 @@ the Reference tab and search box (press <code>/</code>) lead to every register e
 <ul>
 <li>The first release from this repository is <strong>Revision 1</strong> (<code>v1.0.0</code>). Legacy revisions (Rev 3–9) were
   produced outside the repository; the Rev 9 content was imported as the starting content.</li>
-<li>Drafts sent to the TWG for review are release candidates: <code>v1.0.0-rc1</code>, <code>v1.0.0-rc2</code>, …</li>
+<li>Drafts sent to the Project Workstreams for review are release candidates: <code>v1.0.0-rc1</code>, <code>v1.0.0-rc2</code>, …</li>
 <li>Later revisions step the major version (<code>v2.0.0</code>); text clarifications without scoring effect step
   the minor version (<code>v1.1.0</code>); fixes to a released version step the patch (<code>v1.0.1</code>).</li>
 <li>The released workbook is the official, signed record. The web scorecard is a review and practice tool.</li>
@@ -550,11 +550,11 @@ python scripts/change_summary.py        # what changed in the criteria since the
   })();
 </script>
     <div class="versions">
-<section class="hero"><div class="big">No release yet</div><div class="muted">Use the draft below.</div></section><section><h2>Releases</h2><p class="muted">No final release yet. Final releases are tagged vX.Y.Z after TWG approval.</p></section><section><h2>Release candidates</h2><p class="muted">No release candidates.</p></section><section><h2>Draft (main branch)</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">main</span><div class="muted">Enhance README rendering and layout in landing page; improve styling and responsiveness for better user experience</div></td><td><span class="badge b-draft">Draft · main</span></td><td>2026-10-19<div class="muted">built <time datetime="2026-10-19T05:11:45+00:00">2026-10-19 13:11 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="draft/">Open scorecard</a> <a class="btn" href="draft/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="draft/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/main">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/8353c43">Commit 8353c43</a></td></tr></tbody></table></section><section><h2>Branch previews</h2><p class="muted">No other branches. Every pushed branch gets a preview here.</p></section>
+<section class="hero"><div class="big">No release yet</div><div class="muted">Use the draft below.</div></section><section><h2>Releases</h2><p class="muted">No final release yet. Final releases are tagged vX.Y.Z after Project Workstreams approval.</p></section><section><h2>Release candidates</h2><p class="muted">No release candidates.</p></section><section><h2>Draft (main branch)</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">main</span><div class="muted">Update terminology to reflect Project Workstreams intead of &quot;TWG&quot; in documentation and templates</div></td><td><span class="badge b-draft">Draft · main</span></td><td>2026-10-19<div class="muted">built <time datetime="2026-10-19T09:33:14+00:00">2026-10-19 17:33 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="draft/">Open scorecard</a> <a class="btn" href="draft/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="draft/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/main">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/b02b579">Commit b02b579</a></td></tr></tbody></table></section><section><h2>Branch previews</h2><p class="muted">No other branches. Every pushed branch gets a preview here.</p></section>
     </div>
   </main>
   <footer>
-    Generated <time datetime="2026-10-19T05:11:52+00:00">2026-10-19 13:11 PHT</time> by the publishing workflow ·
+    Generated <time datetime="2026-10-19T09:33:21+00:00">2026-10-19 17:33 PHT</time> by the publishing workflow ·
     <a href="https://github.com/dohwvchdictu/hirmes-tool">Source repository</a> ·
     <a href="https://github.com/dohwvchdictu/hirmes-tool/actions/workflows/publish.yml">Republish (maintainers)</a> ·
     <a href="versions.json">versions.json</a>
