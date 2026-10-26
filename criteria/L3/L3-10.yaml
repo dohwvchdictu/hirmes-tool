@@ -12,7 +12,7 @@ developer_guide: |
 
   Purpose: Detailed and summary reports tell the same story.
 validator_guide: |
-  Add up the linelist by direction; Met only if it equals the aggregate report totals.
+  Calculate the linelist totals by direction. Met only if they equal the aggregate report totals.
   Calculation rule: IND-09.
 traces:
   fhir_traceability: []

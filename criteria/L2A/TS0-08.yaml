@@ -1,14 +1,17 @@
 id: TS0-08
 status: active
 section: Registry (optional)
-title: OPTIONAL — DSWD household / beneficiary identifier (Household No. or UBD ID) can be recorded and, where DSWD grants API access, looked up through the DSWD dxCLOUD API (SRC-15)
+title: 'OPTIONAL: DSWD household / beneficiary identifier (Household No. or UBD ID) can be recorded and, where DSWD grants API access, queried through the DSWD dxCLOUD API (SRC-15)'
 critical: 'no'
 weight: 0
 scoring: binary
 validation_role: Validator
 evidence: Screenshot (optional)
-developer_guide: Provide a field for the DSWD household / beneficiary identifier. Where DSWD has granted API access and a data sharing agreement is in place, the system may look it up or verify it through the DSWD dxCLOUD API (https://dxcloud.dswd.gov.ph/api/documentation — e.g., /api/person/getUBID, /api/person/verifyPantawid). Optional and not scored until the TDG defines the PH Core / PHeReF mapping.
-validator_guide: Record whether the field exists and, if DSWD API access was granted, whether a look-up works (for information only).
+developer_guide: |
+  Provide a field for the DSWD household / beneficiary identifier. The system MAY query or verify the identifier through the DSWD dxCLOUD API. This applies only where DSWD granted API access and a data sharing agreement is in place. See https://dxcloud.dswd.gov.ph/api/documentation (for example, /api/person/getUBID, /api/person/verifyPantawid). This item is OPTIONAL and is not scored until the TDG defines the PH Core / PHeReF mapping.
+validator_guide: |
+  Record whether the field exists.
+  If DSWD granted API access, record whether a look-up works (for information only).
 traces:
   fhir_traceability: []
   technical_baseline: []

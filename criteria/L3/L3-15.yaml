@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Supports equity analysis and LGU planning.
 validator_guide: |
   Count the disaggregations available.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-15.1
   text: Sex

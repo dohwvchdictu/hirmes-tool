@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Aggregated figures are complete.
 validator_guide: |
   Enter the system values in Test Data column C. Count the 3 values that show MATCH.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-05.
 sub_items:
 - id: L3-04.1

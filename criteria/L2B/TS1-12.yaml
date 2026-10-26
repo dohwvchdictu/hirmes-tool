@@ -8,29 +8,34 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
 developer_guide: |
-  Capture the fields below in the EMR and send them in the Task (EReferral Task) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
-  FHIR elements: Task.status = requested; Task.intent = order; Task.focus → ServiceRequest; Task.for → Patient; Task.requester → referring PractitionerRole; Task.owner → receiving facility (or its care navigator, when known); Task.authoredOn.
-  Source: SRC-04 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+  Capture the fields below in the EMR. Send them in the Task (EReferral Task), in accordance with the PHeReF / PH Core profile. The vendor MAY use any create / update method. A transaction Bundle is RECOMMENDED. The vendor MAY use conditional create / update. This criterion does not prescribe HTTP verbs. The test checks that the values reach the SHR in the profiled resource and that they can be retrieved.
+  FHIR elements: Task.status = requested, Task.intent = order, Task.focus → ServiceRequest, Task.for → Patient. Also Task.requester → referring PractitionerRole, Task.owner → receiving facility (or its care navigator, when known), Task.authoredOn.
+  Source: SRC-04 (Reference Guide, Ch. 4: Terminology & Registry Sources)
 
-  Purpose: The referral can be tracked; the receiving facility updates this Task (TS2-11).
+  Purpose: The referral can be tracked. The receiving facility updates this Task (TS2-11).
 validator_guide: |
-  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
-  2. Open the Task in the server-side evidence and compare each sub-item with the Test Data value.
-  3. Record the resource ID / log reference in Notes.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR.
+  2. Submit the referral.
+  3. Open the Task in the server-side evidence.
+  4. Compare each sub-item with the Test Data value.
+  5. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS1-12.1
-  text: Status = requested at submission — Task.status
+  text: 'Status = requested at submission: Task.status'
   critical: true
 - id: TS1-12.2
-  text: Linked to the referral — Task.focus → ServiceRequest
+  text: 'Linked to the referral: Task.focus → ServiceRequest'
   critical: true
 - id: TS1-12.3
-  text: Requester = referring practitioner; owner = receiving facility — Task.requester / Task.owner
+  text: 'Requester = referring practitioner, owner = receiving facility: Task.requester / Task.owner'
   critical: false
 - id: TS1-12.4
-  text: Date / time sent — Task.authoredOn
+  text: 'Date / time sent: Task.authoredOn'
   critical: false
 traces:
   fhir_traceability:

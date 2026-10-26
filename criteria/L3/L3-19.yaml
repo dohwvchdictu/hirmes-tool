@@ -10,10 +10,12 @@ evidence: Report screenshots before and after + Test Data Section C
 developer_guide: |
   Report the status as of the time the report is run (IND-04). Compute TAT from the first 'received' timestamp, not from later updates (IND-08).
 
-  Purpose: Reports must follow reality as referrals progress, not freeze at first status.
+  Purpose: Reports MUST follow reality as referrals progress, not freeze at the first status.
 validator_guide: |
-  1. Run the report. 2. Change C5 from accepted to completed and C2 from received to rejected. 3. Re-run and compare with the Expected Results (after-update column).
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  1. Run the report.
+  2. Change C5 from accepted to completed. Change C2 from received to rejected.
+  3. Run the report again. Compare the result with the Expected Results (after-update column).
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-19.1
   text: Re-run shows the new status counts after the late updates

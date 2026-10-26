@@ -8,23 +8,23 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshots / HTTP responses + time of each step
 developer_guide: |
-  Invalidate the session on the server at log-out; refuse expired sessions and tokens; when an administrator deactivates an account, block new log-ins immediately and end its active sessions within the TB-12 limit.
+  Invalidate the session on the server at log-out. Refuse expired sessions and tokens. When an administrator deactivates an account, block new log-ins immediately. Also end the active sessions of that account within the TB-12 limit.
 
-  Purpose: Departed staff and stolen sessions cannot keep accessing patient data.
+  Purpose: Former staff and stolen sessions cannot continue to access patient data.
 validator_guide: |
-  1. Log in, copy the session (or note the page), log out, then press Back / replay the request: access must be refused.
-  2. Wait past the idle / token expiry (TB-06 / TB-12) and repeat an action: re-authentication is required.
-  3. Administrator deactivates a logged-in test user: the user cannot log in again, and the open session ends within the TB-12 limit.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  1. Log in, copy the session (or note the page) and log out. Then press Back / replay the request. Check that access is refused.
+  2. Wait past the idle / token expiry (TB-06 / TB-12) and repeat an action. Check that the system asks for re-authentication.
+  3. An administrator deactivates a logged-in test user. Check that the user cannot log in again. Check that the open session ends within the TB-12 limit.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: TEC-10.1
   text: Session invalid after log-out (Back / replayed request refused)
   critical: false
 - id: TEC-10.2
-  text: Expired session / token refused; re-authentication required
+  text: Expired session / token refused, and the system asks for re-authentication
   critical: false
 - id: TEC-10.3
-  text: 'Deactivated account: new log-in blocked immediately; active session ended within the TB-12 limit'
+  text: 'Deactivated account: new log-in blocked immediately, and active session ended within the TB-12 limit'
   critical: false
 traces:
   fhir_traceability: []

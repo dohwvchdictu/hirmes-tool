@@ -1,20 +1,23 @@
 id: TS1-16
 status: active
 section: Patient matching
-title: 'Submitting a referral for an existing patient reuses the existing Patient record — no duplicate patient is created (moved from L4-08; Connectathon Issue #8)'
+title: 'Submitting a referral for an existing patient reuses the existing Patient record: no duplicate patient is created (moved from L4-08, Connectathon Issue #8)'
 critical: 'yes'
 weight: 2
 scoring: count
 validation_role: Validator (server-side check)
 evidence: SHR Patient search result + server-side evidence
 developer_guide: |
-  Match the patient on the SHR by the PH Core PhilSys / PhilHealth identifiers (validated in TS0-07) before creating one — e.g., conditional update 'PUT Patient?identifier=…' as in the IG example transaction (ExampleERefSubmissionBundle), or search then reuse. The matching method is the vendor's choice.
+  Before the EMR creates a Patient, match the patient on the SHR by the PH Core PhilSys / PhilHealth identifiers (validated in TS0-07). For example, use a conditional update 'PUT Patient?identifier=…' as in the IG example transaction (ExampleERefSubmissionBundle). Another example is to search, then reuse the existing Patient. The vendor MAY choose the matching method.
 
-  Purpose: One patient = one record across the network; duplicates split the clinical history.
+  Purpose: One patient = one record across the network. Duplicates split the clinical history.
 validator_guide: |
-  Submit 3 referrals for the same test patient (Test Data Section A identifiers). Validator (server-side) searches Patient by identifier and counts the referrals linked to the single existing Patient.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Submit 3 referrals for the same test patient (Test Data Section A identifiers). The validator (server-side) searches Patient by identifier. The validator counts the referrals linked to the single existing Patient.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS1-16.1
   text: 'Test referral #1 linked to the single existing Patient'

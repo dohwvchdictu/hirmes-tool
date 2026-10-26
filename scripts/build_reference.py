@@ -145,7 +145,7 @@ def split_doc(path: Path, doc_id: str, title: str) -> dict:
             while sc["l"][1] > sc["l"][0] and not lines[sc["l"][1] - 1].strip():
                 sc["l"][1] -= 1
         text = "\n".join(body)
-        num = re.match(r"Chapter (\d+)\s*[—-]\s*(.*)", ch["title"])
+        num = re.match(r"Chapter (\d+)\s*[—:-]\s*(.*)", ch["title"])
         out.append({"id": f"ch{num.group(1)}" if num else (slug(ch["title"]) or "intro"),
                     "num": num.group(1) if num else "", "title": ch["title"], "short": num.group(2) if num else ch["title"],
                     "html": render_md(text), "l": [ch["start"], end], "sections": sections,

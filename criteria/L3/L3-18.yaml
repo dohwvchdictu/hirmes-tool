@@ -8,18 +8,18 @@ scoring: count
 validation_role: Validator
 evidence: Report screenshots + Test Data Section C
 developer_guide: |
-  Count each referral once by its identifier (IND-02) and exclude cancelled referrals from the active totals while showing them as cancelled (IND-03).
+  Count each referral once by its identifier (IND-02). Exclude cancelled referrals from the active totals, but show them as cancelled (IND-03).
 
-  Purpose: The same referral sent twice, or one that was cancelled, must not inflate the figures.
+  Purpose: The same referral sent twice, or one that was cancelled, MUST NOT inflate the figures.
 validator_guide: |
-  C3 is a second copy of C2 with the same business identifier and C4 was cancelled by the referring side (both pre-loaded by the DOH). Compare the Section C totals with the Expected Results.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  C3 is a second copy of C2 with the same business identifier. The referring side cancelled C4. The DOH pre-loaded both C3 and C4. Compare the Section C totals with the Expected Results.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-18.1
   text: Duplicate C3 counted once (IND-02)
   critical: false
 - id: L3-18.2
-  text: Cancelled C4 excluded from active totals and shown as cancelled (IND-03; N/A if cancellation is not supported by the IG version)
+  text: Cancelled C4 excluded from active totals and shown as cancelled (IND-03, N/A if the IG version does not support cancellation)
   critical: false
 traces:
   fhir_traceability: []

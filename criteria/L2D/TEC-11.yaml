@@ -1,21 +1,21 @@
 id: TEC-11
 status: active
 section: Information leakage
-title: Error messages, client-side code and logs do not expose secrets, system internals or patient data beyond what the user may see
+title: Error messages, client-side code and logs do not expose secrets, system internals or patient data beyond what the user has permission to see
 critical: 'no'
 weight: 1
 scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshots + log sample or signed attestation
 developer_guide: |
-  Show users generic error messages (no stack traces, SQL, file paths or server versions); keep credentials, tokens and API keys out of browser / mobile code, URLs and browser storage (TB-07); keep full identifiers and clinical content out of application logs except where required by TB-08 audit (TB-13).
+  Show users generic error messages (no stack traces, SQL, file paths or server versions). Keep credentials, tokens and API keys out of browser / mobile code, URLs and browser storage (TB-07). Keep full identifiers and clinical content out of application logs, except where the TB-08 audit requires them (TB-13).
 
   Purpose: Error screens and logs are a frequent source of data leaks.
 validator_guide: |
   1. Trigger errors (TD-D03, a non-existent page, a broken request) and read the messages.
-  2. Open the browser developer tools (or inspect the mobile app traffic) and look for secrets in source, URLs, local / session storage.
-  3. Review a sample application log from the test session, OR accept a signed attestation with a redacted sample (Instructions 4B).
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  2. Open the browser developer tools (or inspect the mobile app traffic). Look for secrets in the source, URLs and local / session storage.
+  3. Review a sample application log from the test session, or accept a signed attestation with a redacted sample (Instructions 4B).
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: TEC-11.1
   text: Error messages show no stack trace, SQL, paths, versions or unauthorised patient data

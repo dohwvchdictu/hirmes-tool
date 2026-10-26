@@ -1,14 +1,14 @@
 id: TS1-14
 status: active
 section: Time called (info)
-title: Time Called — record whether the EMR captures it (for information)
+title: 'Time Called: record whether the EMR captures it (for information)'
 critical: 'no'
 weight: 0
 scoring: binary
 validation_role: Validator
-evidence: Screenshot (optional)
-developer_guide: Capture the field in the EMR. Not scored until the TDG defines its FHIR element (IG v0.1 defines none).
-validator_guide: Record only whether the field exists in the EMR and where it is sent, if anywhere (for information).
+evidence: Screenshot (OPTIONAL)
+developer_guide: Capture the field in the EMR. This criterion is not scored until the TDG defines its FHIR element (IG v0.1 defines none).
+validator_guide: Record only whether the field exists in the EMR and where the EMR sends it, if anywhere (for information).
 traces:
   fhir_traceability:
   - TR-043

@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Shows the true pattern of referral needs.
 validator_guide: |
   Count the 4 reason values that show MATCH in Test Data.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-06.
 sub_items:
 - id: L3-06.1

@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Supports network planning across public and private facilities.
 validator_guide: |
   Count the 4 ownership values that show MATCH in Test Data.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-07.
 sub_items:
 - id: L3-07.1
@@ -23,10 +23,10 @@ sub_items:
   text: Incoming from private facilities match
   critical: false
 - id: L3-07.3
-  text: Outgoing — government referring facility match
+  text: 'Outgoing: government referring facility match'
   critical: false
 - id: L3-07.4
-  text: Outgoing — private referring facility match
+  text: 'Outgoing: private referring facility match'
   critical: false
 traces:
   fhir_traceability: []

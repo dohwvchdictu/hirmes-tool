@@ -8,30 +8,35 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshot of each dropdown + server response ($expand / $validate-code)
 developer_guide: |
-  Use the PHeReF value sets for each coded field — sources SRC-01 to SRC-04 and SRC-09. Use the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4) — for coded values, the DOH HIE terminology server (runtime look-up, scheduled sync or cached copy: vendor's choice).
-  Referral Category → ServiceRequest.category (Referral Category VS, SNOMED CT: 73770003 Emergency / 440655000 Outpatient — required). Priority → ServiceRequest.priority (EReferralPriority: routine / urgent / stat — required). Reason for Referral → ServiceRequest.reasonCode (Reason for Referral (Service Type) VS, SNOMED CT). Practitioner Role → PractitionerRole.code (Practitioner Role VS — required). Task status → Task.status (FHIR TaskStatus: requested, received, accepted, rejected, completed).
+  Use the PHeReF value sets for each coded field. The sources are SRC-01 to SRC-04 and SRC-09. Use the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4). For coded values, this source is the DOH HIE terminology server. The vendor MAY choose runtime look-up, scheduled sync or cached copy.
+  Referral Category → ServiceRequest.category (Referral Category VS, SNOMED CT: 73770003 Emergency / 440655000 Outpatient, required binding).
+  Priority → ServiceRequest.priority (EReferralPriority: routine / urgent / stat, required binding).
+  Reason for Referral → ServiceRequest.reasonCode (Reason for Referral (Service Type) VS, SNOMED CT).
+  Practitioner Role → PractitionerRole.code (Practitioner Role VS, required binding).
+  Task status → Task.status (FHIR TaskStatus: requested, received, accepted, rejected, completed).
 
-  Purpose: TS1, TS2 and the Level 3 reports cannot work if these codes are wrong — all five are critical.
+  Purpose: TS1, TS2 and the Level 3 reports cannot work if these codes are wrong. All five are critical.
 validator_guide: |
-  1. Check that the system's configured terminology endpoint is the DOH HIE terminology server (Terminology & Registry Sources — Reference Guide, Ch. 4).
-  2. Open each field / dropdown listed as a sub-item and compare the options with the value set on the server ($expand), or check the submitted code ($validate-code).
-  3. A sub-item is Met only if every option / submitted code belongs to the bound value set.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  1. Check that the configured terminology endpoint of the system is the DOH HIE terminology server (Terminology & Registry Sources, Reference Guide, Ch. 4).
+  2. Open each field / dropdown listed as a sub-item.
+  3. Compare the options with the value set on the server ($expand), or check the submitted code ($validate-code).
+  4. A sub-item is Met only if every option / submitted code belongs to the bound value set.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
 sub_items:
 - id: TS0-02.1
-  text: Practitioner Role — PHeReF Practitioner Role VS (required binding)
+  text: 'Practitioner Role: PHeReF Practitioner Role VS (required binding)'
   critical: true
 - id: TS0-02.2
-  text: Referral Category — PHeReF Referral Category VS, SNOMED CT Emergency / Outpatient (required binding)
+  text: 'Referral Category: PHeReF Referral Category VS, SNOMED CT Emergency / Outpatient (required binding)'
   critical: true
 - id: TS0-02.3
-  text: 'Priority — EReferralPriority: routine / urgent / stat (required binding)'
+  text: 'Priority: EReferralPriority, routine / urgent / stat (required binding)'
   critical: true
 - id: TS0-02.4
-  text: Reason for Referral (service type) — PHeReF Reason for Referral VS, SNOMED CT
+  text: 'Reason for Referral (service type): PHeReF Reason for Referral VS, SNOMED CT'
   critical: true
 - id: TS0-02.5
-  text: Task status — FHIR TaskStatus (requested / received / accepted / rejected / completed)
+  text: 'Task status: FHIR TaskStatus (requested / received / accepted / rejected / completed)'
   critical: true
 traces:
   fhir_traceability:

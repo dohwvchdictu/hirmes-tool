@@ -8,12 +8,12 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Audit log extract
 developer_guide: |
-  Log user, date/time and action for create, view, edit, send, receive, accept, decline, print, export and log-in events, with the fields required by TB-08. The storage format (database table, log file, FHIR AuditEvent, SIEM) is the vendor's choice.
+  Log user, date/time and action for these events: create, view, edit, send, receive, accept, decline, print, export and log-in. Include the fields that TB-08 requires. The vendor MAY choose the storage format (database table, log file, FHIR AuditEvent, SIEM).
 
-  Purpose: Needed for accountability and privacy compliance.
+  Purpose: The audit trail is necessary for accountability and privacy compliance.
 validator_guide: |
-  Perform the 10 actions listed in the Notes (create, view, edit, send, receive, accept, decline, print, export, log-in). Count the actions found in the audit log with user and time.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Do the 10 actions listed in the Notes (create, view, edit, send, receive, accept, decline, print, export, log-in). Count the actions that the audit log shows with user and time.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: TEC-04.1
   text: '"Create" logged with user and date/time'

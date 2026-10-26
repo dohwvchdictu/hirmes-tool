@@ -8,42 +8,42 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screen recording
 developer_guide: |
-  Allow the receiving facility to import the retrieved referral data into its patient record without re-typing.
+  Let the receiving facility import the retrieved referral data into its patient record without re-typing.
 
   Purpose: True interoperability at the receiving side.
 validator_guide: |
-  Count the same 10 fields that are imported into the receiving patient record automatically.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Count the same 10 fields that are imported automatically into the receiving patient record.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L4-04.1
-  text: Patient full name — imported without re-typing
+  text: 'Patient full name: imported without re-typing'
   critical: false
 - id: L4-04.2
-  text: Birth date — imported without re-typing
+  text: 'Birth date: imported without re-typing'
   critical: false
 - id: L4-04.3
-  text: Sex — imported without re-typing
+  text: 'Sex: imported without re-typing'
   critical: false
 - id: L4-04.4
-  text: PhilSys number — imported without re-typing
+  text: 'PhilSys number: imported without re-typing'
   critical: false
 - id: L4-04.5
-  text: PhilHealth ID — imported without re-typing
+  text: 'PhilHealth ID: imported without re-typing'
   critical: false
 - id: L4-04.6
-  text: Patient address — imported without re-typing
+  text: 'Patient address: imported without re-typing'
   critical: false
 - id: L4-04.7
-  text: Contact number — imported without re-typing
+  text: 'Contact number: imported without re-typing'
   critical: false
 - id: L4-04.8
-  text: Chief complaint — imported without re-typing
+  text: 'Chief complaint: imported without re-typing'
   critical: false
 - id: L4-04.9
-  text: Working impression — imported without re-typing
+  text: 'Working impression: imported without re-typing'
   critical: false
 - id: L4-04.10
-  text: Blood pressure — imported without re-typing
+  text: 'Blood pressure: imported without re-typing'
   critical: false
 traces:
   fhir_traceability: []

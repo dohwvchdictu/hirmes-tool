@@ -1,13 +1,13 @@
 id: TS1-15
 status: active
 section: Transport (info)
-title: Mode of transportation (e.g., ambulance, private vehicle) — record whether the EMR captures it (for information)
+title: 'Mode of transportation (for example, ambulance, private vehicle): record whether the EMR captures it (for information)'
 critical: 'no'
 weight: 0
 scoring: binary
 validation_role: Validator
-evidence: Screenshot (optional)
-developer_guide: Capture the field in the EMR. Not scored until the TDG defines its FHIR mapping.
+evidence: Screenshot (OPTIONAL)
+developer_guide: Capture the field in the EMR. This criterion is not scored until the TDG defines its FHIR mapping.
 validator_guide: Record only whether the field exists in the EMR (for information).
 traces:
   fhir_traceability:

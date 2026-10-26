@@ -8,10 +8,12 @@ scoring: binary
 validation_role: Validator (server-side check)
 evidence: Release notes + update commitment
 developer_guide: |
-  Submit release notes for the version under test and a written timeline for adopting new PH Core / PHeReF IG versions.
+  Submit release notes for the version under test. Also submit a written timeline for adopting new PH Core / PHeReF IG versions.
 
-  Purpose: Updates to the draft IGs will be applied in a controlled, traceable way.
-validator_guide: Check release notes for the version under test and the written update timeline.
+  Purpose: The vendor will apply updates to the draft IGs in a controlled, traceable way.
+validator_guide: |
+  Check the release notes for the version under test.
+  Check the written update timeline.
 traces:
   fhir_traceability: []
   technical_baseline: []

@@ -6,17 +6,22 @@ critical: 'no'
 weight: 1
 scoring: binary
 validation_role: Validator (server-side check)
-evidence: Restore demonstration, OR restore-test record, OR provider backup report + signed attestation
+evidence: Restore demonstration, or restore-test record, or provider backup report + signed attestation
 developer_guide: |
-  Provide backup and restore of data held only in the system — user accounts / credentials, roles, audit trail and configuration — meeting TB-09 (automated, encrypted, stored separately). The backup tool and location are the vendor's choice.
-  Evidence options (vendor's choice — any ONE that proves compliance): (a) the full document / configuration; (b) a high-level or redacted version plus a signed attestation by an authorized officer that the control meets the referenced TB items; (c) independent certification or report (e.g., ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter); or (d) a view-only presentation (screen share or on site) recorded by the Validators as "sighted" with date, without keeping a copy. Source code, keys, credentials and internal network details are never required. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
+  Provide backup and restore for the data that only the system holds: user accounts / credentials, roles, audit trail and configuration. Use a backup that meets TB-09 (automated, encrypted, stored separately). The vendor MAY choose the backup tool and location.
+  Evidence options (the vendor MAY choose any one that proves compliance):
+  (a) the full document / configuration.
+  (b) a high-level or redacted version, plus a signed attestation by an authorized officer that the control meets the referenced TB items.
+  (c) independent certification or report (for example, ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter).
+  (d) a view-only presentation (screen share or on site). The Validators record it as "sighted" with the date and do not keep a copy.
+  Source code, keys, credentials and internal network details are never necessary as evidence. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
 
-  Purpose: Data that exists only in the system — not on the Shared Health Record — can be recovered after a failure.
+  Purpose: Data that exists only in the system (not on the Shared Health Record) can be recovered after a failure.
 validator_guide: |
-  Met if ANY one of the following shows that system-only data (user accounts, audit trail, configuration) is backed up per TB-09 and can be restored:
-  (a) a live restore demonstration in the test environment;
-  (b) a dated restore-test record (log or report) accepted by the Technical Lead;
-  (c) a hosting / cloud-provider backup report plus a signed vendor attestation that system-only data is included and restores are tested.
+  System-only data includes user accounts, audit trail and configuration. Met if any one option below shows a restorable TB-09 backup of system-only data:
+  (a) a live restore demonstration in the test environment.
+  (b) a dated restore-test record (log or report) that the Technical Lead accepts.
+  (c) a hosting / cloud-provider backup report, plus a signed vendor attestation that the backup includes system-only data and that restores are tested.
   Record the evidence option used in Notes.
 traces:
   fhir_traceability: []

@@ -10,10 +10,10 @@ evidence: Screenshots per role
 developer_guide: |
   Implement role-based access for referring clinician, receiving clinician, administrator and report viewer.
 
-  Purpose: Staff only see the data they need.
+  Purpose: Staff see only the data that they need.
 validator_guide: |
-  Log in with each of the 4 roles and try one action outside the role. Count roles that behave correctly.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Log in with each of the 4 roles. For each role, try one action outside the role. Count the roles that behave correctly.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: TEC-03.1
   text: Referring clinician role restricted correctly

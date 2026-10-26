@@ -8,21 +8,26 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshots + server-side evidence + fallback record (if manual)
 developer_guide: |
-  Queue referrals made during connection loss and resend automatically, OR provide a documented manual fallback (user manual L1-02.5). After recovery the referral must arrive once, with the original date/time referred (absorbs Rev 6 TEC-06).
+  Queue referrals made during connection loss and resend them automatically, or provide a documented manual fallback (user manual L1-02.5). After recovery, the referral MUST arrive once, with the original date/time referred (absorbs Rev 6 TEC-06).
 
   Purpose: Referrals continue during outages without loss or duplication.
 validator_guide: |
-  1. TD-D10: disconnect the network, create and send a referral; reconnect.
-  2. TD-D11: interrupt the connection while a send is in progress (e.g., disable the network adapter immediately after Send).
-  3. Met per sub-item if, after recovery, exactly one copy is on the SHR with the original authoredOn, and the user was told the status (queued / failed / sent).
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  1. TD-D10: disconnect the network. Create and send a referral. Then reconnect.
+  2. TD-D11: interrupt the connection while a send is in progress (for example, disable the network adapter immediately after Send).
+  3. Met per sub-item if both conditions are true after recovery:
+  (a) exactly one copy is on the SHR with the original authoredOn.
+  (b) the user was told the status (queued / failed / sent).
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS3-05.1
-  text: Offline creation (TD-D10) — queued or documented fallback followed; user sees status
+  text: 'Offline creation (TD-D10): queued or documented fallback followed, and user sees status'
   critical: true
 - id: TS3-05.2
-  text: Interruption mid-send (TD-D11) — no loss; exactly one copy after recovery
+  text: 'Interruption mid-send (TD-D11): no loss, and exactly one copy after recovery'
   critical: true
 - id: TS3-05.3
   text: Original date/time referred kept after delayed sending (ServiceRequest.authoredOn)

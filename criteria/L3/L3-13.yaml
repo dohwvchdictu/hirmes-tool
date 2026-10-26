@@ -12,8 +12,8 @@ developer_guide: |
 
   Purpose: Staff are alerted immediately.
 validator_guide: |
-  Submit 3 referrals; count the ones that trigger a notification automatically.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Submit 3 referrals. Count the referrals that trigger a notification automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-13.1
   text: 'Test referral #1 triggered an alert automatically'

@@ -13,7 +13,10 @@ developer_guide: |
   Purpose: Staff know a lab result came with the patient.
 validator_guide: |
   Met if the attachment sent in TS1-09 is listed with the received referral.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability:
   - TR-034

@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator
 evidence: Dashboard screenshots
 developer_guide: |
-  Restrict dashboard viewers to de-identified, aggregated data — no names or IDs in views or exports.
+  Restrict dashboard viewers to de-identified, aggregated data, with no names or IDs in views or exports.
 
   Purpose: Monitoring does not expose individual patients.
-validator_guide: Log in as dashboard viewer; Met if no patient-identifying data can be seen or exported.
+validator_guide: Log in as a dashboard viewer. Met if no patient-identifying data can be seen or exported.
 traces:
   fhir_traceability: []
   technical_baseline:

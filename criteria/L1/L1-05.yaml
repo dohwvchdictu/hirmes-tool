@@ -1,20 +1,28 @@
 id: L1-05
 status: active
 section: Security design
-title: 'Product security and privacy design documented and stated against the Technical Baseline and NPC Circular 2023-06: (1) authentication & role-based access, (2) audit logging, (3) encryption in transit and at rest, (4) backup & recovery of data held only in the system (user accounts / credentials, audit trail, configuration), (5) privacy-by-design / privacy-by-default features — data minimisation, retention and secure disposal'
+title: 'Product security and privacy design documented and stated against the Technical Baseline and NPC Circular 2023-06: (1) authentication & role-based access, (2) audit logging, (3) encryption in transit and at rest, (4) backup & recovery of data held only in the system (user accounts / credentials, audit trail, configuration), (5) privacy-by-design / privacy-by-default features (data minimisation, retention and secure disposal)'
 critical: 'no'
 weight: 1
 scoring: count
 validation_role: Validator + server-side check + Observer
-evidence: Security design document, OR redacted summary + signed attestation, OR independent certification, OR view-only presentation
+evidence: Security design document, or redacted summary + signed attestation, or independent certification, or view-only presentation
 developer_guide: |
-  Submit security and privacy design documentation covering the five topics. For each topic, state the mechanism used and confirm it meets or exceeds the Technical Baseline (Reference Guide, Ch. 3) (TB-01 to TB-11). Any product, platform or method is acceptable if it meets the baseline. If an equivalent control is used instead, attach a short justification with evidence (Instructions 4A).
-  Evidence options (vendor's choice — any ONE that proves compliance): (a) the full document / configuration; (b) a high-level or redacted version plus a signed attestation by an authorized officer that the control meets the referenced TB items; (c) independent certification or report (e.g., ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter); or (d) a view-only presentation (screen share or on site) recorded by the Validators as "sighted" with date, without keeping a copy. Source code, keys, credentials and internal network details are never required. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
+  Submit security and privacy design documentation that covers the five topics. For each topic, state the mechanism used. Confirm that it meets or exceeds the Technical Baseline (Reference Guide, Ch. 3) (TB-01 to TB-11). The vendor MAY use any product, platform or method that meets the baseline. If the system uses an equivalent control instead, attach a short justification with evidence (Instructions 4A).
+  Evidence options: the vendor MAY choose any one option that proves compliance.
+  (a) The full document / configuration.
+  (b) A high-level or redacted version, plus a signed attestation by an authorized officer that the control meets the referenced TB items.
+  (c) Independent certification or report (for example, ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter).
+  (d) A view-only presentation (screen share or on site). The Validators record it as "sighted" with the date, and do not keep a copy.
+  The vendor never needs to give source code, keys, credentials or internal network details. The evidence is used only for this validation, under the confidentiality undertaking of the Regional Validation Team (Instructions 4B).
 
-  Purpose: Describes the security features the system provides, in measurable terms. Referral data exchanged is kept on the Shared Health Record; the backup covers data that exists only in the system. Topic 5 also gives facilities (the personal information controllers) what they need for their own Privacy Impact Assessment under NPC Circular 2023-06 §5 and §7.
+  Purpose: Describes the security features of the system in measurable terms. The Shared Health Record keeps the exchanged referral data. The backup covers data that exists only in the system. Topic 5 also gives facilities (the personal information controllers) the information for their own Privacy Impact Assessment (NPC Circular 2023-06 §5 and §7).
 validator_guide: |
-  Count the five topics. A topic is Met if compliance is shown by ANY accepted evidence option (full or redacted document with signed attestation, independent certification, or view-only presentation recorded as sighted) AND it is mapped to the referenced TB items (or an equivalent control was accepted by the Technical Lead). Record the evidence option used in Notes. Level 2D tests that the controls work.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Count the five topics. A topic is Met if both conditions are true:
+  1. Any accepted evidence option shows compliance (full or redacted document with signed attestation, independent certification, or view-only presentation recorded as sighted).
+  2. The topic maps to the referenced TB items (or the Technical Lead accepted an equivalent control).
+  Record the evidence option used in Notes. Level 2D tests that the controls work.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L1-05.1
   text: Authentication & role-based access (TB-05, TB-06, TB-07)
@@ -26,10 +34,10 @@ sub_items:
   text: Encryption in transit and at rest, password storage (TB-01 to TB-04)
   critical: false
 - id: L1-05.4
-  text: Backup & recovery of data held only in the system — user accounts / credentials, audit trail, configuration (TB-09)
+  text: 'Backup & recovery of data held only in the system: user accounts / credentials, audit trail, configuration (TB-09)'
   critical: false
 - id: L1-05.5
-  text: Privacy-by-design / privacy-by-default — data minimisation, retention and secure disposal (TB-11; NPC Circular 2023-06 §7–9, §28–30)
+  text: 'Privacy-by-design / privacy-by-default: data minimisation, retention and secure disposal (TB-11, NPC Circular 2023-06 §7–9 and §28–30)'
   critical: false
 traces:
   fhir_traceability: []

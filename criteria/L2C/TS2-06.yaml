@@ -1,22 +1,25 @@
 id: TS2-06
 status: active
 section: Clinical findings
-title: Clinical findings are retrieved and displayed correctly
+title: Clinical findings are retrieved and shown correctly
 critical: subs
 weight: 2
 scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshot of receiving EMR + server-side evidence / resource ID
 developer_guide: |
-  Read the Condition and Encounter resources from the SHR and display it in the receiving view exactly as sent — no re-typing. Screen layout and labels are the vendor's choice; the value and its meaning must match.
+  Read the Condition and Encounter resources from the SHR. Show the data in the receiving view exactly as sent, with no re-typing. The vendor MAY choose the screen layout and labels. The value and its meaning MUST match.
 
   Purpose: The receiving clinician understands the clinical picture before the patient arrives.
 validator_guide: |
   1. Open the received Test Data referral in the receiving EMR.
-  2. Compare each sub-item on screen with the Test Data value (write what is seen in Test Data column D).
-  3. Confirm with the server-side evidence that the value was read from the SHR, not typed in.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  2. Compare each sub-item on screen with the Test Data value. Write what you see in Test Data column D.
+  3. Use the server-side evidence to confirm that the EMR read the value from the SHR (not from manual entry).
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS2-06.1
   text: Chief complaint

@@ -8,7 +8,7 @@ scoring: binary
 validation_role: Validator
 evidence: Access confirmation
 developer_guide: |
-  Request sandbox (test endpoint) access from the Regional Validation Team and confirm a successful connection.
+  Request sandbox (test endpoint) access from the Regional Validation Team. Confirm that the connection is successful.
 
   Purpose: The vendor can connect to the test servers.
 validator_guide: Check the confirmation email / access log from the endpoint administrator.

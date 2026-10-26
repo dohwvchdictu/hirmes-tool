@@ -8,22 +8,27 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
 developer_guide: |
-  Capture the fields below in the EMR and send them in the Provenance (EReferral Provenance) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
-  FHIR elements: Provenance.signature; Provenance.recorded; Provenance.target → ServiceRequest.
+  Capture the fields below in the EMR. Send them in the Provenance (EReferral Provenance), in accordance with the PHeReF / PH Core profile. The vendor MAY use any create / update method. A transaction Bundle is RECOMMENDED. The vendor MAY use conditional create / update. This criterion does not prescribe HTTP verbs. The test checks that the values reach the SHR in the profiled resource and that they can be retrieved.
+  FHIR elements: Provenance.signature, Provenance.recorded, Provenance.target → ServiceRequest.
 
-  Purpose: The referral is attested by an accountable professional.
+  Purpose: An accountable professional attests the referral.
 validator_guide: |
-  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
-  2. Open the Provenance in the server-side evidence and compare each sub-item with the Test Data value.
-  3. Record the resource ID / log reference in Notes.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR.
+  2. Submit the referral.
+  3. Open the Provenance in the server-side evidence.
+  4. Compare each sub-item with the Test Data value.
+  5. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS1-11.1
-  text: Professional signature — Provenance.signature
+  text: 'Professional signature: Provenance.signature'
   critical: false
 - id: TS1-11.2
-  text: Date & time of signature — Provenance.recorded
+  text: 'Date & time of signature: Provenance.recorded'
   critical: false
 traces:
   fhir_traceability:

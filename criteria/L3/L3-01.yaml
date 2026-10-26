@@ -8,30 +8,30 @@ scoring: count
 validation_role: Validator
 evidence: Printed form (scanned)
 developer_guide: |
-  Provide a printable referral form that includes all TS1 data elements. Layout and section order are the vendor's choice.
+  Provide a printable referral form that includes all TS1 data elements. The vendor MAY choose the layout and section order.
 
   Purpose: A paper copy can go with the patient if needed.
 validator_guide: |
-  Print the Test Data referral and compare each form section with the Test Data sheet. A section is Met only if every field in it is printed correctly; write any missing field in Notes.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Print the Test Data referral. Compare each form section with the Test Data sheet. A section is Met only if every field in it is printed correctly. Write any missing field in Notes.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-01.1
-  text: Facility details — referring and receiving facility names, NHFR codes, addresses, HCPN (TS1-01, TS1-02)
+  text: 'Facility details: referring and receiving facility names, NHFR codes, addresses, HCPN (TS1-01, TS1-02)'
   critical: false
 - id: L3-01.2
-  text: Patient details — name, PhilSys, PhilHealth, birth date / age, sex, civil status, address, contact, PWD, accompanying person (TS1-04, TS1-05)
+  text: 'Patient details: name, PhilSys, PhilHealth, birth date / age, sex, civil status, address, contact, PWD, accompanying person (TS1-04, TS1-05)'
   critical: false
 - id: L3-01.3
-  text: Referral details — date of referral, referral category, priority, reason for referral (TS1-06)
+  text: 'Referral details: date of referral, referral category, priority, reason for referral (TS1-06)'
   critical: false
 - id: L3-01.4
-  text: Clinical information — chief complaint, working impression, clinical history, vital signs, lab attachment noted, treatment given (TS1-07 to TS1-10)
+  text: 'Clinical information: chief complaint, working impression, clinical history, vital signs, lab attachment noted, treatment given (TS1-07 to TS1-10)'
   critical: false
 - id: L3-01.5
-  text: Practitioners and signature — referring practitioner and role, care navigator, signature with date / time (TS1-03, TS1-11)
+  text: 'Practitioners and signature: referring practitioner and role, care navigator, signature with date / time (TS1-03, TS1-11)'
   critical: false
 - id: L3-01.6
-  text: Referral status — current status and receiving facility response (TS1-12, TS2-11)
+  text: 'Referral status: current status and receiving facility response (TS1-12, TS2-11)'
   critical: false
 traces:
   fhir_traceability:

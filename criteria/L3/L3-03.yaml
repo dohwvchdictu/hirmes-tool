@@ -12,7 +12,7 @@ developer_guide: |
 
   Purpose: The system does not lose or duplicate referrals.
 validator_guide: |
-  Compare the linelist count with the Expected value "Total referrals in linelist" in Test Data. All-or-nothing.
+  Compare the linelist count with the Expected value "Total referrals in linelist" in Test Data. Scoring is all-or-nothing.
   Calculation rule: IND-01 (Reference Guide, Ch. 6), IND-02.
 traces:
   fhir_traceability: []

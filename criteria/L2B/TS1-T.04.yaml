@@ -8,12 +8,21 @@ scoring: binary
 validation_role: Validator (server-side check)
 evidence: Server-side evidence for both ServiceRequests
 developer_guide: |
-  On onward referral: set the Task outcome to referred-onward, create a new ServiceRequest that references the previous one (ServiceRequest.replaces, per IG) and update the previous ServiceRequest status.
+  For an onward referral, do these three steps:
+  1. Set the Task outcome to referred-onward.
+  2. Create a new ServiceRequest that references the previous one (ServiceRequest.replaces, in accordance with the IG).
+  3. Update the status of the previous ServiceRequest.
 
-  Purpose: Prevents a patient from appearing as referred to two places at once.
+  Purpose: This prevents a patient from appearing as referred to two places at the same time.
 validator_guide: |
-  Perform one onward referral; Met if the server-side evidence shows (1) Task = referred-onward, (2) the new ServiceRequest references the earlier one, and (3) the earlier ServiceRequest status changed.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Do one onward referral. Met if the server-side evidence shows these three items:
+  (1) Task = referred-onward.
+  (2) The new ServiceRequest references the earlier one.
+  (3) The status of the earlier ServiceRequest changed.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability:
   - TR-049

@@ -8,12 +8,15 @@ scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
 developer_guide: |
-  Send the referring-facility encounter as an Encounter (ERefEncounter) and reference it from ServiceRequest.encounter. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  Send the encounter at the referring facility as an Encounter (ERefEncounter). Reference it from ServiceRequest.encounter. The vendor MAY use any create / update method. A transaction Bundle is RECOMMENDED. The vendor MAY use conditional create / update. This criterion does not prescribe HTTP verbs. The test checks that the values reach the SHR in the profiled resource and that they can be retrieved.
 
-  Purpose: Places the referral in the context of the visit where it was made.
+  Purpose: The Encounter puts the referral in the context of the visit where the referral was made.
 validator_guide: |
   Met if the server-side evidence shows an Encounter for the test patient, referenced by ServiceRequest.encounter.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability:
   - TR-042

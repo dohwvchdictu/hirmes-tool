@@ -8,12 +8,15 @@ scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
 developer_guide: |
-  Send the treatment given as MedicationAdministration (EReferral MedicationAdministration) per the IG; Procedure (with note) is accepted as an equivalent for non-drug treatment or while the IG is in draft. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
+  Send the treatment given as MedicationAdministration (EReferral MedicationAdministration), in accordance with the IG. For non-drug treatment, or while the IG is in draft, the vendor MAY use Procedure (with note) as an equivalent. The vendor MAY use any create / update method. A transaction Bundle is RECOMMENDED. The vendor MAY use conditional create / update. This criterion does not prescribe HTTP verbs. The test checks that the values reach the SHR in the profiled resource and that they can be retrieved.
 
   Purpose: The receiving facility knows what was already given.
 validator_guide: |
-  Enter the Test Data value and submit. Met if the server-side evidence shows the treatment in a MedicationAdministration or Procedure linked to the patient / encounter.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Enter the Test Data value. Submit the referral. Met if the server-side evidence shows the treatment in a MedicationAdministration or Procedure linked to the patient / encounter.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability:
   - TR-035

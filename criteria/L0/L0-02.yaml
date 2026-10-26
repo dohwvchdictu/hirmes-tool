@@ -8,12 +8,12 @@ scoring: count
 validation_role: Validator
 evidence: Designation / contact list
 developer_guide: |
-  Name three contact persons — product/technical lead, FHIR integration developer, data privacy contact — with position, email and mobile number.
+  Name three contact persons: the product/technical lead, the FHIR integration developer and the data privacy contact. Give the position, email and mobile number of each person.
 
   Purpose: The DOH knows who is accountable for the product, the integration and privacy questions during testing.
 validator_guide: |
-  Count the roles with a named person, position and contact details in the letter or designation.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Count the roles that have a named person, position and contact details in the letter or designation.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L0-02.1
   text: Product / technical lead named (position, email, mobile)

@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Shows which levels of care receive referrals.
 validator_guide: |
   Count the 5 capability values that show MATCH in Test Data.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-07.
 sub_items:
 - id: L3-08.1
