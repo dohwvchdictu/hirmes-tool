@@ -3,11 +3,11 @@
  "ref_type": "branch",
  "kind": "draft",
  "path": "draft",
- "commit": "54cc0be",
- "commit_date": "2026-10-19T17:40:09+08:00",
- "subject": "Clarify changelog reference in README",
- "built": "2026-10-19 17:40 PHT",
- "built_iso": "2026-10-19T09:40:26+00:00",
+ "commit": "35e735e",
+ "commit_date": "2026-10-26T11:18:44+08:00",
+ "subject": "Merge pull request #5 from dohwvchdictu/ASD-STE100",
+ "built": "2026-10-26 11:18 PHT",
+ "built_iso": "2026-10-26T03:18:56+00:00",
  "ok": true,
  "files": {
   "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -15,7 +15,7 @@
   "scorecard": "index.html"
  },
  "version": "unreleased draft",
- "label": "unreleased draft \u00b7 branch main \u00b7 commit 54cc0be",
+ "label": "unreleased draft \u00b7 branch main \u00b7 commit 35e735e",
  "counts": {
   "criteria": 103,
   "sub_items": 272

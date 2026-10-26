@@ -3,7 +3,7 @@
      SPDX-License-Identifier: GPL-3.0-or-later -->
 <html lang="en">
 <head>
-  <meta name="generated" content="2026-10-26T03:17:55+00:00">
+  <meta name="generated" content="2026-10-26T03:18:59+00:00">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Testing Criteria: Published Versions</title>
@@ -100,27 +100,35 @@
     </div>
   </header>
   <main class="wrap layout has-readme">
-<details class="readme" id="readme" open><summary><span class="readme-title">About this tool</span><span class="muted">README.md on main · <a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/README.md">View on GitHub</a></span></summary><div class="readme-body" tabindex="0" role="region" aria-label="About this tool (README)"><p>Level-based testing criteria used to check whether an EMR system conforms to an interoperability standard and for use in the Health Information Exchange (HIE).</p>
+<details class="readme" id="readme" open><summary><span class="readme-title">About this tool</span><span class="muted">README.md on main · <a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/README.md">View on GitHub</a></span></summary><div class="readme-body" tabindex="0" role="region" aria-label="About this tool (README)"><p>This repository contains level-based testing criteria. Evaluators use them to check whether an EMR
+system conforms to an interoperability standard and can be used in the Health Information Exchange
+(HIE).</p>
 <p><strong>Changelog:</strong> Check the <a href="#changelog">recent changes to the testing criteria since Oct. 1, 2026, as of October 19, 2026</a></p>
 <p><strong>Open the scorecard: <a href="https://dohwvchdictu.github.io/hirmes-tool/">https://dohwvchdictu.github.io/hirmes-tool/</a></strong></p>
-<p>Everything a reviewer needs is on that site: test a system against the criteria, read the guides and
-the Technical Reference Guide, print the report, and propose a change to any line. Testing needs no
-installation and no GitHub account. Proposing a change needs a free GitHub account.</p>
+<p>The scorecard site contains all the functions that a reviewer uses:</p>
+<ul>
+<li>Test a system against the criteria.</li>
+<li>Read the guides and the Technical Reference Guide.</li>
+<li>Print the report.</li>
+<li>Propose a change to a line.</li>
+</ul>
+<p>Testing does not need an installation or a GitHub account. To propose a change, you need a free
+GitHub account.</p>
 <table>
 <thead>
 <tr>
-<th>You want to…</th>
+<th>To do this</th>
 <th>Go to</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Test a system against the criteria</td>
-<td><a href="https://dohwvchdictu.github.io/hirmes-tool/">The scorecard site</a>, see <a href="#using-the-scorecard-site">Using the scorecard site</a></td>
+<td><a href="https://dohwvchdictu.github.io/hirmes-tool/">The scorecard site</a>. See <a href="#using-the-scorecard-site">Using the scorecard site</a>.</td>
 </tr>
 <tr>
 <td>Review the criteria and propose a change</td>
-<td>✉ <strong>Suggest a change</strong> on any item in the site, or <a href="https://github.com/dohwvchdictu/hirmes-tool/issues/new/choose">open an issue</a></td>
+<td>✉ <strong>Suggest a change</strong> on an item in the site, or <a href="https://github.com/dohwvchdictu/hirmes-tool/issues/new/choose">open an issue</a></td>
 </tr>
 <tr>
 <td>Download the official files</td>
@@ -140,188 +148,218 @@ installation and no GitHub account. Proposing a change needs a free GitHub accou
 </tr>
 </tbody>
 </table>
+<h2 id="requirement-key-words">Requirement key words</h2>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "MAY", and "OPTIONAL" in this document, in the testing criteria and in the Technical
+Reference Guide are to be interpreted as described in
+<a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a>. These words have this meaning only when they
+are in capital letters.</p>
 <h2 id="using-the-scorecard-site">Using the scorecard site</h2>
-<h3 id="1-pick-a-version">1. Pick a version</h3>
-<p>The landing page lists every version of the criteria. Choose <strong>Open scorecard</strong> on the row you need.</p>
+<h3 id="1-select-a-version">1. Select a version</h3>
+<p>The landing page shows a list of all versions of the criteria. Select <strong>Open scorecard</strong> on the
+row that you need.</p>
 <p><img alt="Landing page with the versions of the criteria" src="readme/site-landing.png" loading="lazy"></p>
 <table>
 <thead>
 <tr>
 <th>Label</th>
-<th>What it is</th>
-<th>Use it to</th>
+<th>Description</th>
+<th>Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Release</td>
-<td>Approved by the Project Workstreams; the official version</td>
-<td>Practise and prepare for an evaluation (the released workbook is the official, signed record)</td>
+<td>The official version. The Project Workstreams approved it.</td>
+<td>Practise and prepare for an evaluation. The released workbook is the official, signed record.</td>
 </tr>
 <tr>
 <td>Release candidate</td>
-<td>Sent to the Project Workstreams for review</td>
-<td>Review what the Project Workstreams are asked to approve</td>
+<td>A version that the Project Workstreams review</td>
+<td>Review the text that the Project Workstreams must approve.</td>
 </tr>
 <tr>
 <td>Draft · main</td>
-<td>Latest accepted changes, not yet released</td>
-<td>See the current state of the criteria</td>
+<td>The latest accepted changes. They are not released yet.</td>
+<td>See the current state of the criteria.</td>
 </tr>
 <tr>
 <td>Branch preview</td>
-<td>A proposed change in progress</td>
-<td>Check a change before it is accepted</td>
+<td>A proposed change that is not complete</td>
+<td>Check a change before a maintainer accepts it.</td>
 </tr>
 </tbody>
 </table>
-<p>Each row also links to that version's workbook (<code>.xlsx</code>), change summary and source. The yellow bar
-at the top of every scorecard page names the version, branch and commit you are looking at, and
-<em>All published versions</em> returns to the landing page.</p>
-<h3 id="2-find-your-way-around">2. Find your way around</h3>
+<p>Each row also has links to the workbook (<code>.xlsx</code>), the change summary and the source of that
+version. The yellow bar at the top of each scorecard page shows the version, the branch and the
+commit. <em>All published versions</em> opens the landing page again.</p>
+<h3 id="2-find-items-on-the-site">2. Find items on the site</h3>
 <p><img alt="Search across criteria, terms, registers and documents" src="readme/site-search.png" loading="lazy"></p>
 <ul>
-<li><strong>Sidebar.</strong> <em>Overview</em> (Summary, System profile), <em>Levels</em> (one sheet per level, with its progress),
-  <em>Output</em> (Printed report, Certificate, Verify a certificate) and <em>Reference</em> (the Technical Reference
-  Guide, glossary and registers).</li>
-<li><strong>Search.</strong> Press <code>/</code> or click the search box to find any criterion, term, register entry or
-  document section.</li>
+<li><strong>Sidebar.</strong> The sidebar has four groups:</li>
+<li><em>Overview</em>: Summary, System profile.</li>
+<li><em>Levels</em>: one sheet for each level, with its progress.</li>
+<li><em>Output</em>: Printed report, Certificate, Verify a certificate.</li>
+<li><em>Reference</em>: the Technical Reference Guide, the glossary and the registers.</li>
+<li><strong>Search.</strong> Press <code>/</code> or click the search box. You can find a criterion, a term, a register
+  entry or a document section.</li>
 <li><strong>Terms.</strong> Underlined terms and dotted abbreviations in the criteria open a short definition.</li>
-<li><strong>ⓘ</strong> next to a control explains it: result options, scoring types, weights, thresholds.</li>
-<li><strong>Links.</strong> Every page and criterion has its own address (for example <code>#L1/L1-01</code>), so you can send a
-  link to the exact item you mean.</li>
+<li><strong>ⓘ.</strong> The ⓘ icon next to a control explains the control: result options, scoring types,
+  weights and thresholds.</li>
+<li><strong>Links.</strong> Each page and each criterion has its own address (for example <code>#L1/L1-01</code>). You can
+  send a link to the exact item.</li>
 </ul>
 <h3 id="3-test-a-system">3. Test a system</h3>
-<p>Open a level in the sidebar and set the <strong>Result</strong> of each criterion (Met, Not Met, Not Tested or
-N/A; some criteria are answered per sub-item). Write the evidence you checked in the notes box.
-Scores, sheet status and the level achieved update as you answer.</p>
+<ol>
+<li>Open a level in the sidebar.</li>
+<li>Set the <strong>Result</strong> of each criterion: Met, Not Met, Not Tested or N/A. For some criteria, you
+   set a result for each sub-item.</li>
+<li>Write the evidence that you checked in the notes box.</li>
+</ol>
+<p>The scores, the sheet status and the level achieved change immediately when you set a result.</p>
 <p><img alt="A criteria sheet with one criterion answered and its evidence noted" src="readme/site-criteria-sheet.png" loading="lazy"></p>
-<p>The buttons under each criterion open the <strong>guide drawer</strong>: what the developer must provide, how the
-validator checks it, the evidence required, its traces to the FHIR profiles and registers, and its
-terms. Tick <em>Follow</em> to keep the drawer in step with the criterion you click.</p>
+<p>The buttons below each criterion open the <strong>guide drawer</strong>. The guide drawer shows:</p>
+<ul>
+<li>The items that the developer MUST provide.</li>
+<li>How the validator checks the criterion.</li>
+<li>The evidence that the criterion requires.</li>
+<li>The traces to the FHIR profiles and the registers.</li>
+<li>The terms of the criterion.</li>
+</ul>
+<p>Select <em>Follow</em> to show the guide of each criterion that you click.</p>
 <p><img alt="Guide drawer showing the developer's guide for L1-01" src="readme/site-guide-drawer.png" loading="lazy"></p>
-<p>Fill in the <strong>System profile</strong> (application, product, versions, testing team), then open the
-<strong>Summary</strong> to see every level at once. A level stays LOCKED until the level before it passes; a
-system is conformant when Levels 0 to 3 pass with no critical item not met.</p>
+<p>Complete the <strong>System profile</strong> (application, product, versions, testing team). Then open the
+<strong>Summary</strong> to see all levels together. A level shows LOCKED until the level before it passes. A
+system is conformant when Levels 0 to 3 pass and no critical item is Not Met.</p>
 <p><img alt="Summary scorecard with the result of each level" src="readme/site-summary.png" loading="lazy"></p>
 <h3 id="4-save-print-and-download">4. Save, print and download</h3>
-<p>Your answers, notes and profile are kept <strong>in this browser only</strong> and saved as you type; nothing is
-sent to a server. Use the <strong>Evaluation</strong> menu to keep or share them:</p>
+<p>The site keeps your answers, notes and profile <strong>only in this browser</strong>. It saves them while you
+type. It does not send data to a server. Use the <strong>Evaluation</strong> menu to keep or share your
+answers:</p>
 <p><img alt="The Evaluation menu" src="readme/site-evaluation-menu.png" loading="lazy"></p>
 <table>
 <thead>
 <tr>
 <th>Menu item</th>
-<th>What it does</th>
+<th>Function</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Save evaluation</td>
-<td>Downloads answers, notes and profile as a <code>.json</code> file. Save often, and before clearing the browser or changing computers</td>
+<td>Downloads the answers, notes and profile as a <code>.json</code> file. Save frequently. Save before you clear the browser or change to a different computer.</td>
 </tr>
 <tr>
 <td>Load evaluation…</td>
-<td>Continues from a saved <code>.json</code> file, on any computer</td>
+<td>Opens a saved <code>.json</code> file on any computer, so that you can continue.</td>
 </tr>
 <tr>
 <td>Print report</td>
-<td>The printed evaluation report, or a PDF through the browser's print dialog</td>
+<td>Prints the evaluation report. To make a PDF, use the print dialog of the browser.</td>
 </tr>
 <tr>
 <td>Print certificate</td>
-<td>The Certificate of Validation (proof of concept, see <a href="#6-certificate-proof-of-concept">step 6</a>)</td>
+<td>Prints the Certificate of Validation (proof of concept, see <a href="#6-certificate-proof-of-concept">step 6</a>).</td>
 </tr>
 <tr>
 <td>Clear answers</td>
-<td>Removes everything saved in this browser</td>
+<td>Removes all data that this browser keeps for the evaluation.</td>
 </tr>
 <tr>
 <td>Blank workbook (.xlsx)</td>
-<td>The scorecard workbook of this version, to fill in offline</td>
+<td>Downloads the scorecard workbook of this version. You can complete it offline.</td>
 </tr>
 </tbody>
 </table>
-<p>A workbook filled with the web answers is not available yet. Use <em>Save evaluation</em>, or copy the
+<p>The site cannot make a workbook that contains the web answers. Use <em>Save evaluation</em>, or copy the
 results into the blank workbook.</p>
 <h3 id="5-review-the-criteria-and-propose-a-change">5. Review the criteria and propose a change</h3>
-<p>Every criterion, sheet heading, guide, help text, glossary term, register entry and Reference
-section has a yellow <strong>✎ Edit</strong> button. It shows the file and lines the item comes from and offers
-three actions:</p>
+<p>These items have a yellow <strong>✎ Edit</strong> button: each criterion, sheet heading, guide, help text,
+glossary term, register entry and Reference section. The button shows the file and the lines that
+contain the item. It gives three actions:</p>
 <p><img alt="The ✎ Edit menu of criterion L1-02" src="readme/site-edit-menu.png" loading="lazy"></p>
 <table>
 <thead>
 <tr>
 <th>Action</th>
-<th>What it does</th>
-<th>Who it suits</th>
+<th>Function</th>
+<th>Users</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>✉ Suggest a change</td>
-<td>Opens a change request (a GitHub issue) with the item, its location and its current text filled in. Add what it should say and why</td>
-<td>Project Workstream members and reviewers (no editing needed)</td>
+<td>Opens a change request (a GitHub issue). The request already contains the item, its location and its current text. Add the new text and the reason.</td>
+<td>Project Workstream members and reviewers. They do not edit files.</td>
 </tr>
 <tr>
 <td>⌗ Show the lines</td>
-<td>Opens the source file at those lines, in the exact version the page was built from</td>
-<td>Anyone checking where a text comes from</td>
+<td>Opens the source file at those lines, in the version that the page comes from.</td>
+<td>All persons who check the source of a text</td>
 </tr>
 <tr>
 <td>✎ Edit on GitHub</td>
-<td>Opens the file in GitHub's editor. Without write access GitHub makes a copy (fork) and a pull request for you</td>
+<td>Opens the file in the GitHub editor. If you do not have write access, GitHub makes a copy (fork) and a pull request for you.</td>
 <td>Editors</td>
 </tr>
 </tbody>
 </table>
-<p><em>Jump to a part</em> lists each field of a criterion (title, weight, critical flag, guides, sub-items)
-with its own ✉, so a suggestion can point at one field. You can also
-<a href="https://github.com/dohwvchdictu/hirmes-tool/issues/new/choose">open a change request</a> directly and choose the kind of change: wording,
-correction, new criterion, retire or move, or a policy change (weight, critical flag, threshold).</p>
-<p>The <strong>Reference</strong> section holds the Technical Reference Guide, with the glossary and the registers
-(Technical Baseline, sources, FHIR traceability, indicators) inserted where they belong. Each
-register entry lists the criteria that use it, and every section and entry has its own ✎.</p>
+<p><em>Jump to a part</em> shows a list of the fields of a criterion: title, weight, critical flag, guides
+and sub-items. Each field has its own ✉, so a suggestion can refer to one field. You can also
+<a href="https://github.com/dohwvchdictu/hirmes-tool/issues/new/choose">open a change request</a> directly. Then select the type of change:
+wording, correction, new criterion, retire or move, or policy change (weight, critical flag,
+threshold).</p>
+<p>The <strong>Reference</strong> section contains the Technical Reference Guide. The glossary and the registers
+(Technical Baseline, sources, FHIR traceability, indicators) are in the related chapters. Each
+register entry shows the criteria that use it. Each section and each entry has its own ✎.</p>
 <p><img alt="Technical Baseline chapter in the Reference section" src="readme/site-reference.png" loading="lazy"></p>
-<p><strong>What happens next.</strong> A maintainer answers the issue. An accepted change is made on a branch, which
-gets its own <em>Branch preview</em> on the landing page so you can check it. Once merged it appears in
-<em>Draft · main</em>, and it is listed in the change summary of the next release candidate sent to the Project Workstreams.</p>
+<p><strong>After you send a request:</strong></p>
+<ol>
+<li>A maintainer replies to the issue.</li>
+<li>If the maintainer accepts the change, the maintainer makes the change on a branch.</li>
+<li>The branch gets its own <em>Branch preview</em> on the landing page. You can check the change there.</li>
+<li>After the merge, the change is in <em>Draft · main</em>.</li>
+<li>The change summary of the next release candidate for the Project Workstreams shows the change.</li>
+</ol>
 <h3 id="6-certificate-proof-of-concept">6. Certificate (proof of concept)</h3>
 <p><em>Output › Certificate</em> prints a Certificate of Validation from the System Profile and the results.
-The page lists what is still missing; until everything is in order it prints as a SPECIMEN. Its QR
-code opens <em>Verify a certificate</em>, which checks the number and fingerprint against the register of
-issued certificates. This feature is a proof of concept for discussion and is not an official DOH
-certificate; see <a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#certificates">CONTRIBUTING.md</a>.</p>
+The page shows a list of the missing items. Until all items are complete, the certificate prints
+as a SPECIMEN.</p>
+<p>The QR code of the certificate opens <em>Verify a certificate</em>. This page compares the number and the
+fingerprint with the register of issued certificates.</p>
+<p>This function is a proof of concept for discussion. It is not an official DOH certificate. See
+<a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#certificates">CONTRIBUTING.md</a>.</p>
 <p><img alt="Certificate page listing the open items" src="readme/site-certificate.png" loading="lazy"></p>
 <h2 id="about-this-repository">About this repository</h2>
-<p>The criteria are kept as plain text. Every output is generated from them, so a change is made once
-and every file stays in sync. The rest of this README is for maintainers and editors.</p>
-<h3 id="what-is-in-this-repository">What is in this repository</h3>
-<pre><code>criteria/            one YAML file per criterion, in a folder per sheet (L0, L1, L2A–L2D, L3, L4)
-criteria/sheets.yaml sheet titles, introductions and the display order of criteria
+<p>The criteria are plain text files. The build scripts make all outputs from these files. Thus you
+make a change in one location, and all output files stay the same. The remaining part of this
+README is for maintainers and editors.</p>
+<h3 id="contents-of-this-repository">Contents of this repository</h3>
+<pre><code>criteria/            one YAML file for each criterion, in a folder for each sheet (L0, L1, L2A to L2D, L3, L4)
+criteria/sheets.yaml sheet titles, introductions and the display order of the criteria
 criteria/profile.yaml              sections, fields and choices of the System Profile form
 criteria/certificate.yaml          wording, signatories and logos of the Certificate of Validation (proof of concept)
-criteria/certificates-issued.yaml  register of issued certificates (what the QR code verifies against)
-criteria/retired-legacy.yaml  IDs retired before this repository existed (kept reserved)
+criteria/certificates-issued.yaml  register of issued certificates (the QR code verification uses it)
+criteria/retired-legacy.yaml  IDs retired before this repository existed (reserved)
 scoring.yaml         pass thresholds, level gating and the Project Workstreams approval record
 registers/           Technical Baseline (TB-), sources (SRC-), FHIR traceability (TR-), indicators (IND-),
                      glossary, abbreviations, ID prefixes, and form-help.yaml (the ⓘ help in the web scorecard)
-schema/              rules every YAML file must follow
-templates/           workbook layout used to generate the scorecard
+schema/              rules for each YAML file
+templates/           workbook layout for the scorecard
 scripts/             check, build, publish and change-summary scripts (import_rev9.py: the one-time Rev 9 import)
 tool/                web scorecard (static page), certificate code (cert.js), letterhead images (img/)
                      and landing page template
 tests/               round-trip, scoring and certificate tests
-docs/                Technical Reference Guide (prose; its tables come from registers/, see docs/README.md)
+docs/                Technical Reference Guide (text, with tables from registers/, see docs/README.md)
                      and the one-time GitHub setup (maintainer-setup.md)
 .github/             workflows (check, publish, release) and issue templates (change request, certificate record)
 </code></pre>
-<h3 id="how-outputs-are-produced">How outputs are produced</h3>
+<h3 id="how-the-build-makes-the-outputs">How the build makes the outputs</h3>
 <table>
 <thead>
 <tr>
 <th>Output</th>
-<th>Built by</th>
+<th>Made by</th>
 <th>When</th>
 </tr>
 </thead>
@@ -329,192 +367,205 @@ docs/                Technical Reference Guide (prose; its tables come from regi
 <tr>
 <td>Scorecard workbook (<code>.xlsx</code>)</td>
 <td><code>scripts/build_xlsx.py</code></td>
-<td>Every push (download from the workflow run or the web scorecard's Evaluation menu) and every release</td>
+<td>At each push and at each release. Download it from the workflow run or from the Evaluation menu of the web scorecard.</td>
 </tr>
 <tr>
 <td>Web scorecard and landing page</td>
 <td><code>scripts/build_web.py</code> (with <code>scripts/build_reference.py</code> for the glossary, registers and documents), <code>scripts/publish.py</code></td>
-<td>Every push to any branch or tag (GitHub Pages, <code>gh-pages</code> branch); a <code>.zip</code> of the scorecard with every release</td>
+<td>At each push to a branch or tag (GitHub Pages, <code>gh-pages</code> branch). Each release also contains a <code>.zip</code> of the scorecard.</td>
 </tr>
 <tr>
 <td>Printed report and certificate (PDF)</td>
-<td>The web scorecard: Output › Printed report and Output › Certificate in the sidebar, or the Evaluation menu (the certificate is a proof of concept, see <a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#certificates">CONTRIBUTING.md</a>)</td>
-<td>On demand, from an evaluation</td>
+<td>The web scorecard: Output › Printed report and Output › Certificate in the sidebar, or the Evaluation menu. The certificate is a proof of concept, see <a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#certificates">CONTRIBUTING.md</a>.</td>
+<td>When a user prints from an evaluation</td>
 </tr>
 <tr>
 <td>Change summary</td>
 <td><code>scripts/change_summary.py</code></td>
-<td>Every release (compared with the previous release)</td>
+<td>At each release (compared with the previous release)</td>
 </tr>
 <tr>
 <td>Change log</td>
 <td>git-cliff, from commit messages</td>
-<td>Every release</td>
+<td>At each release</td>
 </tr>
 </tbody>
 </table>
-<p>The web scorecard also carries the glossary, registers and documents: terms in the criteria open a
-short popover, each criterion has a guide drawer (Developer, Validator, Evidence, Traces, Terms), and
-the Reference tab and search box (press <code>/</code>) lead to every register entry and document chapter. See
-<a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#help-terms-and-documents-in-the-web-scorecard">CONTRIBUTING.md</a> for how to edit them.</p>
-<p>Every file carries its version, branch and commit, so a printed copy can be traced to its source.</p>
-<h3 id="proposed-versioning">Proposed Versioning</h3>
+<p>The web scorecard also contains the glossary, the registers and the documents:</p>
 <ul>
-<li>The first release from this repository is <strong>Revision 1</strong> (<code>v1.0.0</code>). Legacy revisions (Rev 3–9) were
-  produced outside the repository; the Rev 9 content was imported as the starting content.</li>
-<li>Drafts sent to the Project Workstreams for review are release candidates: <code>v1.0.0-rc1</code>, <code>v1.0.0-rc2</code>, …</li>
-<li>Later revisions step the major version (<code>v2.0.0</code>); text clarifications without scoring effect step
-  the minor version (<code>v1.1.0</code>); fixes to a released version step the patch (<code>v1.0.1</code>).</li>
-<li>The released workbook is the official, signed record. The web scorecard is a review and practice tool.</li>
+<li>A term in the criteria opens a short popover.</li>
+<li>Each criterion has a guide drawer (Developer, Validator, Evidence, Traces, Terms).</li>
+<li>The Reference tab and the search box (press <code>/</code>) open each register entry and each document
+  chapter.</li>
+</ul>
+<p>To edit these items, see
+<a href="https://github.com/dohwvchdictu/hirmes-tool/blob/main/CONTRIBUTING.md#help-terms-and-documents-in-the-web-scorecard">CONTRIBUTING.md</a>.</p>
+<p>Each file contains its version, branch and commit. Thus you can find the source of a printed copy.</p>
+<h3 id="proposed-versioning">Proposed versioning</h3>
+<ul>
+<li>The first release from this repository is <strong>Revision 1</strong> (<code>v1.0.0</code>). The legacy revisions
+  (Rev 3 to Rev 9) were made outside the repository. The Rev 9 content is the starting content of
+  this repository.</li>
+<li>A draft for review by the Project Workstreams is a release candidate: <code>v1.0.0-rc1</code>,
+  <code>v1.0.0-rc2</code>, and so on.</li>
+<li>A new revision increases the major version (<code>v2.0.0</code>).</li>
+<li>A text clarification that does not change the scores increases the minor version (<code>v1.1.0</code>).</li>
+<li>A correction to a released version increases the patch version (<code>v1.0.1</code>).</li>
+<li>The released workbook is the official, signed record. The web scorecard is a tool for review
+  and practice.</li>
 </ul>
 <h3 id="run-it-locally">Run it locally</h3>
 <pre><code class="language-bash">python -m pip install -r requirements.txt
-python scripts/check.py --counts        # validate everything and print the Count Register
+python scripts/check.py --counts        # validate all files and print the Count Register
 python scripts/build_xlsx.py            # writes dist/testing-criteria-scorecard-&lt;version&gt;.xlsx
 python scripts/build_web.py             # writes site/
 python -m http.server -d site 8000      # open http://localhost:8000
 python tests/test_roundtrip.py          # workbook rows match the YAML
 python tests/test_certificate.py        # certificate fingerprints and QR codes (needs Node.js; pip install qrcode for the full QR check)
 python tests/test_scoring.py            # workbook and web give the same results (needs LibreOffice and Node.js)
-python scripts/change_summary.py        # what changed in the criteria since the previous tag
+python scripts/change_summary.py        # changes in the criteria since the previous tag
 </code></pre>
 <h2 id="changelog">Changelog</h2>
-<p>The following indicates the changes made to the testing criteria from the draft revision presented at the Aklan Health Information Exchange Pre-Deployment Workshop for 2027 Roll-Out at DOH Central Office last October 1, 2026</p>
+<p>This list shows the changes to the testing criteria since the draft revision of October 1, 2026.
+That draft was presented at the Aklan Health Information Exchange Pre-Deployment Workshop for the
+2027 Roll-Out, at the DOH Central Office.</p>
+<p>In this list, "affects scoring" marks a change that can change the score of an evaluation.</p>
 <h3 id="criteria-added">Criteria added</h3>
 <ul>
-<li><strong>TS0</strong>: Add TS0-05 international code systems (SNOMED CT, LOINC, ICD-10) valid on the DOH terminology server (Count 3, W2) <em>(affects scoring)</em></li>
-<li><strong>TS0</strong>: Add TS0-06 national registries PSGC ★, NHFR ★, NHWR (split out of rev2 TS0-01.1 to TS0-01.3; NHFR absorbs L4-09) (Count 3, critical via ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS0</strong>: Add TS0-07 patient identifiers PhilHealth ID ★ and PhilSys ★, format validated, malformed values rejected (moved from L4-07, Connectathon Issue #5) (Count 2, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS0</strong>: Add TS0-08 optional DSWD household / beneficiary ID (SRC-15) (Binary, info-only, W0) <em>(affects scoring)</em></li>
-<li><strong>TS0-01</strong>: Add required bindings civil status (MaritalStatus) ★ and next-of-kin relationship ★ as TS0-01.3 and TS0-01.4 <em>(affects scoring)</em></li>
-<li><strong>TS0-02</strong>: Add TS0-02.3 Priority ★ (EReferralPriority: routine / urgent / stat); Task status moves to TS0-02.5 ★ <em>(affects scoring)</em></li>
-<li><strong>L1-05</strong>: Add L1-05.5 privacy-by-design / privacy-by-default: data minimisation, retention, secure disposal (TB-11; NPC Circular 2023-06) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-01 referring facility details (Count 5, 1 ★ NHFR code, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-02 receiving facility details (Count 3, 1 ★ NHFR code, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-03 referring practitioner and care navigator, linked as requester (Count 4, 2 ★: role, and new TS1-03.4 requester link, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-04 patient demographics and identifiers (Count 9, 3 ★: PhilSys, PhilHealth, sex; adds TS1-04.9 PWD registration, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-05 accompanied by / next of kin, as Patient.contact or ERefRelatedPerson (TR-022) (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-06 referral request details (Count 6, 4 ★: referral category, new priority, reason for referral, new ServiceRequest links; adds TS1-06.6 fixed values intent / status, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-07 chief complaint, working impression ★ and clinical history (Count 3, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-08 vital signs with LOINC code, vital-signs category and UCUM unit (Count 6, 1 ★ blood pressure panel, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-09 laboratory result attachment (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-10 treatment given before referral (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-11 professional signature and its date / time (Count 2, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-12 referral tracking Task: status requested ★, focus to ServiceRequest ★, requester / owner, authoredOn (Count 4, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-13 referral linked to the referring encounter (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-14 time called, for information (Binary, W0) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-15 mode of transportation, for information (Binary, W0) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Add TS1-16 patient matching: three referrals reuse one existing Patient (moved from L4-08) (Count 3, all ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS1-T.03</strong>: Add RelatedPerson (N/A if Patient.contact is used) to the meta.profile check, 12 to 13 resources; Procedure becomes MedicationAdministration or Procedure <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-01 receiving facility finds new referrals without typing an ID (re-keys TS2-T.01) (Binary, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-02 referring and receiving facility details (Count 7, 2 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-03 referring practitioner and care navigator (Count 3, 1 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-04 patient demographics and identifiers (Count 11, 3 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-05 referral request details (Count 4, 3 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-06 clinical findings (Count 4, 1 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-07 vital signs, value and unit (Count 6, 1 ★, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-08 laboratory attachment received and listed with the referral (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-09 treatment given and professional signature (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-10 receiving practitioner / care navigator kept separate from the referring practitioner (Count 4, 2 ★ including new TS2-10.4, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-11 receiving response updates the Task: received ★, accepted ★ (new), rejected with reason, completed (new) (Count 4, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-12 status changes shown at the referring facility (re-keys TS2-T.02) (Binary, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Add TS2-13 every status change time-stamped and kept: requested ★, received ★, accepted / rejected ★, completed ★ (moved from L4-06) (Count 4, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-08 encryption at rest (TB-03) and salted adaptive password hashes (TB-04) (Binary, W2) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-09 access boundaries: failed log-ins, cross-facility access, privilege escalation (Count 5, 3 ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-10 log-out, expiry and revocation end sessions and accounts (Count 3, W2) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-11 error messages, client code and logs expose no secrets or excess patient data (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-12 audit log cannot be altered through the application and records security events (Count 4, W2) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-13 outgoing connections verify certificates; exposed APIs protected against abuse (Count 2, W1) <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Add TEC-14 independent vulnerability assessment of the version under test, no unresolved critical / high findings (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-01 referral missing an IG-mandatory element is not shown as sent, reason shown, corrected referral accepted (Count 3, all ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-02 malformed values prevented or SHR rejection handled without data loss (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-03 references to non-existent facility, practitioner or patient prevented or handled (Count 2, W1) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-04 double submission leaves only one referral on the SHR (Count 2, all ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-05 connection loss: no data lost, referral sent after recovery (absorbs TEC-06) (Count 3, 2 ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-06 partial failure leaves no half-saved referral and no false success (Count 2, all ★, critical, W2) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-07 graceful degradation when the terminology server or a registry is down; no invented codes (Count 2, W1) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-08 rejected or expired system credential reported clearly, nothing silently dropped (Binary, W1) <em>(affects scoring)</em></li>
-<li><strong>TS3</strong>: Add TS3-09 receiving-side retrieval during an SHR outage: nothing missed, nothing listed twice (Count 3, W2) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-16 top morbidity (working impression) counted and ranked correctly (replaces the untitled, unscored rev2 row "Top Morbidity caes being referred") (Count 4, W1) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-17 month boundary: referrals assigned to the correct reporting period (IND-01) (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-18 duplicate and cancelled referrals counted per indicator rules (IND-02, IND-03) (Count 2, W2) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-19 late status changes reflected on re-run; turnaround time uses the correct timestamps (IND-04, IND-08) (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-20 combined filters return the expected counts (Count 3, W1) <em>(affects scoring)</em></li>
-<li><strong>L3</strong>: Add L3-21 exported totals equal on-screen totals and expected values (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS0</strong>: Add TS0-05, international code systems (SNOMED CT, LOINC, ICD-10) valid on the DOH terminology server (Count 3, W2) <em>(affects scoring)</em></li>
+<li><strong>TS0</strong>: Add TS0-06, national registries PSGC ★, NHFR ★ and NHWR. They come from rev2 TS0-01.1 to TS0-01.3. NHFR also contains L4-09. (Count 3, critical through ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS0</strong>: Add TS0-07, patient identifiers PhilHealth ID ★ and PhilSys ★. The EMR validates the format and rejects malformed values. Moved from L4-07, Connectathon Issue #5. (Count 2, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS0</strong>: Add TS0-08, OPTIONAL DSWD household or beneficiary ID (SRC-15) (Binary, information only, W0) <em>(affects scoring)</em></li>
+<li><strong>TS0-01</strong>: Add the required bindings civil status (MaritalStatus) ★ and next-of-kin relationship ★ as TS0-01.3 and TS0-01.4 <em>(affects scoring)</em></li>
+<li><strong>TS0-02</strong>: Add TS0-02.3 Priority ★ (EReferralPriority: routine / urgent / stat). Task status moves to TS0-02.5 ★. <em>(affects scoring)</em></li>
+<li><strong>L1-05</strong>: Add L1-05.5, privacy by design and privacy by default: data minimisation, retention, secure disposal (TB-11, NPC Circular 2023-06) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-01, referring facility details (Count 5, 1 ★ NHFR code, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-02, receiving facility details (Count 3, 1 ★ NHFR code, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-03, referring practitioner and care navigator, linked as requester (Count 4, 2 ★: role, and the new TS1-03.4 requester link, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-04, patient demographics and identifiers (Count 9, 3 ★: PhilSys, PhilHealth, sex. Adds TS1-04.9 PWD registration. W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-05, accompanied by / next of kin, as Patient.contact or ERefRelatedPerson (TR-022) (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-06, referral request details (Count 6, 4 ★: referral category, new priority, reason for referral, new ServiceRequest links. Adds TS1-06.6 fixed values intent / status. W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-07, chief complaint, working impression ★ and clinical history (Count 3, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-08, vital signs with LOINC code, vital-signs category and UCUM unit (Count 6, 1 ★ blood pressure panel, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-09, laboratory result attachment (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-10, treatment given before referral (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-11, professional signature and its date / time (Count 2, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-12, referral tracking Task: status requested ★, focus to ServiceRequest ★, requester / owner, authoredOn (Count 4, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-13, referral linked to the referring encounter (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-14, time called, for information (Binary, W0) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-15, mode of transportation, for information (Binary, W0) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Add TS1-16, patient matching: three referrals use one existing Patient again. Moved from L4-08. (Count 3, all ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS1-T.03</strong>: Add RelatedPerson (N/A if the EMR uses Patient.contact) to the meta.profile check. The check now has 13 resources (was 12). Procedure becomes MedicationAdministration or Procedure. <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-01, the receiving facility finds new referrals without typing an ID (new key for TS2-T.01) (Binary, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-02, referring and receiving facility details (Count 7, 2 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-03, referring practitioner and care navigator (Count 3, 1 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-04, patient demographics and identifiers (Count 11, 3 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-05, referral request details (Count 4, 3 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-06, clinical findings (Count 4, 1 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-07, vital signs, value and unit (Count 6, 1 ★, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-08, laboratory attachment received and shown with the referral (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-09, treatment given and professional signature (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-10, the receiving practitioner / care navigator is separate from the referring practitioner (Count 4, 2 ★ including the new TS2-10.4, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-11, the receiving response updates the Task: received ★, accepted ★ (new), rejected with reason, completed (new) (Count 4, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-12, the referring facility shows the status changes (new key for TS2-T.02) (Binary, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Add TS2-13, the EMR records a time stamp for each status change and keeps it: requested ★, received ★, accepted / rejected ★, completed ★. Moved from L4-06. (Count 4, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-08, encryption at rest (TB-03) and salted adaptive password hashes (TB-04) (Binary, W2) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-09, access boundaries: failed log-ins, cross-facility access, privilege escalation (Count 5, 3 ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-10, log-out, expiry and revocation end sessions and accounts (Count 3, W2) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-11, error messages, client code and logs do not show secrets or more patient data than necessary (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-12, users cannot change the audit log through the application, and the audit log records security events (Count 4, W2) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-13, outgoing connections verify certificates, and exposed APIs have protection against abuse (Count 2, W1) <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Add TEC-14, independent vulnerability assessment of the version under test, with no unresolved critical or high findings (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-01, the EMR does not show a referral without an IG-mandatory element as sent. It shows the reason and accepts the corrected referral. (Count 3, all ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-02, the EMR prevents malformed values, or handles the SHR rejection without data loss (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-03, the EMR prevents or handles references to a facility, practitioner or patient that does not exist (Count 2, W1) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-04, a double submission leaves only one referral on the SHR (Count 2, all ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-05, connection loss: no data loss, and the EMR sends the referral after recovery. Contains TEC-06. (Count 3, 2 ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-06, a partial failure leaves no half-saved referral and no false success (Count 2, all ★, critical, W2) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-07, graceful degradation when the terminology server or a registry is not available. The EMR does not invent codes. (Count 2, W1) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-08, the EMR reports a rejected or expired system credential clearly and does not silently drop data (Binary, W1) <em>(affects scoring)</em></li>
+<li><strong>TS3</strong>: Add TS3-09, retrieval at the receiving side during an SHR outage: no referral missed, no referral shown two times (Count 3, W2) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-16, top morbidity (working impression) counted and ranked correctly. Replaces the untitled rev2 row "Top Morbidity caes being referred", which had no score. (Count 4, W1) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-17, month boundary: referrals go to the correct reporting period (IND-01) (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-18, duplicate and cancelled referrals counted by the indicator rules (IND-02, IND-03) (Count 2, W2) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-19, a new run shows late status changes, and turnaround time uses the correct time stamps (IND-04, IND-08) (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-20, combined filters give the expected counts (Count 3, W1) <em>(affects scoring)</em></li>
+<li><strong>L3</strong>: Add L3-21, exported totals are equal to the totals on the screen and to the expected values (Binary, W1) <em>(affects scoring)</em></li>
 </ul>
 <h3 id="criteria-retired-moved-or-merged">Criteria retired, moved or merged</h3>
 <ul>
-<li><strong>TS1</strong>: Retire TS1-1.01 to TS1-1.45 and re-model them into TS1-01 to TS1-16, fields as sub-items (cross-walk §6.4) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Merge duplicate rows TS1-1.38, TS1-1.39, TS1-1.40 into TS1-03.1, TS1-03.3, TS1-03.2 <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Remove TS1-1.14 Action Point: Received and TS1-1.15 Referred (Forwarded); the referring EMR now sets Task requested (TS1-12.1 ★) <em>(affects scoring)</em></li>
-<li><strong>TS1</strong>: Move TS1-1.22 Age (computed) to the receiving-side display check TS2-04.5 <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Retire TS2-2.01 to TS2-2.44 and TS2-T.01 to TS2-T.03 and re-model them into TS2-01 to TS2-13 (cross-walk §6.5) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Remove TS2-2.16 Time Called; no longer checked on the receiving side (info-only in TS1-14) <em>(affects scoring)</em></li>
-<li><strong>TS2</strong>: Remove TS2-2.18 Referred (Forwarded) as a receiving-side status; onward referral is TS1-T.04 / L4-10 <em>(affects scoring)</em></li>
-<li><strong>TEC</strong>: Move TEC-06 downtime handling to TS3-05 (now tested with retry / duplication checks) <em>(affects scoring)</em></li>
-<li><strong>L4</strong>: Move L4-06 status timestamps to TS2-13 (fundamental, now critical in Level 2) <em>(affects scoring)</em></li>
-<li><strong>L4</strong>: Move L4-07 identifier format validation to TS0-07 (Connectathon Issue #5; number not reused) <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Retire TS1-1.01 to TS1-1.45. Their content is now in TS1-01 to TS1-16, with fields as sub-items (cross-walk §6.4). <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Merge the duplicate rows TS1-1.38, TS1-1.39 and TS1-1.40 into TS1-03.1, TS1-03.3 and TS1-03.2 <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Remove TS1-1.14 Action Point: Received and TS1-1.15 Referred (Forwarded). The referring EMR now sets Task requested (TS1-12.1 ★). <em>(affects scoring)</em></li>
+<li><strong>TS1</strong>: Move TS1-1.22 Age (computed) to the display check at the receiving side, TS2-04.5 <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Retire TS2-2.01 to TS2-2.44 and TS2-T.01 to TS2-T.03. Their content is now in TS2-01 to TS2-13 (cross-walk §6.5). <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Remove TS2-2.16 Time Called. The receiving side does not check it now (information only in TS1-14). <em>(affects scoring)</em></li>
+<li><strong>TS2</strong>: Remove TS2-2.18 Referred (Forwarded) as a receiving-side status. Onward referral is in TS1-T.04 / L4-10. <em>(affects scoring)</em></li>
+<li><strong>TEC</strong>: Move TEC-06 downtime handling to TS3-05. TS3-05 also tests retry and duplication. <em>(affects scoring)</em></li>
+<li><strong>L4</strong>: Move L4-06 status time stamps to TS2-13 (fundamental, now critical in Level 2) <em>(affects scoring)</em></li>
+<li><strong>L4</strong>: Move L4-07 identifier format validation to TS0-07 (Connectathon Issue #5. The number is not used again.) <em>(affects scoring)</em></li>
 <li><strong>L4</strong>: Move L4-08 patient de-duplication to TS1-16 (fundamental, now critical in Level 2) <em>(affects scoring)</em></li>
 <li><strong>L4</strong>: Merge L4-09 NHFR-sourced facility data into TS0-06.2 ★ <em>(affects scoring)</em></li>
-<li><strong>L4</strong>: Retire L4-12 Inferno / official conformance suite until an official PHeReF test kit exists (Inferno is now accepted evidence in TS1-T.02) <em>(affects scoring)</em></li>
-<li><strong>L4</strong>: Retire L4-13 SMART on FHIR launch (maturity target outside current scope) <em>(affects scoring)</em></li>
+<li><strong>L4</strong>: Retire L4-12 Inferno / official conformance suite until an official PHeReF test kit is available. Inferno is now accepted evidence in TS1-T.02. <em>(affects scoring)</em></li>
+<li><strong>L4</strong>: Retire L4-13 SMART on FHIR launch (maturity target outside the current scope) <em>(affects scoring)</em></li>
 </ul>
-<p>Only TEC-06 and L4-06 to L4-13 are recorded in <code>retired-legacy.yaml</code>; the TS1-1.xx, TS2-2.xx and TS2-T.xx ranges are not (audit §10, item 1).</p>
+<p><code>retired-legacy.yaml</code> records only TEC-06 and L4-06 to L4-13. It does not record the TS1-1.xx,
+TS2-2.xx and TS2-T.xx ranges (audit §10, item 1).</p>
 <h3 id="policy-thresholds-weights-critical-flags">Policy (thresholds, weights, critical flags)</h3>
 <ul>
-<li><strong>2A</strong>: Lower the TS0 pass threshold from 100% to 85%; critical items and ★ sub-items must still be Met <em>(affects scoring)</em></li>
-<li>Add ★ critical sub-items (<code>critical: subs</code>): a criterion fails critically when any ★ sub-item is Not Met or N/A <em>(affects scoring)</em></li>
-<li>Extend the pass rule: every critical item and every ★ sub-item must be Met <em>(affects scoring)</em></li>
-<li>Require no critical item Not Met for Conformant, in addition to Levels 0 to 3 passed; a certificate is issued only then <em>(affects scoring)</em></li>
-<li>Add threshold policy status Proposed / Approved; a Conformant result while Proposed is shown as PROVISIONAL</li>
+<li><strong>2A</strong>: Decrease the TS0 pass threshold from 100% to 85%. Critical items and ★ sub-items MUST still be Met. <em>(affects scoring)</em></li>
+<li>Add ★ critical sub-items (<code>critical: subs</code>). A criterion fails critically when a ★ sub-item is Not Met or N/A. <em>(affects scoring)</em></li>
+<li>Extend the pass rule: each critical item and each ★ sub-item MUST be Met. <em>(affects scoring)</em></li>
+<li>For a Conformant result, Levels 0 to 3 MUST pass and no critical item can be Not Met. The DOH issues a certificate only for a Conformant result. <em>(affects scoring)</em></li>
+<li>Add the threshold policy status Proposed / Approved. While the status is Proposed, a Conformant result shows as PROVISIONAL.</li>
 <li>Add the all-or-nothing scoring type <em>(affects scoring)</em></li>
-<li>Add info-only items with weight 0: TS0-08, TS1-14, TS1-15, L3-12 (rev2 had one, TS1-1.43) <em>(affects scoring)</em></li>
-<li><strong>L1-02</strong>: Change scoring from Count to All-or-nothing; a manual missing any one section scores 0% (rev2 gave partial credit, e.g. 5/7 = 71%) <em>(affects scoring)</em></li>
-<li><strong>L1-04</strong>: Cut the tiers from three to two, judged by how patient details reach the referral: a standalone system that receives patient details automatically scores 100% (was 75%); manual encoding stays 50% <em>(affects scoring)</em></li>
-<li><strong>L3-12</strong>: Set weight 1 to 0 (info-only) until a time limit is set on the consultant's recommendation; polling, push or IOL notification accepted; recording optional <em>(affects scoring)</em></li>
-<li><strong>TS0-01, TS0-02</strong>: Make critical, with every sub-item ★ <em>(affects scoring)</em></li>
-<li><strong>TS0-07, TS1-16</strong>: Make identifier format validation and patient de-duplication critical (were W1, non-critical, in Level 4) <em>(affects scoring)</em></li>
+<li>Add information-only items with weight 0: TS0-08, TS1-14, TS1-15, L3-12. Rev2 had one such item, TS1-1.43. <em>(affects scoring)</em></li>
+<li><strong>L1-02</strong>: Change the scoring from Count to All-or-nothing. A manual without one of the sections gets 0%. Rev2 gave partial credit, for example 5/7 = 71%. <em>(affects scoring)</em></li>
+<li><strong>L1-04</strong>: Decrease the tiers from three to two. The tier depends on how patient details get to the referral. A standalone system that receives patient details automatically gets 100% (was 75%). Manual encoding stays at 50%. <em>(affects scoring)</em></li>
+<li><strong>L3-12</strong>: Change the weight from 1 to 0 (information only) until the DOH sets a time limit for the recommendation of the consultant. Polling, push or IOL notification is accepted. Recording is OPTIONAL. <em>(affects scoring)</em></li>
+<li><strong>TS0-01, TS0-02</strong>: Make them critical, with all sub-items ★ <em>(affects scoring)</em></li>
+<li><strong>TS0-07, TS1-16</strong>: Make identifier format validation and patient de-duplication critical. They were W1 and not critical in Level 4. <em>(affects scoring)</em></li>
 <li><strong>TS1, TS2</strong>: Make Reason for Referral critical as TS1-06.4 ★ and TS2-05.4 ★ (was W1 in TS1-1.18 and TS2-2.15) <em>(affects scoring)</em></li>
-<li><strong>TS1, TS2</strong>: Make Priority critical as TS1-06.3 ★ and TS2-05.3 ★ (no rev2 equivalent; TR-025 IG discrepancy, TDG to confirm) <em>(affects scoring)</em></li>
+<li><strong>TS1, TS2</strong>: Make Priority critical as TS1-06.3 ★ and TS2-05.3 ★. Rev2 had no equivalent. TR-025 IG discrepancy, TDG to confirm. <em>(affects scoring)</em></li>
 <li><strong>TS2</strong>: Make Date &amp; Time Received critical as TS2-13.2 ★ (was TS2-2.44, W1) <em>(affects scoring)</em></li>
-<li><strong>TS1, TS2</strong>: Reduce blood pressure from a critical Count criterion with 4 sub-items to one ★ sub-item (TS1-08.1, TS2-07.1) <em>(affects scoring)</em></li>
-<li><strong>TS1-14</strong>: Demote Time Called to info-only W0 (was TS1-1.07, W1) <em>(affects scoring)</em></li>
+<li><strong>TS1, TS2</strong>: Change blood pressure from a critical Count criterion with 4 sub-items to one ★ sub-item (TS1-08.1, TS2-07.1) <em>(affects scoring)</em></li>
+<li><strong>TS1-14</strong>: Change Time Called to information only, W0 (was TS1-1.07, W1) <em>(affects scoring)</em></li>
 </ul>
 <h3 id="corrections">Corrections</h3>
 <ul>
 <li><strong>TS1-06.2</strong>: Map Referral Category to ServiceRequest.category, SNOMED CT 73770003 Emergency / 440655000 Outpatient (was ServiceRequest.priority)</li>
 <li><strong>TS1-06.4</strong>: Map Reason for Referral to ServiceRequest.reasonCode (was ServiceRequest.category)</li>
 <li><strong>TS1-10</strong>: Map Treatment Given to MedicationAdministration or Procedure (was Procedure.note) (TR-035)</li>
-<li><strong>TS1-03.3</strong>: Map the referring care navigator to a separate PractitionerRole, N/A if none assigned (was a second Practitioner.name) (TR-011, TDG to confirm)</li>
-<li><strong>TS2-10.2</strong>: Map the receiving care navigator to Task.owner, N/A if none assigned</li>
-<li><strong>TS1-14</strong>: Map Time Called to ServiceRequest.occurrence[x] (was Task.authoredOn, now date / time sent in TS1-12.4) (TR-043, TDG to confirm)</li>
+<li><strong>TS1-03.3</strong>: Map the referring care navigator to a separate PractitionerRole, N/A if the facility assigns no care navigator (was a second Practitioner.name) (TR-011, TDG to confirm)</li>
+<li><strong>TS2-10.2</strong>: Map the receiving care navigator to Task.owner, N/A if the facility assigns no care navigator</li>
+<li><strong>TS1-14</strong>: Map Time Called to ServiceRequest.occurrence[x]. It was Task.authoredOn, which is now the date / time sent in TS1-12.4. (TR-043, TDG to confirm)</li>
 <li><strong>TS1-13</strong>: Clarify the Encounter mapping as ServiceRequest.encounter to ERefEncounter (TR-042)</li>
-<li><strong>TS1-07.2</strong>: Code working impression in ICD-10 by DOH decision (TR-031; IG binding is "example", TDG to confirm)</li>
-<li><strong>TS2-04.5</strong>: Check Age as computed from the birth date on the day of testing (rev2 mapped Age to birthDate as a TS1 field)</li>
-<li><strong>TS1, TS2</strong>: Replace the Action Point model with the Task status sequence: requested by the referring EMR (TS1-12), then received, accepted or rejected, completed by the receiving EMR (TS2-11), each time-stamped (TS2-13) <em>(affects scoring)</em></li>
-<li><strong>TS1-T.04</strong>: Require Task referred-onward, a new ServiceRequest that replaces the earlier one, and the earlier status changed (rev2 required only the status change) (TR-049)</li>
-<li><strong>TS2-11.3</strong>: Change "decline / redirect with a reason" to "rejected with reason" (Task.status rejected + statusReason); redirect is no longer named</li>
-<li><strong>TS1</strong>: Drop the prescribed HTTP verbs (PUT / POST); any create or update method is accepted</li>
-<li><strong>TS1, TS2</strong>: Accept any ONE form of server-side evidence: IOL log (e.g. OpenHIM), Inferno / official validator report, or raw FHIR request / response captured during the session (rev2: validator GET / $validate with resource ID and screenshot)</li>
-<li><strong>TS1-T.01</strong>: Drop "as one transaction"; a transaction Bundle is recommended, the interactions declared in L1-03 are accepted, Met if every resource gets HTTP 200 / 201</li>
-<li><strong>TS1-T.02</strong>: Accept Inferno, and the developer's validator report on the same payload produced during the session</li>
-<li><strong>TS0</strong>: Require values to match the official value set or registry, obtained by runtime look-up, scheduled sync or cached copy at the vendor's choice (rev2 banned hardcoding); the configured endpoint must be the DOH HIE terminology server; evidence is $expand / $validate-code</li>
-<li><strong>TS0-03</strong>: Accept showing the SHR rejection with correct-and-resend as an alternative to prevention; evidence must show the rejected and the corrected submission (Connectathon Issue #25)</li>
-<li><strong>L1-02</strong>: Check content only; titles, order and format of the manual are the vendor's choice</li>
-<li><strong>L1-04</strong>: Accept a high-level diagram and any integration method; demonstrate with the Test Data patient (name, birth date, sex, PhilSys, PhilHealth, address, contact appear without re-typing)</li>
-<li><strong>L1-05</strong>: Map each topic to the Technical Baseline TB items, or justify an equivalent control</li>
-<li><strong>L1-04, L1-05, TEC-07</strong>: Accept any ONE evidence option: full document, redacted version with signed attestation, independent certification, or view-only presentation recorded as "sighted"; source code, keys and credentials are never required</li>
-<li><strong>TEC-01</strong>: Require TLS 1.2 or higher, strong cipher suites and a valid certificate on every endpoint (TB-01, TB-02), verified by TLS scan; evidence is a scan report per endpoint (was a certificate screenshot)</li>
-<li><strong>TEC-02</strong>: Add TB-05 account protection tests (short password, repeated failed log-ins); any identity method accepted</li>
-<li><strong>TEC-04</strong>: Require the TB-08 audit fields; storage format is the vendor's choice</li>
-<li><strong>TEC-05</strong>: Accept a session lock with re-authentication as well as log-out; default idle period must not exceed TB-06</li>
-<li><strong>TEC-07</strong>: Accept a dated restore-test record, or a provider backup report with signed attestation, instead of a live restore demo (TB-09)</li>
-<li><strong>L3-01</strong>: Check the printed form by 6 sections instead of 44 fields, adding a referral status section; a section is Met only when every field in it prints correctly <em>(affects scoring)</em></li>
+<li><strong>TS1-07.2</strong>: Code the working impression in ICD-10 by DOH decision (TR-031. The IG binding is "example". TDG to confirm.)</li>
+<li><strong>TS2-04.5</strong>: Check Age as calculated from the birth date on the day of testing. Rev2 mapped Age to birthDate as a TS1 field.</li>
+<li><strong>TS1, TS2</strong>: Replace the Action Point model with the Task status sequence. The referring EMR sets requested (TS1-12). Then the receiving EMR sets received, accepted or rejected, and completed (TS2-11). Each status has a time stamp (TS2-13). <em>(affects scoring)</em></li>
+<li><strong>TS1-T.04</strong>: Require Task referred-onward, a new ServiceRequest that replaces the earlier one, and a change to the status of the earlier one. Rev2 required only the status change. (TR-049)</li>
+<li><strong>TS2-11.3</strong>: Change "decline / redirect with a reason" to "rejected with reason" (Task.status rejected + statusReason). The criterion does not name redirect now.</li>
+<li><strong>TS1</strong>: Remove the prescribed HTTP verbs (PUT / POST). The vendor MAY use any create or update method.</li>
+<li><strong>TS1, TS2</strong>: Accept any one form of server-side evidence: IOL log (for example OpenHIM), Inferno / official validator report, or raw FHIR request / response captured during the session. Rev2 required a validator GET / $validate with resource ID and screenshot.</li>
+<li><strong>TS1-T.01</strong>: Remove "as one transaction". A transaction Bundle is RECOMMENDED. The interactions declared in L1-03 are accepted. The result is Met if each resource gets HTTP 200 / 201.</li>
+<li><strong>TS1-T.02</strong>: Accept Inferno, and the validator report of the developer on the same payload, made during the session</li>
+<li><strong>TS0</strong>: Values MUST match the official value set or registry. The vendor MAY get them by runtime look-up, scheduled sync or cached copy. Rev2 did not permit hardcoded values. The configured endpoint MUST be the DOH HIE terminology server. The evidence is $expand / $validate-code.</li>
+<li><strong>TS0-03</strong>: Accept, as an alternative to prevention, an EMR that shows the SHR rejection and lets the user correct and send again. The evidence MUST show the rejected and the corrected submission. (Connectathon Issue #25)</li>
+<li><strong>L1-02</strong>: Check only the content. The vendor MAY select the titles, order and format of the manual.</li>
+<li><strong>L1-04</strong>: Accept a high-level diagram and any integration method. Demonstrate with the Test Data patient: name, birth date, sex, PhilSys, PhilHealth, address and contact appear without typing them again.</li>
+<li><strong>L1-05</strong>: Map each topic to the Technical Baseline TB items, or give the reason for an equivalent control</li>
+<li><strong>L1-04, L1-05, TEC-07</strong>: Accept any one evidence option: full document, redacted version with signed attestation, independent certification, or a view-only presentation recorded as "sighted". The evaluation never requires source code, keys or credentials.</li>
+<li><strong>TEC-01</strong>: Require TLS 1.2 or higher, strong cipher suites and a valid certificate on each endpoint (TB-01, TB-02). A TLS scan verifies them. The evidence is a scan report for each endpoint (was a certificate screenshot).</li>
+<li><strong>TEC-02</strong>: Add the TB-05 account protection tests (short password, repeated failed log-ins). Any identity method is accepted.</li>
+<li><strong>TEC-04</strong>: Require the TB-08 audit fields. The vendor MAY select the storage format.</li>
+<li><strong>TEC-05</strong>: Accept a session lock with re-authentication as an alternative to log-out. The default idle period MUST NOT be more than the TB-06 value.</li>
+<li><strong>TEC-07</strong>: Accept a dated restore-test record, or a backup report from the provider with signed attestation, as an alternative to a live restore demonstration (TB-09)</li>
+<li><strong>L3-01</strong>: Check the printed form by 6 sections, not by 44 fields. Add a referral status section. A section is Met only when each field in it prints correctly. <em>(affects scoring)</em></li>
 </ul>
 <h3 id="text-and-guides">Text and guides</h3>
 <ul>
 <li><strong>L0-01</strong>: Change "use in the LHIE" to "use in the HIE"</li>
-<li><strong>L0-02, L1-01, L3-02, L3-10, L3-13</strong>: Change CHD to DOH in criterion text and purpose</li>
+<li><strong>L0-02, L1-01, L3-02, L3-10, L3-13</strong>: Change CHD to DOH in the criterion text and purpose</li>
 <li><strong>L0-05, L0-06</strong>: Change "Regional SCIV Team" to "Regional Validation Team"</li>
 <li><strong>L0-03</strong>: Change "System Profile" to "System Profile Sheet"</li>
 <li><strong>TS0</strong>: Rename the sheet from "TS0 Terminology Server Validation" to "TS0 Terminology &amp; Registry Validation" (tab L2-A TS0-Terminology); intro names the official source per concept (SRC-01 to SRC-15) and drops the 100% default</li>
@@ -550,11 +601,11 @@ python scripts/change_summary.py        # what changed in the criteria since the
   })();
 </script>
     <div class="versions">
-<section class="hero"><div class="big">No release yet</div><div class="muted">Use the draft below.</div></section><section><h2>Releases</h2><p class="muted">No final release yet. Final releases are tagged vX.Y.Z after Project Workstreams approval.</p></section><section><h2>Release candidates</h2><p class="muted">No release candidates.</p></section><section><h2>Draft (main branch)</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">main</span><div class="muted">Clarify changelog reference in README</div></td><td><span class="badge b-draft">Draft · main</span></td><td>2026-10-19<div class="muted">built <time datetime="2026-10-19T09:40:26+00:00">2026-10-19 17:40 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="draft/">Open scorecard</a> <a class="btn" href="draft/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="draft/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/main">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/54cc0be">Commit 54cc0be</a></td></tr></tbody></table></section><section><h2>Branch previews</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">ASD-STE100</span><div class="muted">Merge branch &#x27;main&#x27; into ASD-STE100</div></td><td><span class="badge b-branch">Branch preview</span></td><td>2026-10-26<div class="muted">built <time datetime="2026-10-26T03:17:51+00:00">2026-10-26 11:17 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="preview/ASD-STE100/">Open scorecard</a> <a class="btn" href="preview/ASD-STE100/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="preview/ASD-STE100/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/ASD-STE100">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/a203b9f">Commit a203b9f</a></td></tr></tbody></table></section>
+<section class="hero"><div class="big">No release yet</div><div class="muted">Use the draft below.</div></section><section><h2>Releases</h2><p class="muted">No final release yet. Final releases are tagged vX.Y.Z after Project Workstreams approval.</p></section><section><h2>Release candidates</h2><p class="muted">No release candidates.</p></section><section><h2>Draft (main branch)</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">main</span><div class="muted">Merge pull request #5 from dohwvchdictu/ASD-STE100</div></td><td><span class="badge b-draft">Draft · main</span></td><td>2026-10-26<div class="muted">built <time datetime="2026-10-26T03:18:56+00:00">2026-10-26 11:18 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="draft/">Open scorecard</a> <a class="btn" href="draft/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="draft/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/main">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/35e735e">Commit 35e735e</a></td></tr></tbody></table></section><section><h2>Branch previews</h2><table><thead><tr><th>Version / branch</th><th>Type</th><th>Date</th><th class="num">Criteria / sub-items</th><th>Open or download</th></tr></thead><tbody><tr><td><span class="ref">ASD-STE100</span><div class="muted">Merge branch &#x27;main&#x27; into ASD-STE100</div></td><td><span class="badge b-branch">Branch preview</span></td><td>2026-10-26<div class="muted">built <time datetime="2026-10-26T03:17:51+00:00">2026-10-26 11:17 PHT</time></div></td><td class="num">103 / 272</td><td class="actions"><a class="btn primary" href="preview/ASD-STE100/">Open scorecard</a> <a class="btn" href="preview/ASD-STE100/testing-criteria-scorecard-unreleased-draft.xlsx" download>Workbook (.xlsx)</a> <a class="btn" href="preview/ASD-STE100/CHANGE-SUMMARY.md">Change summary</a> <a class="btn" href="https://github.com/dohwvchdictu/hirmes-tool/tree/ASD-STE100">Source</a> <a class="btn subtle" href="https://github.com/dohwvchdictu/hirmes-tool/commit/a203b9f">Commit a203b9f</a></td></tr></tbody></table></section>
     </div>
   </main>
   <footer>
-    Generated <time datetime="2026-10-26T03:17:55+00:00">2026-10-26 11:17 PHT</time> by the publishing workflow ·
+    Generated <time datetime="2026-10-26T03:19:00+00:00">2026-10-26 11:19 PHT</time> by the publishing workflow ·
     <a href="https://github.com/dohwvchdictu/hirmes-tool">Source repository</a> ·
     <a href="https://github.com/dohwvchdictu/hirmes-tool/actions/workflows/publish.yml">Republish (maintainers)</a> ·
     <a href="versions.json">versions.json</a>
