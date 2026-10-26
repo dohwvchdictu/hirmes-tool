@@ -16,11 +16,11 @@ TOTAL       103       27      62   272     4     99
 
 0 error(s), 0 warning(s).
 
-$ scripts/build_web.py --out /tmp/tmp7f6h8hek/out
-Wrote web scorecard to /tmp/tmp7f6h8hek/out
+$ scripts/build_web.py --out /tmp/tmpxbj4i5gr/out
+Wrote web scorecard to /tmp/tmpxbj4i5gr/out
 
-$ scripts/build_xlsx.py --out /tmp/tmp7f6h8hek/out
-Wrote /tmp/tmp7f6h8hek/out/testing-criteria-scorecard-unreleased-draft.xlsx
+$ scripts/build_xlsx.py --out /tmp/tmpxbj4i5gr/out
+Wrote /tmp/tmpxbj4i5gr/out/testing-criteria-scorecard-unreleased-draft.xlsx
 
-$ scripts/change_summary.py --to b96da053ba1d00d6af5a1a507574c81bdba48b5b --out /tmp/tmp7f6h8hek/out/CHANGE-SUMMARY.md --label branch ASD-STE100
-Wrote /tmp/tmp7f6h8hek/out/CHANGE-SUMMARY.md
+$ scripts/change_summary.py --to a203b9f8b24e20a98a055e70819be6b49fde8281 --out /tmp/tmpxbj4i5gr/out/CHANGE-SUMMARY.md --label branch ASD-STE100
+Wrote /tmp/tmpxbj4i5gr/out/CHANGE-SUMMARY.md
