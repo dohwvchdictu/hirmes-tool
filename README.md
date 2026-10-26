@@ -4,7 +4,7 @@ This repository contains level-based testing criteria. Evaluators use them to ch
 system conforms to an interoperability standard and can be used in the Health Information Exchange
 (HIE).
 
-See the [Testing Criteria Changelog from October 1, 2026 to October 19, 2026](#changelog).
+**Changelog:** Check the [recent changes to the testing criteria since Oct. 1, 2026, as of October 19, 2026](#changelog)
 
 **Open the scorecard: <https://dohwvchdictu.github.io/hirmes-tool/>**
 
@@ -394,17 +394,17 @@ TS2-2.xx and TS2-T.xx ranges (audit §10, item 1).
 - **L0-02, L1-01, L3-02, L3-10, L3-13**: Change CHD to DOH in the criterion text and purpose
 - **L0-05, L0-06**: Change "Regional SCIV Team" to "Regional Validation Team"
 - **L0-03**: Change "System Profile" to "System Profile Sheet"
-- **TS0**: Change the sheet name from "TS0 Terminology Server Validation" to "TS0 Terminology & Registry Validation" (tab L2-A TS0-Terminology). The introduction names the official source for each concept (SRC-01 to SRC-15). It does not give the 100% default now.
-- **TS1**: Remove "(PUT / POST)" from the sheet title (tab L2-B TS1-Submission). The introduction groups the fields by FHIR resource and gives a list of the evidence options.
-- **TS2**: Change the sheet title to "eReferral Retrieval and Status Update by Receiving Facility". It does not contain "(GET; PUT for Task status)" now. (tab L2-C TS2-Retrieval)
-- **2D**: Change the sheet title to "Security, Reliability & Exception Handling" (tab L2-D System Resilience). The introduction adds outcome-based testing against TB-01 to TB-14, black-box testing and a statement that the test is not a VAPT.
-- **L4**: Label the sections Core-track (L4-01, L4-02, L4-10) and Maturity (L4-03, L4-04, L4-05, L4-11). The introduction replaces the Connectathon gap text.
-- **L3-03**: Change the section name "Aggregated Data" to "Accuracy". Refer to the calculation rules IND-01 and IND-02.
-- **L3-04 to L3-10**: Add the applicable calculation rule to the guide of each validator (IND-05 to IND-09)
-- **L3-14**: Add a note that L3-21 compares the export totals
-- **L4-05**: Refer the lab file to TS1-09
-- **TS0-04**: Permit a local translation in addition to the official display text, not as a replacement for it
-- **TS1**: Mark the addresses as PSGC-coded (TS1-01.4, TS1-02.3, TS1-04.7). Change the labels "Temperature" and "Weight" to "Body temperature" and "Body weight".
-- **TS2-06.4**: Change the label "Encounter (FHIR Requirement)" to "Referring encounter context (date / type of visit)"
-- Add Observer to the validation role of each TS0 criterion, L1-04, L1-05, TEC-02 to TEC-05, L4-01 to L4-05 and L4-11
-- Remove the default weight guidance ("critical items 2, others 1") from the Instructions. Each criterion has its own weight (0 to 3).
+- **TS0**: Rename the sheet from "TS0 Terminology Server Validation" to "TS0 Terminology & Registry Validation" (tab L2-A TS0-Terminology); intro names the official source per concept (SRC-01 to SRC-15) and drops the 100% default
+- **TS1**: Drop "(PUT / POST)" from the sheet title (tab L2-B TS1-Submission); intro groups fields by FHIR resource and lists the evidence options
+- **TS2**: Retitle the sheet "eReferral Retrieval and Status Update by Receiving Facility", dropping "(GET; PUT for Task status)" (tab L2-C TS2-Retrieval)
+- **2D**: Retitle the sheet "Security, Reliability & Exception Handling" (tab L2-D System Resilience); intro adds outcome-based testing against TB-01 to TB-14, black-box testing and a not-a-VAPT disclaimer
+- **L4**: Label sections Core-track (L4-01, L4-02, L4-10) and Maturity (L4-03, L4-04, L4-05, L4-11); intro replaces the Connectathon gap text
+- **L3-03**: Rename section "Aggregated Data" to "Accuracy"; cite calculation rules IND-01, IND-02
+- **L3-04 to L3-10**: Add the governing calculation rule to each validator's guide (IND-05 to IND-09)
+- **L3-14**: Note that export totals are reconciled in L3-21
+- **L4-05**: Point the lab file to TS1-09
+- **TS0-04**: Allow a local translation in addition to, not instead of, the official display text
+- **TS1**: Mark addresses as PSGC-coded (TS1-01.4, TS1-02.3, TS1-04.7); relabel "Temperature" and "Weight" as "Body temperature" and "Body weight"
+- **TS2-06.4**: Relabel "Encounter (FHIR Requirement)" as "Referring encounter context (date / type of visit)"
+- Add Observer to the validation role of every TS0 criterion, L1-04, L1-05, TEC-02 to TEC-05, L4-01 to L4-05 and L4-11
+- Drop the default weight guidance ("critical items 2, others 1") from the Instructions; weights are set per criterion (0 to 3)
