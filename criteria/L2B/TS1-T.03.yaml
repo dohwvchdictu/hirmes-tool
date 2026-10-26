@@ -10,10 +10,10 @@ evidence: Bundle excerpt / raw payload
 developer_guide: |
   Populate meta.profile of each resource with the canonical URL of its PH Core / PHeReF profile.
 
-  Purpose: Lets the server check the data against the correct rules.
+  Purpose: The declared profile lets the server check the data against the correct rules.
 validator_guide: |
   Count the resource types in the submitted referral that declare the correct profile.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
 sub_items:
 - id: TS1-T.03.1
   text: Organization declares its PH Core / PHeReF profile

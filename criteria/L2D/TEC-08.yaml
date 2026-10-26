@@ -8,15 +8,20 @@ scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Any accepted evidence option (view-only demo, masked screenshots, certification + signed attestation)
 developer_guide: |
-  Encrypt personal and health data held by the system — database, stored files/attachments and backups — with AES-128 or stronger, keeping keys separate from the data (TB-03). Store passwords only as salted hashes using Argon2id, bcrypt, scrypt or PBKDF2 (TB-04). Any encryption layer is acceptable (full-disk/volume, database, file or field level).
-  Evidence options (vendor's choice — any ONE that proves compliance): (a) the full document / configuration; (b) a high-level or redacted version plus a signed attestation by an authorized officer that the control meets the referenced TB items; (c) independent certification or report (e.g., ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter); or (d) a view-only presentation (screen share or on site) recorded by the Validators as "sighted" with date, without keeping a copy. Source code, keys, credentials and internal network details are never required. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
+  Encrypt personal and health data that the system holds (database, stored files/attachments and backups) with AES-128 or stronger. Keep the keys separate from the data (TB-03). Store passwords only as salted hashes that use Argon2id, bcrypt, scrypt or PBKDF2 (TB-04). The vendor MAY use any encryption layer (full-disk/volume, database, file or field level).
+  Evidence options (the vendor MAY choose any one that proves compliance):
+  (a) the full document / configuration.
+  (b) a high-level or redacted version, plus a signed attestation by an authorized officer that the control meets the referenced TB items.
+  (c) independent certification or report (for example, ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter).
+  (d) a view-only presentation (screen share or on site). The Validators record it as "sighted" with the date and do not keep a copy.
+  Source code, keys, credentials and internal network details are never necessary as evidence. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
 
   Purpose: A stolen disk, database copy or backup does not expose patient data or passwords.
 validator_guide: |
-  Met if compliance with BOTH TB-03 and TB-04 is shown by any accepted evidence option, e.g.:
-  (a) view-only demonstration of the encryption setting and of the stored form of one TEST password;
-  (b) configuration screenshots with key values masked;
-  (c) cloud-provider encryption setting or independent certification covering encryption at rest, plus a signed attestation naming the password-hashing algorithm.
+  Met if any accepted evidence option shows compliance with both TB-03 and TB-04. Examples of accepted options:
+  (a) a view-only demonstration of the encryption setting and of the stored form of one test password.
+  (b) configuration screenshots with key values masked.
+  (c) a cloud-provider encryption setting or independent certification that covers encryption at rest, plus a signed attestation that names the password-hashing algorithm.
   Not Met if any evidence shows plain-text, reversible or MD5 / SHA-1 password storage, or no encryption at rest. Record the evidence option used in Notes.
 traces:
   fhir_traceability: []

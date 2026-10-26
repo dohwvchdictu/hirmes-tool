@@ -8,12 +8,15 @@ scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Screenshot of incoming list + server-side evidence
 developer_guide: |
-  Search / subscribe for referrals addressed to the facility (e.g., by Task.owner or ServiceRequest.performer = the facility's NHFR-identified Organization). Polling, subscription or IOL notification is the vendor's choice.
+  Search for, or subscribe to, referrals addressed to the facility. For example, use Task.owner or ServiceRequest.performer = the facility's NHFR-identified Organization. The vendor MAY choose polling, subscription or IOL notification.
 
-  Purpose: Referrals are not missed and staff do not need IDs passed by phone.
+  Purpose: Staff do not miss referrals and do not need to get IDs by phone.
 validator_guide: |
-  Submit the Test Data referral; Met if it appears in the receiving facility's incoming list without typing an ID.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Submit the Test Data referral. Met if it appears in the receiving facility's incoming list without typing an ID.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability:
   - TR-007

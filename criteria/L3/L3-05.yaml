@@ -13,7 +13,7 @@ developer_guide: |
   Purpose: Unaccepted referrals are counted correctly.
 validator_guide: |
   Count the 2 values that show MATCH in Test Data.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-05.
 sub_items:
 - id: L3-05.1

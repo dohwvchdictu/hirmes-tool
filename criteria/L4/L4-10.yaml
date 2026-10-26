@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator (server-side check)
 evidence: SHR resources for each step
 developer_guide: |
-  Link each onward referral to the previous one as defined in the IG.
+  Link each onward referral to the previous one as the IG defines.
 
   Purpose: Supports real escalation of care.
-validator_guide: Perform a 3-step referral chain; Met if the SHR shows each referral linked to the previous one.
+validator_guide: Do a 3-step referral chain. Met if the SHR shows each referral linked to the previous one.
 traces:
   fhir_traceability:
   - TR-049

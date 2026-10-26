@@ -10,10 +10,10 @@ evidence: Report screenshots + Test Data Section C
 developer_guide: |
   Apply report filters together (AND logic) on the same data as the totals.
 
-  Purpose: Managers combine filters; each combination must be correct.
+  Purpose: Managers combine filters. Each combination MUST be correct.
 validator_guide: |
-  Apply each filter combination listed under the Section C Expected Results (combinations use Section B and Section C data as labelled) and compare.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Apply each filter combination listed under the Section C Expected Results. Combinations use Section B and Section C data as labelled. Compare the results with the Expected Results.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-20.1
   text: Incoming + Private + Emergency matches

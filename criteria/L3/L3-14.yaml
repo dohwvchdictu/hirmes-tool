@@ -12,8 +12,8 @@ developer_guide: |
 
   Purpose: Data can be used for further analysis and submission.
 validator_guide: |
-  Export the linelist; Met if the file opens and matches the screen.
-  Totals reconciliation of exports is checked in L3-21.
+  Export the linelist. Met if the file opens and matches the screen.
+  L3-21 checks the reconciliation of export totals.
 traces:
   fhir_traceability: []
   technical_baseline:

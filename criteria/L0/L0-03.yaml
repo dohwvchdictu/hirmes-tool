@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator
 evidence: Completed System Profile
 developer_guide: |
-  Complete the System Profile Sheet: product name, exact version/build to be tested, deployment model, and facility types the system is offered for.
+  Complete the System Profile Sheet: product name, exact version/build for testing, deployment model, and the facility types that the system is offered for.
 
-  Purpose: We know exactly which system and version is being tested; results apply to that version only.
-validator_guide: Check System Profile A.1–A.7 and B.1–B.2 are complete and match the letter.
+  Purpose: We know exactly which system and version we test. The results apply to that version only.
+validator_guide: Check that System Profile A.1 to A.7 and B.1 to B.2 are complete and agree with the letter.
 traces:
   fhir_traceability: []
   technical_baseline: []

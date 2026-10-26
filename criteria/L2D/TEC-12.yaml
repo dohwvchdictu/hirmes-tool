@@ -1,21 +1,21 @@
 id: TEC-12
 status: active
 section: Audit integrity
-title: The audit log cannot be altered through the application and records security events
+title: The audit log cannot be changed through the application and records security events
 critical: 'no'
 weight: 2
 scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Audit log extract + screenshots
 developer_guide: |
-  Make audit entries append-only for every application role, including administrators; log failed log-ins, role / permission changes and account deactivation; restrict viewing / export of the audit log to an authorised role (TB-08).
+  Make audit entries append-only for every application role, including administrators. Log failed log-ins, role / permission changes and account deactivation. Restrict audit log viewing / export to an authorised role (TB-08).
 
   Purpose: An audit trail that can be edited proves nothing.
 validator_guide: |
   1. As an ordinary user and as an administrator, try to edit or delete an audit entry through the application.
-  2. Check that the failed log-ins (TEC-09.1), the role change attempt (TEC-09.4) and the deactivation (TEC-10.3) appear in the log.
+  2. Check that the log shows the failed log-ins (TEC-09.1), the role change attempt (TEC-09.4) and the deactivation (TEC-10.3).
   3. Try to open the audit log with a non-authorised role.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: TEC-12.1
   text: Audit entries cannot be edited or deleted through the application (any role)

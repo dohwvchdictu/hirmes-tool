@@ -1,17 +1,20 @@
 id: L0-01
 status: active
 section: Application
-title: Letter of application to have the EMR system tested for use in the HIE, signed by the vendor's/developer's authorized signatory
+title: Letter of application to have the EMR system tested for use in the HIE, signed by the authorized signatory of the vendor/developer
 critical: 'yes'
 weight: 2
 scoring: binary
 validation_role: Validator
 evidence: Signed letter of application + proof of authority
 developer_guide: |
-  Submit a letter of application on official letterhead, signed by an authorized signatory, with proof of authority (secretary's certificate / board resolution; office order for in-house systems).
+  Submit a letter of application on official letterhead, signed by an authorized signatory. Attach proof of authority: a secretary's certificate / board resolution, or an office order for in-house systems.
 
-  Purpose: The vendor or developer formally asks to be evaluated.
-validator_guide: Check the letter is on official letterhead, dated, and signed by an authorized signatory (with proof of authority, e.g. secretary's certificate or office order for in-house systems).
+  Purpose: The vendor or developer formally asks for an evaluation.
+validator_guide: |
+  Check that the letter is on official letterhead and has a date.
+  Check that an authorized signatory signed the letter.
+  Check the proof of authority (for example, a secretary's certificate, or an office order for in-house systems).
 traces:
   fhir_traceability: []
   technical_baseline: []

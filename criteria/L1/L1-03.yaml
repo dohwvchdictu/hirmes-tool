@@ -1,17 +1,17 @@
 id: L1-03
 status: active
 section: Interfaces
-title: 'Supported FHIR interactions documented per resource (which resources are created, read, updated, searched), e.g. a CapabilityStatement (Connectathon Issue #3)'
+title: 'Supported FHIR interactions documented per resource (which resources are created, read, updated, searched), for example a CapabilityStatement (Connectathon Issue #3)'
 critical: 'yes'
 weight: 2
 scoring: binary
 validation_role: Validator (server-side check)
 evidence: CapabilityStatement or equivalent document
 developer_guide: |
-  Submit a CapabilityStatement (or equivalent) listing each FHIR resource used, its supported interactions (POST, PUT, GET, search) and search parameters.
+  Submit a CapabilityStatement (or equivalent) that lists each FHIR resource used, with its supported interactions (POST, PUT, GET, search) and search parameters.
 
   Purpose: Removes ambiguity about what the system actually sends and receives.
-validator_guide: Check the document lists each resource used in TS1/TS2 with its interactions (POST/PUT/GET/search).
+validator_guide: Check that the document lists each resource used in TS1/TS2 with its interactions (POST/PUT/GET/search).
 traces:
   fhir_traceability: []
   technical_baseline:

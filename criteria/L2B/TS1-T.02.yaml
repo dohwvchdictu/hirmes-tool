@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator (server-side check)
 evidence: Validator report showing 0 errors
 developer_guide: |
-  Validate outgoing resources against the PHeReF / PH Core profiles (e.g., $validate, the HL7 validator or Inferno) during development until 0 errors.
+  During development, validate outgoing resources against the PHeReF / PH Core profiles (for example, $validate, the HL7 validator or Inferno) until there are 0 errors.
 
   Purpose: The data follows the national standard, not just the vendor's format.
-validator_guide: Run $validate / the official validator / Inferno on the submitted referral (or accept the developer's validator report produced on the same payload during the session). Met only if 0 errors.
+validator_guide: Run $validate / the official validator / Inferno on the submitted referral. As an alternative, accept the developer's validator report produced on the same payload during the session. Met only if 0 errors.
 traces:
   fhir_traceability:
   - TR-050

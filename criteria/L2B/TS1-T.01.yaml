@@ -8,12 +8,15 @@ scoring: binary
 validation_role: Validator (server-side check)
 evidence: Server response with status code (IOL log or raw payload)
 developer_guide: |
-  Send the complete referral to the SHR — as one FHIR transaction Bundle (recommended) or by the interactions declared in L1-03 — and handle success and error responses.
+  Send the complete referral to the SHR. One FHIR transaction Bundle is RECOMMENDED. As an alternative, the vendor MAY use the interactions declared in L1-03. Handle success responses and error responses.
 
   Purpose: The whole referral arrives in one piece.
 validator_guide: |
-  Submit the Test Data referral; Met if the server-side evidence shows a success response (HTTP 200 / 201) for every resource of the referral.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Submit the Test Data referral. Met if the server-side evidence shows a success response (HTTP 200 / 201) for every resource of the referral.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 traces:
   fhir_traceability: []
   technical_baseline:

@@ -1,28 +1,36 @@
 id: TS3-04
 status: active
 section: Exception · Duplicate submission
-title: Submitting the same referral twice (double click, resend after timeout, re-opened draft) leaves only ONE referral on the SHR
+title: Submitting the same referral twice (double click, resend after timeout, re-opened draft) leaves only one referral on the SHR
 critical: 'yes'
 weight: 2
 scoring: count
 validation_role: Validator (server-side check)
 evidence: SHR search result (count of ServiceRequest / Task) + server-side evidence
 developer_guide: |
-  Make sending idempotent — e.g., disable the Send action while waiting, give each referral a business identifier and use conditional create (If-None-Exist) or a transaction Bundle with conditional entries, or check the SHR before resending. The method is the vendor's choice.
+  Make sending idempotent. Examples:
+  (a) disable the Send action while waiting.
+  (b) give each referral a business identifier, and use conditional create (If-None-Exist) or a transaction Bundle with conditional entries.
+  (c) check the SHR before resending.
+  The vendor MAY choose the method.
 
   Purpose: Duplicate referrals distort Level 3 counts and make the receiving facility prepare twice.
 validator_guide: |
-  1. TD-D08: click Send twice quickly. 2. TD-D09: after a send, use the system's own resend / retry function for the same referral.
+  1. TD-D08: click Send twice quickly.
+  2. TD-D09: after a send, use the resend / retry function of the system for the same referral.
   3. Validator (server-side) searches the SHR (ServiceRequest by patient and authored date, or by business identifier).
-  Met per sub-item only if exactly ONE ServiceRequest and ONE Task exist for that referral.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  Met per sub-item only if exactly one ServiceRequest and one Task exist for that referral.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS3-04.1
-  text: Double Send (TD-D08) — exactly one ServiceRequest and one Task on the SHR
+  text: 'Double Send (TD-D08): exactly one ServiceRequest and one Task on the SHR'
   critical: true
 - id: TS3-04.2
-  text: Resend / retry of an already accepted referral (TD-D09) — no second referral created
+  text: 'Resend / retry of an already accepted referral (TD-D09): no second referral created'
   critical: true
 traces:
   fhir_traceability: []

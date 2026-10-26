@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Screenshots at both EMRs
 developer_guide: |
-  Support cancel / revoke of a referral and send the status to the receiving facility (if supported by the IG version).
+  Support cancel / revoke of a referral, and send the status to the receiving facility (if the IG version supports it).
 
-  Purpose: Prevents facilities preparing for patients who are not coming.
-validator_guide: Cancel one test referral; Met if the receiving EMR shows it as cancelled. Mark N/A with reason if not yet supported by the IG version tested.
+  Purpose: This prevents facilities from preparing for patients who are not coming.
+validator_guide: Cancel one test referral. Met if the receiving EMR shows it as cancelled. If the tested IG version does not support it yet, mark N/A with the reason.
 traces:
   fhir_traceability: []
   technical_baseline: []

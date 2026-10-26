@@ -10,23 +10,23 @@ evidence: Report screenshot + Test Data
 developer_guide: |
   Count and rank referrals by working impression / diagnosis (ICD-10 coded) for the selected period.
 
-  Purpose: Shows which conditions are driving referrals, for planning and capacity building.
+  Purpose: Shows which conditions drive referrals, for planning and capacity building.
 validator_guide: |
-  Enter the system values in Test Data column C (rows "Morbidity rank 1–4"). Count the 4 morbidity values that show MATCH; the ranking must follow the counts.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Enter the system values in Test Data column C (rows "Morbidity rank 1–4"). Count the 4 morbidity values that show MATCH. The ranking MUST follow the counts.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
   Calculation rule: IND-10.
 sub_items:
 - id: L3-16.1
-  text: Rank 1 — J18.9 Pneumonia, unspecified organism matches
+  text: 'Rank 1: J18.9 Pneumonia, unspecified organism matches'
   critical: false
 - id: L3-16.2
-  text: Rank 2 — O14.1 Severe pre-eclampsia matches
+  text: 'Rank 2: O14.1 Severe pre-eclampsia matches'
   critical: false
 - id: L3-16.3
-  text: Rank 3 — I10 Essential (primary) hypertension matches
+  text: 'Rank 3: I10 Essential (primary) hypertension matches'
   critical: false
 - id: L3-16.4
-  text: Rank 4 — A09 Infectious gastroenteritis and colitis matches
+  text: 'Rank 4: A09 Infectious gastroenteritis and colitis matches'
   critical: false
 traces:
   fhir_traceability: []

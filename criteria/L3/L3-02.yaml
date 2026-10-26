@@ -8,12 +8,12 @@ scoring: count
 validation_role: Validator
 evidence: Linelist screenshot/export
 developer_guide: |
-  Provide a referral linelist with the 6 required columns / filters.
+  Provide a referral linelist with the 6 columns / filters listed below.
 
   Purpose: The linelist has all the columns the DOH needs.
 validator_guide: |
-  Count the required columns/filters present.
-  Mark each sub-item (↳) below; Achieved is counted automatically.
+  Count the columns / filters below that are present.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically.
 sub_items:
 - id: L3-02.1
   text: Patient

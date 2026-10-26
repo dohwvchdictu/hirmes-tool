@@ -1,17 +1,17 @@
 id: L3-12
 status: active
 section: Features
-title: New referral appears on the receiving facility's list without manual refresh — time limit deferred (for information)
+title: New referral appears on the receiving facility's list without manual refresh (time limit deferred, for information)
 critical: 'no'
 weight: 0
 scoring: binary
 validation_role: Validator
-evidence: Screen recording (optional)
+evidence: Screen recording (OPTIONAL)
 developer_guide: |
-  Refresh incoming referral lists automatically (polling, push or IOL notification — vendor's choice) without manual refresh. A time limit will be set after the consultant's recommendation.
+  Refresh incoming referral lists automatically, without manual refresh. The vendor MAY choose polling, push or IOL notification. A time limit will be set after the consultant's recommendation.
 
   Purpose: Staff see urgent referrals without pressing F5.
-validator_guide: Submit a referral and observe whether it appears without refreshing; record the observed time in Notes (for information). Not scored until a time limit is set.
+validator_guide: Submit a referral. Observe whether it appears without refreshing. Record the observed time in Notes (for information). Not scored until a time limit is set.
 traces:
   fhir_traceability: []
   technical_baseline: []

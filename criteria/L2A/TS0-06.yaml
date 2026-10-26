@@ -8,23 +8,24 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Screenshot of each field + registry / server response
 developer_guide: |
-  Take PSGC codes from the PSA PSGC release announced by the DOH (SRC-10), facility codes from the NHFR (SRC-11) and practitioner identifiers from the NHWR / PRC (SRC-12). How the registry is accessed (API, scheduled sync or official download) is the vendor's choice; the release must match the DOH server.
+  Take PSGC codes from the PSA PSGC release that the DOH announced (SRC-10). Take facility codes from the NHFR (SRC-11). Take practitioner identifiers from the NHWR / PRC (SRC-12). The vendor MAY choose how to access the registry (API, scheduled sync or official download). The release MUST match the DOH server.
 
-  Purpose: PSGC and NHFR are critical — the receiving facility finds its referrals by NHFR code (TS2-01) and the Level 3 reports group by facility and municipality.
+  Purpose: PSGC and NHFR are critical. The receiving facility finds its referrals by NHFR code (TS2-01). The Level 3 reports group by facility and municipality.
 validator_guide: |
-  1. Open each field listed as a sub-item and compare the values with the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4).
-  2. Server-side check: confirm the submitted codes exist in that registry / the DOH terminology server.
-  3. For NHFR (TS0-06.2): try to type a facility that is not in the NHFR — the system must only allow selecting NHFR facilities (absorbs Rev 6 L4-09).
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
+  1. Open each field listed as a sub-item.
+  2. Compare the values with the source named in the Terminology & Registry Sources (Reference Guide, Ch. 4).
+  3. Server-side check: confirm that the submitted codes exist in that registry / the DOH terminology server.
+  4. For NHFR (TS0-06.2): try to type a facility that is not in the NHFR. The system MUST allow the user to select only NHFR facilities (absorbs Rev 6 L4-09).
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
 sub_items:
 - id: TS0-06.1
-  text: PSGC code — Philippine Standard Geographic Code (PSA)
+  text: 'PSGC code: Philippine Standard Geographic Code (PSA)'
   critical: true
 - id: TS0-06.2
-  text: NHFR code — National Health Facility Registry; facilities selected only from the NHFR, not free-typed (absorbs Rev 6 L4-09)
+  text: 'NHFR code: National Health Facility Registry. Facilities are selected only from the NHFR, not free-typed (absorbs Rev 6 L4-09)'
   critical: true
 - id: TS0-06.3
-  text: NHWR — health worker identifier / licence no. (National Health Workforce Registry)
+  text: 'NHWR: health worker identifier / licence no. (National Health Workforce Registry)'
   critical: false
 traces:
   fhir_traceability:

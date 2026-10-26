@@ -8,26 +8,31 @@ scoring: count
 validation_role: Validator + server-side check + Observer
 evidence: Server-side evidence (IOL log, Inferno / validator report, or raw payload) + resource ID
 developer_guide: |
-  Capture the fields below in the EMR and send them in the PractitionerRole + Practitioner (referring facility) per the PHeReF / PH Core profile. Any create / update method is accepted (transaction Bundle recommended; conditional create / update allowed) — HTTP verbs are not prescribed. What is tested is that the values reach the SHR in the profiled resource and can be retrieved.
-  FHIR elements: Practitioner.name; PractitionerRole.code (Practitioner Role VS); referenced by ServiceRequest.requester and Task.requester. A care navigator at the referring facility, where assigned, is a separate PractitionerRole (role code from the Practitioner Role VS).
-  Source: SRC-01, SRC-12 (Terminology & Registry Sources — Reference Guide, Ch. 4)
+  Capture the fields below in the EMR. Send them in the PractitionerRole + Practitioner (referring facility), in accordance with the PHeReF / PH Core profile. The vendor MAY use any create / update method. A transaction Bundle is RECOMMENDED. The vendor MAY use conditional create / update. This criterion does not prescribe HTTP verbs. The test checks that the values reach the SHR in the profiled resource and that they can be retrieved.
+  FHIR elements: Practitioner.name, PractitionerRole.code (Practitioner Role VS). The PractitionerRole is referenced by ServiceRequest.requester and Task.requester. A care navigator at the referring facility, where assigned, is a separate PractitionerRole (role code from the Practitioner Role VS).
+  Source: SRC-01, SRC-12 (Reference Guide, Ch. 4: Terminology & Registry Sources)
 
   Purpose: The receiving facility knows who is accountable for the referral and whom to call back.
 validator_guide: |
-  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR and submit the referral.
-  2. Open the PractitionerRole + Practitioner in the server-side evidence and compare each sub-item with the Test Data value.
-  3. Record the resource ID / log reference in Notes.
-  Mark each sub-item (↳) below; Achieved is counted automatically. ★ = critical sub-item: if it is Not Met (or N/A) the criterion counts as a critical failure.
-  Server-side evidence — any ONE of: (a) Interoperability Layer transaction log (e.g., OpenHIM), (b) Inferno / official FHIR validator report, or (c) the raw FHIR request / response payload provided by the developer and captured during the session.
+  1. Enter the Test Data values for this group (Test Data Section A) in the referring EMR.
+  2. Submit the referral.
+  3. Open the PractitionerRole + Practitioner in the server-side evidence.
+  4. Compare each sub-item with the Test Data value.
+  5. Record the resource ID / log reference in Notes.
+  Mark each sub-item (↳) below. The tool counts Achieved automatically. ★ = critical sub-item. If a ★ sub-item is Not Met (or N/A), the criterion counts as a critical failure.
+  Server-side evidence is any one of these items:
+  (a) The Interoperability Layer transaction log (for example, OpenHIM).
+  (b) An Inferno / official FHIR validator report.
+  (c) The raw FHIR request / response payload that the developer provides and that is captured during the session.
 sub_items:
 - id: TS1-03.1
-  text: Name of referring practitioner — Practitioner.name
+  text: 'Name of referring practitioner: Practitioner.name'
   critical: false
 - id: TS1-03.2
-  text: Practitioner role — PractitionerRole.code
+  text: 'Practitioner role: PractitionerRole.code'
   critical: true
 - id: TS1-03.3
-  text: Care navigator at the referring facility, if assigned — separate PractitionerRole (N/A if the facility does not assign one)
+  text: 'Care navigator at the referring facility, if assigned: separate PractitionerRole (N/A if the facility does not assign one)'
   critical: false
 - id: TS1-03.4
   text: Referring practitioner is the requester of the ServiceRequest and the Task (not the receiving practitioner)

@@ -2,24 +2,29 @@ id: L1-04
 status: active
 section: Architecture
 title: |
-  System architecture — integration of the eReferral function with the EMR, judged by how patient details reach the referral (not by how the system is built):
-  (a) Fully integrated = 100% — the eReferral function is part of the EMR, OR it is a standalone system integrated with the EMR whose only role is to perform the referral and which receives the patient details automatically;
-  (b) Standalone - manual encoding = 50% — the standalone system still requires manual intervention to encode patient details (re-typing, copy-paste or re-upload).
+  System architecture: integration of the eReferral function with the EMR, judged by how patient details reach the referral (not by how the system is built).
+  (a) Fully integrated = 100%: the eReferral function is part of the EMR. Or, it is a standalone system integrated with the EMR. Its only role is to do the referral, and it receives the patient details automatically.
+  (b) Standalone - manual encoding = 50%: the standalone system still needs a person to encode patient details manually (re-typing, copy-paste or re-upload).
 critical: 'no'
 weight: 2
 scoring: tier
 validation_role: Validator + server-side check + Observer
 evidence: System architecture diagram (high-level is sufficient) + demonstration
 developer_guide: |
-  Submit a system architecture diagram showing the EMR, the eReferral function (built-in or a separate system) and how patient details flow from the EMR record into the referral. A high-level diagram is sufficient — internal component, network or infrastructure details are not required. Any integration method is acceptable (shared database, API, FHIR, HL7 v2, other interface).
-  Evidence options (vendor's choice — any ONE that proves compliance): (a) the full document / configuration; (b) a high-level or redacted version plus a signed attestation by an authorized officer that the control meets the referenced TB items; (c) independent certification or report (e.g., ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter); or (d) a view-only presentation (screen share or on site) recorded by the Validators as "sighted" with date, without keeping a copy. Source code, keys, credentials and internal network details are never required. Evidence is used only for this validation, under the Regional Validation Team's confidentiality undertaking (Instructions 4B).
+  Submit a system architecture diagram. Show the EMR, the eReferral function (built-in or a separate system) and how patient details flow from the EMR record into the referral. A high-level diagram is sufficient. The diagram does not need internal component, network or infrastructure details. The vendor MAY use any integration method (shared database, API, FHIR, HL7 v2, other interface).
+  Evidence options: the vendor MAY choose any one option that proves compliance.
+  (a) The full document / configuration.
+  (b) A high-level or redacted version, plus a signed attestation by an authorized officer that the control meets the referenced TB items.
+  (c) Independent certification or report (for example, ISO/IEC 27001, SOC 2, cloud-provider compliance report, penetration-test summary letter).
+  (d) A view-only presentation (screen share or on site). The Validators record it as "sighted" with the date, and do not keep a copy.
+  The vendor never needs to give source code, keys, credentials or internal network details. The evidence is used only for this validation, under the confidentiality undertaking of the Regional Validation Team (Instructions 4B).
 
-  Purpose: What matters is that patient details recorded once in the EMR are reused without manual re-encoding. Whether the eReferral function is built into the EMR or is a separate system is the vendor's design choice and is not penalised.
+  Purpose: The important point is that the system reuses patient details recorded once in the EMR, without manual re-encoding. The vendor MAY build the eReferral function into the EMR or make it a separate system. This design choice gets no penalty.
 validator_guide: |
   1. Review the architecture diagram.
-  2. Demonstration: register the Test Data patient in the EMR, then start a referral.
-  3. Fully integrated: every patient detail already in the EMR (name, birth date, sex, PhilSys number, PhilHealth ID, address, contact number) appears in the referral without the user re-typing, copy-pasting or re-uploading it — whether the eReferral function is built into the EMR or is a separate system connected to it.
-  4. Standalone - manual encoding: any of these details must be encoded manually.
+  2. Demonstration: register the Test Data patient in the EMR. Then start a referral.
+  3. Fully integrated: every patient detail already in the EMR (name, birth date, sex, PhilSys number, PhilHealth ID, address, contact number) appears in the referral. The user does not re-type, copy-paste or re-upload it. This applies to an eReferral function built into the EMR and to a separate system connected to it.
+  4. Standalone - manual encoding: the user has to encode one or more of these details manually.
   5. Not Met: no diagram or no demonstration.
 traces:
   fhir_traceability: []

@@ -8,10 +8,10 @@ scoring: binary
 validation_role: Validator
 evidence: Signed undertaking
 developer_guide: |
-  Sign the undertaking to (1) conform to PH Core and PHeReF, (2) request re-testing on IG version change or major release, and (3) use only test data on the sandbox.
+  Sign the undertaking to: (1) conform to PH Core and PHeReF, (2) request re-testing on IG version change or major release, and (3) use only test data on the sandbox.
 
-  Purpose: Because the IGs are drafts, the vendor agrees to keep up with updates; no real patient data is used in testing.
-validator_guide: Check the signed undertaking names both IGs, the re-test clause and the test-data-only clause.
+  Purpose: The IGs are drafts. Thus the vendor agrees to stay current with the IG updates. Testing uses no real patient data.
+validator_guide: Check that the signed undertaking names both IGs, the re-test clause and the test-data-only clause.
 traces:
   fhir_traceability: []
   technical_baseline: []

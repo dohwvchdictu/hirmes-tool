@@ -1,17 +1,17 @@
 id: L4-05
 status: active
 section: Maturity · Attachments
-title: 'Attachments (e.g., laboratory result PDF) sent with the referral can be opened at the receiving facility (Connectathon Issue #23)'
+title: 'Attachments (for example, laboratory result PDF) sent with the referral can be opened at the receiving facility (Connectathon Issue #23)'
 critical: 'no'
 weight: 1
 scoring: binary
 validation_role: Validator + server-side check + Observer
 evidence: Screenshot of opened file
 developer_guide: |
-  Store and retrieve attachments (e.g., laboratory result PDF) so they open at the receiving facility.
+  Store and retrieve attachments (for example, laboratory result PDF) so that they open at the receiving facility.
 
   Purpose: Lab results travel with the patient.
-validator_guide: Attach the Test Data lab file (TS1-09); Met if it opens correctly at the receiving EMR.
+validator_guide: Attach the Test Data lab file (TS1-09). Met if it opens correctly at the receiving EMR.
 traces:
   fhir_traceability:
   - TR-034
