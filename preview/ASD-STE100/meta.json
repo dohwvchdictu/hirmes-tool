@@ -1,0 +1,23 @@
+{
+ "ref": "ASD-STE100",
+ "ref_type": "branch",
+ "kind": "branch",
+ "path": "preview/ASD-STE100",
+ "commit": "b96da05",
+ "commit_date": "2026-10-26T11:10:09+08:00",
+ "subject": "fix: README, the 3 docs files and all 103 criteria plus sheets.yaml now follow ASD-STE100 and RFC 2119.",
+ "built": "2026-10-26 11:10 PHT",
+ "built_iso": "2026-10-26T03:10:27+00:00",
+ "ok": true,
+ "files": {
+  "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
+  "change_summary": "CHANGE-SUMMARY.md",
+  "scorecard": "index.html"
+ },
+ "version": "unreleased draft",
+ "label": "unreleased draft \u00b7 branch ASD-STE100 \u00b7 commit b96da05",
+ "counts": {
+  "criteria": 103,
+  "sub_items": 272
+ }
+}
