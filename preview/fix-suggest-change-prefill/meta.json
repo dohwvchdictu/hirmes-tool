@@ -1,0 +1,23 @@
+{
+ "ref": "fix/suggest-change-prefill",
+ "ref_type": "branch",
+ "kind": "branch",
+ "path": "preview/fix-suggest-change-prefill",
+ "commit": "95ba7e4",
+ "commit_date": "2026-11-25T17:08:53+08:00",
+ "subject": "fix: keep typed text in the Suggest a change issue form",
+ "built": "2026-11-25 17:12 PHT",
+ "built_iso": "2026-11-25T09:12:33+00:00",
+ "ok": true,
+ "files": {
+  "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
+  "change_summary": "CHANGE-SUMMARY.md",
+  "scorecard": "index.html"
+ },
+ "version": "unreleased draft",
+ "label": "unreleased draft \u00b7 branch fix/suggest-change-prefill \u00b7 commit 95ba7e4",
+ "counts": {
+  "criteria": 103,
+  "sub_items": 272
+ }
+}
