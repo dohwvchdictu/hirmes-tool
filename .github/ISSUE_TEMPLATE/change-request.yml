@@ -20,6 +20,11 @@ body:
     validations:
       required: true
   - type: textarea
+    id: current
+    attributes:
+      label: Location and current text
+      description: The "Suggest a change" link fills in this field. Do not edit it. Write your change in the next field.
+  - type: textarea
     id: change
     attributes:
       label: Proposed change
