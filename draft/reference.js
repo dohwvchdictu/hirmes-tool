@@ -247,9 +247,10 @@
     var text = String((row ? row.text : e.text) || "").trim();
     if (text.length > 1200) text = text.slice(0, 1200) + " …";
     var body = "Location: " + (row && row.p || e.p) + (l ? " (" + lines(l) + ")" : "") + "\n" + viewUrl(row && row.p || e.p, l) +
-      (text ? "\n\nCurrent text:\n" + text.split("\n").map(function (x) { return "> " + x; }).join("\n") : "") + "\n\nProposed text:\n";
+      (text ? "\n\nCurrent text:\n" + text.split("\n").map(function (x) { return "> " + x; }).join("\n") : "");
+    // GitHub issue forms revert an edited field to its URL prefill, so prefill "current" and leave "change" empty for the user.
     return D.meta.repository + "/issues/new?template=change-request.yml&title=" + encodeURIComponent("Change: " + what) +
-      "&criterion=" + encodeURIComponent(e.id || "") + "&change=" + encodeURIComponent(body);
+      "&criterion=" + encodeURIComponent(e.id || "") + "&current=" + encodeURIComponent(body);
   }
   /** ✎ button for one source location. entry: {title, id?, p, l, text?, rows?:[{label, p?, l, text?}]} */
   function srcBtn(entry, cls) {

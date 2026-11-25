@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-25T09:12:39+00:00",
+ "generated": "2026-11-25T09:28:00+00:00",
  "repository": "https://github.com/dohwvchdictu/hirmes-tool",
  "latest": null,
  "releases": [],
@@ -10,11 +10,11 @@
    "ref_type": "branch",
    "kind": "draft",
    "path": "draft",
-   "commit": "35e735e",
-   "commit_date": "2026-10-26T11:18:44+08:00",
-   "subject": "Merge pull request #5 from dohwvchdictu/ASD-STE100",
-   "built": "2026-10-26 11:18 PHT",
-   "built_iso": "2026-10-26T03:18:56+00:00",
+   "commit": "508c54a",
+   "commit_date": "2026-11-25T17:27:41+08:00",
+   "subject": "Merge pull request #7 from dohwvchdictu/fix/suggest-change-prefill",
+   "built": "2026-11-25 17:27 PHT",
+   "built_iso": "2026-11-25T09:27:55+00:00",
    "ok": true,
    "files": {
     "workbook": "testing-criteria-scorecard-unreleased-draft.xlsx",
@@ -22,7 +22,7 @@
     "scorecard": "index.html"
    },
    "version": "unreleased draft",
-   "label": "unreleased draft \u00b7 branch main \u00b7 commit 35e735e",
+   "label": "unreleased draft \u00b7 branch main \u00b7 commit 508c54a",
    "counts": {
     "criteria": 103,
     "sub_items": 272
